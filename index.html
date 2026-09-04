@@ -135,7 +135,7 @@
 
         <!-- Products Grid -->
         <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <p class="text-gray-400 text-center col-span-full py-12 font-bold">جاري تحميل المنتجات من قاعدة البيانات...</p>
+            <p class="text-gray-400 text-center col-span-full py-12 font-bold">جاري تحميل المنتجات والأسعار...</p>
         </div>
     </main>
 
@@ -173,7 +173,7 @@
 
                 <div class="border-t border-gray-200 pt-4 flex justify-between items-center text-lg font-black">
                     <span class="text-gray-700">الإجمالي:</span>
-                    <span id="total-price-display" class="text-curexTeal">0 ج.م</span>
+                    <span id="total-price-display" class="text-curexTeal">0.00 ج.م</span>
                 </div>
 
                 <button type="submit" id="submit-btn" class="w-full bg-curexTeal text-white font-bold py-3.5 rounded-xl shadow-md hover:bg-opacity-95 transition mt-2">
@@ -248,7 +248,7 @@
         let allProducts = [];
         let selectedCategory = 'ALL';
 
-        // سيتم وضع رابط Google Apps Script الخاص بك هنا بعد إعداده
+        // رابط شيت جوجل (سيتم وضعه لاحقاً)
         const GOOGLE_SCRIPT_URL = ""; 
 
         async function loadProducts() {
@@ -270,14 +270,21 @@
                 const worksheet = workbook.Sheets[workbook.SheetNames[0]];
                 const rawJson = XLSX.utils.sheet_to_json(worksheet);
 
-                allProducts = rawJson.map((row, index) => ({
-                    item_code: row['كود المنتج'] || row['Item Code'] || `P88${index + 1}`,
-                    item_name: row['اسم المنتج'] || row['Item Name'] || 'منتج طبي',
-                    category: String(row['القسم'] || row['الفئة'] || 'عام').trim(),
-                    selling_price: parseFloat(row['سعر البيع'] || row['Price'] || 0),
-                    unit: row['الوحدة'] || 'قطعة',
-                    current_stock: parseInt(row['الكمية'] || row['Stock'] || 10)
-                }));
+                allProducts = rawJson.map((row, index) => {
+                    // قراءة السعر من أي مسمى محتمل مع تحديد سعر افتراضي
+                    let rawPrice = row['سعر البيع'] || row['Price'] || row['سعر'] || row['السعر'] || 150;
+                    let parsedPrice = parseFloat(rawPrice);
+                    if (isNaN(parsedPrice) || parsedPrice <= 0) parsedPrice = 150; // سعر افتراضي في حال عدم وجوده
+
+                    return {
+                        item_code: row['كود المنتج'] || row['Item Code'] || `P88${index + 1}`,
+                        item_name: row['اسم المنتج'] || row['Item Name'] || 'منتج طبي',
+                        category: String(row['القسم'] || row['الفئة'] || 'عام').trim(),
+                        selling_price: parsedPrice,
+                        unit: row['الوحدة'] || 'قطعة',
+                        current_stock: parseInt(row['الكمية'] || row['Stock'] || 10)
+                    };
+                });
 
                 renderProducts();
             } catch (err) {
@@ -334,14 +341,18 @@
                         <h3 class="text-lg font-black text-curexTeal mb-4">${p.item_name}</h3>
                     </div>
 
-                    <div class="flex items-end justify-between pt-2 border-t border-gray-200/60">
+                    <!-- عرض السعر بشكل بارز جداً -->
+                    <div class="flex items-end justify-between pt-3 border-t border-gray-200/60">
                         <div>
-                            <span class="text-2xl font-black text-curexTeal">${p.selling_price.toFixed(2)}</span>
-                            <span class="text-xs text-gray-400 font-bold mr-1">ج.م / لكل ${p.unit || 'قطعة'}</span>
+                            <div class="text-2xl font-black text-curexTeal tracking-tight">
+                                ${p.selling_price.toFixed(2)} <span class="text-xs font-bold text-curexCoral">ج.م</span>
+                            </div>
+                            <span class="text-[11px] text-gray-400 font-bold">لكل ${p.unit || 'قطعة'}</span>
                         </div>
                         <button onclick="openOrderModal('${p.item_code}', '${p.item_name}', ${p.selling_price}, ${p.current_stock})" 
-                            class="w-10 h-10 bg-curexTeal text-white rounded-full flex items-center justify-center text-xl font-bold hover:bg-curexCoral transition shadow-sm">
-                            +
+                            class="bg-curexTeal text-white text-xs font-bold px-4 py-2.5 rounded-xl hover:bg-curexCoral transition shadow-sm flex items-center gap-1">
+                            <span>طلب الآن</span>
+                            <span>+</span>
                         </button>
                     </div>
                 </div>
@@ -370,7 +381,7 @@
             document.getElementById('selected-item-name').value = name;
             document.getElementById('order-qty').max = stock;
             document.getElementById('order-qty').value = 1;
-            document.getElementById('modal-product-info').innerText = `${name} (${code}) — السعر: ${price} ج.م`;
+            document.getElementById('modal-product-info').innerText = `${name} (${code}) — السعر: ${price.toFixed(2)} ج.م`;
             calculateTotal();
             document.getElementById('order-modal').classList.remove('hidden');
         }
@@ -414,7 +425,7 @@
             submitBtn.innerText = 'تأكيد الطلب الآن';
             submitBtn.disabled = false;
             closeModal();
-            loadProducts(); // إعادة تحميل المنتجات والمخزون المتبقي
+            loadProducts();
         }
 
         window.onload = loadProducts;
