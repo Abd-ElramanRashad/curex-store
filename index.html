@@ -133,7 +133,7 @@
         <div class="flex justify-between items-center mb-8 border-b pb-4">
             <div class="text-right">
                 <h1 class="text-2xl font-black text-brand-teal">لوحة تحكم Inventory Balance</h1>
-                <p class="text-xs text-brand-textMuted font-bold">متابعة دقيقة للكميات المشتراة والمباعة والرصيد الحالي وحالة حد الطلب</p>
+                <p class="text-xs text-brand-textMuted font-bold">متابعة مطابقة 100% لشيت Inventory Balance الأصلي</p>
             </div>
             <button onclick="closeAdminView()" class="bg-stone-200 hover:bg-stone-300 text-stone-800 font-bold px-4 py-2 rounded-xl text-xs transition">
                 <i class="fa-solid fa-arrow-right ml-1"></i> العودة للمتجر
@@ -147,7 +147,7 @@
                 <div class="text-2xl font-black text-brand-orange" id="stat-total-sold">0</div>
             </div>
             <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm text-right">
-                <span class="text-xs font-bold text-stone-400 block mb-1">منتجات تحتاج إعادة طلب (Reorder)</span>
+                <span class="text-xs font-bold text-stone-400 block mb-1">منتجات في حالة Reorder 🚨</span>
                 <div class="text-2xl font-black text-red-600" id="stat-reorder-count">0</div>
             </div>
         </div>
@@ -166,7 +166,7 @@
         <div class="bg-red-50/50 border border-red-200 rounded-2xl p-6 text-right mb-8">
             <h2 class="text-base font-extrabold text-red-700 mb-3 flex items-center gap-2">
                 <i class="fa-solid fa-triangle-exclamation"></i>
-                تنبيه: منتجات بحاجة لإعادة الطلب (Reorder Alert)
+                تنبيه: المنتجات المطلوبة لإعادة الطلب (Reorder Alert)
             </h2>
             <div class="overflow-x-auto">
                 <table class="w-full text-xs text-right border-collapse">
@@ -175,7 +175,7 @@
                             <th class="py-3 px-3 text-right">كود المنتج (Item Code)</th>
                             <th class="py-3 px-3 text-right">اسم المنتج (Item Name)</th>
                             <th class="py-3 px-3 text-right">الرصيد الحالي (Current Balance)</th>
-                            <th class="py-3 px-3 text-right">الحالة (Reorder Point)</th>
+                            <th class="py-3 px-3 text-right">حالة حد الطلب (Reorder Point)</th>
                         </tr>
                     </thead>
                     <tbody id="reorder-table-body">
@@ -187,7 +187,7 @@
 
         <!-- Full Inventory Balance Table Section -->
         <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm text-right overflow-hidden mb-8">
-            <h2 class="text-base font-extrabold text-brand-teal mb-4">تقرير Inventory Balance الكامل</h2>
+            <h2 class="text-base font-extrabold text-brand-teal mb-4">تقرير Inventory Balance الشامل</h2>
             <div class="overflow-x-auto">
                 <table class="w-full text-xs text-right border-collapse">
                     <thead>
@@ -202,7 +202,7 @@
                         </tr>
                     </thead>
                     <tbody id="inventory-table-body" class="divide-y divide-stone-100 font-semibold">
-                        <tr><td colspan="7" class="text-center py-6 text-stone-400">جاري تحميل البيانات من Inventory Balance...</td></tr>
+                        <tr><td colspan="7" class="text-center py-6 text-stone-400">جاري تحميل البيانات من الشيت...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -216,6 +216,7 @@
             <form onsubmit="handleStockUpdate(event)" class="space-y-3">
                 <input type="text" id="add-code" required placeholder="كود المنتج (Item Code) - مثال: P001" class="w-full p-2.5 border rounded-lg text-xs font-semibold text-right">
                 <input type="text" id="add-name" required placeholder="اسم المنتج (Item Name)" class="w-full p-2.5 border rounded-lg text-xs font-semibold text-right">
+                <input type="text" id="add-unit" placeholder="الوحدة (Unit) - مثال: قطع / علبة" class="w-full p-2.5 border rounded-lg text-xs font-semibold text-right">
                 <input type="number" id="add-bought" required placeholder="إجمالي المشتريات (Total Bought)" class="w-full p-2.5 border rounded-lg text-xs font-semibold text-right">
                 <input type="number" id="add-sold" required placeholder="إجمالي المباع (Total Sold)" class="w-full p-2.5 border rounded-lg text-xs font-semibold text-right">
                 <input type="number" id="add-stock" required placeholder="الرصيد الحالي (Current Balance)" class="w-full p-2.5 border rounded-lg text-xs font-semibold text-right">
@@ -327,28 +328,29 @@
             }
         }
 
-        function extractVal(item, keys, defaultVal = '') {
-            if (!item || typeof item !== 'object') return defaultVal;
-            for (let k of keys) {
-                if (item[k] !== undefined && item[k] !== null && String(item[k]).trim() !== '') {
-                    return item[k];
+        // دالة مرنة للحصول على قيمة الخاصية بغض النظر عن الاسم القادم من Google Apps Script
+        function getPropValue(item, propKeys, fallback = '') {
+            if (!item || typeof item !== 'object') return fallback;
+            
+            // 1. تجربة مفاتيح الكائنات الصريحة
+            for (let key of propKeys) {
+                if (item[key] !== undefined && item[key] !== null && String(item[key]).trim() !== '') {
+                    return item[key];
                 }
             }
-            return defaultVal;
-        }
+            
+            // 2. الدعم بالاعتماد على الترتيب من المصفوفة الخامية (إن كانت قادمة كمصفوفة أسطر)
+            if (Array.isArray(item)) {
+                if (propKeys.includes('Item Code') && item[0] !== undefined) return item[0];
+                if (propKeys.includes('Item Name') && item[1] !== undefined) return item[1];
+                if (propKeys.includes('Unit') && item[2] !== undefined) return item[2];
+                if (propKeys.includes('Total Bought') && item[3] !== undefined) return item[3];
+                if (propKeys.includes('Total Sold') && item[4] !== undefined) return item[4];
+                if (propKeys.includes('Current Balance') && item[5] !== undefined) return item[5];
+                if (propKeys.includes('Reorder Point') && item[6] !== undefined) return item[6];
+            }
 
-        function getNameVal(product) {
-            return extractVal(product, ['Item Name', 'item_name', 'Name', 'name', 'اسم المنتج', 'اسم_المنتج', 'المنتج', 'Product Name'], 'منتج بدون اسم');
-        }
-
-        function getCodeVal(product) {
-            return extractVal(product, ['Item Code', 'ItemCode', 'item_code', 'Code', 'code', 'كود المنتج', 'الكود', 'كود'], '');
-        }
-
-        function getPriceVal(product) {
-            const raw = extractVal(product, ['Selling Price', 'SellingPrice', 'selling_price', 'PRICE', 'Price', 'سعر_البيع', 'السعر'], 0);
-            const parsed = parseFloat(String(raw).replace(/[^\d.]/g, ''));
-            return !isNaN(parsed) ? parsed : 0;
+            return fallback;
         }
 
         function renderProducts(products) {
@@ -360,9 +362,10 @@
             }
 
             grid.innerHTML = products.map(product => {
-                const name = getNameVal(product);
-                const code = getCodeVal(product);
-                const priceVal = getPriceVal(product);
+                const name = getPropValue(product, ['Item Name', 'item_name', 'Name', 'name', 'اسم المنتج'], 'منتج بدون اسم');
+                const code = getPropValue(product, ['Item Code', 'item_code', 'Code', 'code', 'كود المنتج'], '');
+                const rawPrice = getPropValue(product, ['Selling Price', 'selling_price', 'Price', 'price', 'سعر البيع'], 0);
+                const priceVal = parseFloat(String(rawPrice).replace(/[^\d.]/g, '')) || 0;
                 
                 return `
                 <div class="bg-brand-cardBg rounded-2xl p-4 border border-stone-200/80 shadow-sm flex flex-col justify-between text-right hover:shadow-md transition">
@@ -387,8 +390,8 @@
         function filterProducts() {
             const query = document.getElementById('search-input').value.toLowerCase().trim();
             const filtered = allProducts.filter(p => {
-                const name = getNameVal(p).toLowerCase();
-                const code = getCodeVal(p).toLowerCase();
+                const name = String(getPropValue(p, ['Item Name', 'item_name', 'Name', 'name'], '')).toLowerCase();
+                const code = String(getPropValue(p, ['Item Code', 'item_code', 'Code', 'code'], '')).toLowerCase();
                 return name.includes(query) || code.includes(query);
             });
             renderProducts(filtered);
@@ -433,35 +436,35 @@
         function renderDashboard(data) {
             const inventoryList = data.inventory || [];
             
-            // حساب إجمالي المبيعات
-            let totalSoldAll = 0;
+            // 1. حساب Total Sold الكلي من العمود E الخاص بالشيت مباشرة
+            let grandTotalSold = 0;
             inventoryList.forEach(item => {
-                const sold = Number(extractVal(item, ['Total Sold', 'totalSold', 'TotalSold', 'إجمالي المباع'], 0));
-                totalSoldAll += isNaN(sold) ? 0 : sold;
+                const soldVal = Number(getPropValue(item, ['Total Sold', 'totalSold', 'TotalSold', 'إجمالي المباع'], 0));
+                grandTotalSold += isNaN(soldVal) ? 0 : soldVal;
             });
-            document.getElementById('stat-total-sold').innerText = totalSoldAll;
+            document.getElementById('stat-total-sold').innerText = grandTotalSold;
 
             renderSalesChart(inventoryList);
 
-            // تصفية المنتجات التي توجد في حالة Reorder
+            // 2. تصفية عناصر التنبيه بحسب عمود Reorder Point (G) أو الرصيد الصفري
             const reorderAlerts = inventoryList.filter(item => {
-                const rp = String(extractVal(item, ['Reorder Point', 'reorderPoint', 'ReorderPoint'], '')).toLowerCase();
-                const curr = Number(extractVal(item, ['Current Balance', 'currentBalance', 'CurrentBalance'], 0));
-                return rp.includes('reorder') || curr === 0;
+                const reorderStatus = String(getPropValue(item, ['Reorder Point', 'reorderPoint', 'ReorderPoint'], '')).toLowerCase();
+                const currentBalance = Number(getPropValue(item, ['Current Balance', 'currentBalance', 'CurrentBalance'], 0));
+                return reorderStatus.includes('reorder') || currentBalance === 0;
             });
 
             document.getElementById('stat-reorder-count').innerText = reorderAlerts.length;
 
-            // 1. جدول التنبيهات
+            // 3. عرض جدول التنبيهات
             const reorderBody = document.getElementById('reorder-table-body');
             if (reorderAlerts.length === 0) {
-                reorderBody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-emerald-600 font-bold">جميع المنتجات في حالة آمنة (Safe) 👍</td></tr>`;
+                reorderBody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-emerald-600 font-bold">جميع المنتجات آمنة (Safe ✅)</td></tr>`;
             } else {
                 reorderBody.innerHTML = reorderAlerts.map(item => {
-                    const code = extractVal(item, ['Item Code', 'code', 'ItemCode'], '-');
-                    const name = extractVal(item, ['Item Name', 'name', 'ItemName'], '-');
-                    const curr = extractVal(item, ['Current Balance', 'currentBalance', 'CurrentBalance'], 0);
-                    const rp = extractVal(item, ['Reorder Point', 'reorderPoint', 'ReorderPoint'], 'Reorder 🚨');
+                    const code = getPropValue(item, ['Item Code', 'code', 'ItemCode'], '-');
+                    const name = getPropValue(item, ['Item Name', 'name', 'ItemName'], '-');
+                    const curr = getPropValue(item, ['Current Balance', 'currentBalance', 'CurrentBalance'], 0);
+                    const rp = getPropValue(item, ['Reorder Point', 'reorderPoint', 'ReorderPoint'], 'Reorder 🚨');
 
                     return `
                     <tr class="font-bold text-red-700 border-b border-red-100 hover:bg-red-100/50 transition-colors">
@@ -474,16 +477,16 @@
                 }).join('');
             }
 
-            // 2. جدول تقرير Inventory Balance الكامل (المكون من الأعمدة الخمسة المحددة)
+            // 4. عرض التقرير الشامل بقيم مطابقة 100% لأعمدة الشيت
             const invBody = document.getElementById('inventory-table-body');
             invBody.innerHTML = inventoryList.map(item => {
-                const code = extractVal(item, ['Item Code', 'code', 'ItemCode', 'Code'], '-');
-                const name = extractVal(item, ['Item Name', 'name', 'ItemName', 'Name'], '-');
-                const unit = extractVal(item, ['Unit', 'unit'], 'قطعة');
-                const bought = extractVal(item, ['Total Bought', 'totalBought', 'TotalBought'], 0);
-                const sold = extractVal(item, ['Total Sold', 'totalSold', 'TotalSold'], 0);
-                const current = extractVal(item, ['Current Balance', 'currentBalance', 'CurrentBalance'], 0);
-                const reorderStr = String(extractVal(item, ['Reorder Point', 'reorderPoint', 'ReorderPoint'], 'Safe ✅'));
+                const code = getPropValue(item, ['Item Code', 'code', 'ItemCode', 'Code'], '-');
+                const name = getPropValue(item, ['Item Name', 'name', 'ItemName', 'Name'], '-');
+                const unit = getPropValue(item, ['Unit', 'unit'], 'قطع');
+                const bought = getPropValue(item, ['Total Bought', 'totalBought', 'TotalBought'], 0);
+                const sold = getPropValue(item, ['Total Sold', 'totalSold', 'TotalSold'], 0);
+                const current = getPropValue(item, ['Current Balance', 'currentBalance', 'CurrentBalance'], 0);
+                const reorderStr = String(getPropValue(item, ['Reorder Point', 'reorderPoint', 'ReorderPoint'], 'Safe ✅'));
                 
                 const isReorder = reorderStr.toLowerCase().includes('reorder') || Number(current) === 0;
                 
@@ -507,8 +510,8 @@
         function renderSalesChart(inventory) {
             const ctx = document.getElementById('salesChart').getContext('2d');
             
-            const labels = inventory.map(item => extractVal(item, ['Item Name', 'name', 'ItemName'], '-'));
-            const salesData = inventory.map(item => Number(extractVal(item, ['Total Sold', 'totalSold', 'TotalSold'], 0)));
+            const labels = inventory.map(item => getPropValue(item, ['Item Name', 'name', 'ItemName'], '-'));
+            const salesData = inventory.map(item => Number(getPropValue(item, ['Total Sold', 'totalSold', 'TotalSold'], 0)));
 
             if (salesChartInstance) {
                 salesChartInstance.destroy();
@@ -519,7 +522,7 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'عدد الوحدات المباعة (Total Sold)',
+                        label: 'إجمالي المبيعات (Total Sold)',
                         data: salesData,
                         backgroundColor: '#E67E51',
                         borderRadius: 8
@@ -555,6 +558,7 @@
                 item: {
                     code: document.getElementById('add-code').value,
                     name: document.getElementById('add-name').value,
+                    unit: document.getElementById('add-unit').value,
                     totalBought: Number(document.getElementById('add-bought').value),
                     totalSold: Number(document.getElementById('add-sold').value),
                     currentBalance: Number(document.getElementById('add-stock').value)
@@ -569,7 +573,7 @@
                     body: JSON.stringify(payload)
                 });
 
-                alert("تم التحديث بنجاح في شيت Inventory Balance!");
+                alert("تم التحديث بنجاح في الشيت!");
                 closeAdminView();
             } catch (err) {
                 alert("حدث خطأ أثناء التحديث!");
