@@ -1,256 +1,4 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CureX HEALTHCARE SOLUTIONS</title>
-    <!-- Google Fonts: Tajawal -->
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Library to read Excel (.xlsx) directly in JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        curexBg: '#F7F4EE',
-                        curexCardBg: '#FAF7F2',
-                        curexTeal: '#188B7E',
-                        curexCoral: '#EE7252',
-                        curexDarkText: '#2B3835',
-                        curexMuted: '#7F8C8D'
-                    },
-                    fontFamily: {
-                        tajawal: ['Tajawal', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #F7F4EE; color: #2B3835; }
-        .grid-pattern {
-            background-image: radial-gradient(#188B7E 0.5px, transparent 0.5px);
-            background-size: 24px 24px;
-            opacity: 0.05;
-        }
-    </style>
-</head>
-<body class="min-h-screen flex flex-col justify-between relative">
-
-    <!-- 1. Top Announcement Bar -->
-    <div class="bg-curexTeal text-white text-xs md:text-sm py-2 px-4 text-center font-medium shadow-sm">
-        توريد موثوق للعيادات والصيدليات — نصل إليك في الوقت المناسب
-    </div>
-
-    <!-- 2. Main Navigation Header -->
-    <header class="bg-curexBg border-b border-gray-200/60 sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            
-            <!-- Logo Section -->
-            <div class="flex items-center gap-3">
-                <div class="relative w-11 h-11 flex items-center justify-center rounded-full bg-curexTeal text-white font-extrabold text-lg shadow-sm overflow-hidden">
-                    <span>CX</span>
-                    <div class="absolute -bottom-2 -right-2 w-6 h-6 bg-curexCoral rounded-full opacity-90"></div>
-                </div>
-                <div>
-                    <div class="flex items-center gap-1">
-                        <span class="text-xl font-extrabold text-curexTeal tracking-tight">CureX</span>
-                        <span class="text-curexCoral text-xs font-bold">↗</span>
-                    </div>
-                    <p class="text-[9px] font-bold text-gray-400 tracking-widest uppercase -mt-1">HEALTHCARE SOLUTIONS</p>
-                </div>
-            </div>
-
-            <!-- Center Nav Links -->
-            <nav class="hidden md:flex items-center gap-8 font-bold text-sm text-curexDarkText">
-                <a href="#products-section" class="hover:text-curexTeal transition">المنتجات</a>
-                <a href="#why-us" class="hover:text-curexTeal transition">لماذا CureX؟</a>
-                <a href="#contact-us" class="hover:text-curexTeal transition">تواصل معنا</a>
-            </nav>
-
-            <!-- Actions (Cart & Admin) -->
-            <div class="flex items-center gap-3">
-                <a href="admin.html" class="text-xs font-bold bg-white text-curexDarkText border border-gray-200 hover:border-curexTeal px-3 py-2 rounded-full transition">
-                    🔒 الأدمن
-                </a>
-                <button onclick="scrollToProducts()" class="flex items-center gap-2 bg-white border border-gray-200 text-curexTeal font-bold text-sm px-4 py-2 rounded-full shadow-sm hover:border-curexTeal transition">
-                    <span>السلة</span>
-                    <span id="cart-count" class="bg-curexCoral text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-extrabold">0</span>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- 3. Hero Section -->
-    <section class="relative py-16 px-6 max-w-7xl mx-auto w-full overflow-hidden">
-        <div class="absolute inset-0 grid-pattern pointer-events-none"></div>
-        <div class="relative z-10 max-w-2xl">
-            <div class="inline-flex items-center gap-2 bg-white/80 backdrop-blur border border-gray-200 px-3 py-1.5 rounded-full text-xs font-bold text-curexTeal mb-6 shadow-sm">
-                <span>✨ رعاية تبدأ من الاختيار الصحيح</span>
-            </div>
-
-            <h1 class="text-5xl md:text-6xl font-black text-curexTeal leading-tight mb-2">
-                كل ما تحتاجه
-            </h1>
-            <h1 class="text-5xl md:text-6xl font-black text-curexCoral leading-tight mb-6">
-                لرعاية أفضل.
-            </h1>
-
-            <p class="text-gray-600 font-medium text-lg mb-8 leading-relaxed">
-                مستلزمات صحية موثوقة، جاهزة لعيادتك أو منزلك. اكتشفها بسهولة واطلبها بثقة.
-            </p>
-
-            <button onclick="scrollToProducts()" class="bg-curexTeal hover:bg-opacity-95 text-white font-bold text-lg px-8 py-3.5 rounded-2xl shadow-lg hover:shadow-xl transition flex items-center gap-3">
-                <span>تصفح المنتجات</span>
-                <span class="text-xl">←</span>
-            </button>
-        </div>
-    </section>
-
-    <!-- 4. Filter & Products Section -->
-    <main id="products-section" class="max-w-7xl mx-auto px-6 py-10 w-full flex-grow">
-        <div class="text-right mb-8">
-            <span class="text-xs font-bold text-curexCoral tracking-widest uppercase">THE ESSENTIALS, CURATED</span>
-            <h2 class="text-3xl font-black text-curexTeal mt-1">اختياراتنا لك</h2>
-            <p class="text-gray-500 text-sm font-medium">ابحث بالاسم أو الكود، واختر ما يناسب احتياجك.</p>
-        </div>
-
-        <!-- Search & Category Filters -->
-        <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-10">
-            <!-- Search Bar -->
-            <div class="w-full md:w-80 relative">
-                <input type="text" id="search-input" onkeyup="filterProducts()" placeholder="ابحث عن منتج..." class="w-full bg-white border border-gray-200 rounded-2xl py-3 px-4 pr-10 text-sm outline-none focus:border-curexTeal transition shadow-sm">
-                <span class="absolute left-3 top-3.5 text-gray-400 text-sm">🔍</span>
-            </div>
-
-            <!-- Filter Pills -->
-            <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
-                <button onclick="setCategory('ALL')" class="cat-btn bg-curexTeal text-white font-bold text-xs px-5 py-2.5 rounded-full transition shadow-sm">الكل</button>
-                <button onclick="setCategory('أجهزة فحص')" class="cat-btn bg-white border border-gray-200 text-gray-600 hover:border-curexTeal font-bold text-xs px-5 py-2.5 rounded-full transition">مستلزمات طبية - أجهزة فحص</button>
-                <button onclick="setCategory('استهلاكية')" class="cat-btn bg-white border border-gray-200 text-gray-600 hover:border-curexTeal font-bold text-xs px-5 py-2.5 rounded-full transition">مستلزمات طبية - استهلاكية</button>
-            </div>
-        </div>
-
-        <!-- Products Grid -->
-        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <p class="text-gray-400 text-center col-span-full py-12 font-bold">جاري تحميل المنتجات من شيت CureX_Database.xlsx...</p>
-        </div>
-    </main>
-
-    <!-- 5. Order Modal -->
-    <div id="order-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-[#FAF7F2] border border-gray-200 rounded-3xl max-w-lg w-full p-8 shadow-2xl relative">
-            <button onclick="closeModal()" class="absolute top-5 left-5 text-gray-400 hover:text-gray-700 text-2xl font-bold">&times;</button>
-            
-            <h3 class="text-2xl font-black text-curexTeal mb-2">تأكيد طلب الشراء</h3>
-            <p class="text-xs text-gray-500 mb-6">يرجى ملء البيانات التالية لإتمام الشحنة والتوصيل</p>
-
-            <div id="modal-product-info" class="bg-white border border-gray-200 p-4 rounded-2xl mb-6 text-sm text-curexDarkText font-bold shadow-sm"></div>
-
-            <form id="order-form" onsubmit="submitOrder(event)" class="space-y-4">
-                <input type="hidden" id="selected-item-code">
-                <input type="hidden" id="selected-item-price">
-                <input type="hidden" id="selected-item-name">
-
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">الكمية المطلوبة</label>
-                    <input type="number" id="order-qty" min="1" value="1" oninput="calculateTotal()" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm focus:border-curexTeal outline-none" required>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">الاسم بالكامل</label>
-                    <input type="text" id="client-name" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm focus:border-curexTeal outline-none" placeholder="أدخل اسمك" required>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">رقم الهاتف</label>
-                    <input type="tel" id="client-phone" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm focus:border-curexTeal outline-none" placeholder="01xxxxxxxxx" required>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">العنوان التفصيلي</label>
-                    <input type="text" id="client-address" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm focus:border-curexTeal outline-none" placeholder="المدينة / الشارع / علامة مميزة" required>
-                </div>
-
-                <div class="border-t border-gray-200 pt-4 flex justify-between items-center text-lg font-black">
-                    <span class="text-gray-700">الإجمالي:</span>
-                    <span id="total-price-display" class="text-curexTeal">0 ج.م</span>
-                </div>
-
-                <button type="submit" class="w-full bg-curexTeal text-white font-bold py-3.5 rounded-xl shadow-md hover:bg-opacity-95 transition mt-2">
-                    تأكيد الطلب الآن
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- 6. Footer Section -->
-    <footer id="contact-us" class="bg-[#FAF7F2] border-t border-gray-200/80 pt-16 pb-8 text-right">
-        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12">
-            
-            <!-- Column 1: Brand Info -->
-            <div>
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="relative w-10 h-10 flex items-center justify-center rounded-full bg-curexTeal text-white font-extrabold text-base overflow-hidden">
-                        <span>CX</span>
-                        <div class="absolute -bottom-2 -right-2 w-5 h-5 bg-curexCoral rounded-full"></div>
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-1">
-                            <span class="text-lg font-extrabold text-curexTeal">CureX</span>
-                            <span class="text-curexCoral text-xs font-bold">↗</span>
-                        </div>
-                        <p class="text-[8px] font-bold text-gray-400 uppercase tracking-widest -mt-1">HEALTHCARE SOLUTIONS</p>
-                    </div>
-                </div>
-                <p class="text-gray-500 text-sm leading-relaxed max-w-xs font-medium">
-                    نختار مستلزمات الرعاية الصحية بعناية، ونوصلها بوضوح وسرعة إلى من يعتمد عليها كل يوم.
-                </p>
-            </div>
-
-            <!-- Column 2: Contact Info -->
-            <div>
-                <h3 class="text-lg font-black text-curexTeal mb-4">نحن هنا للمساعدة</h3>
-                <div class="space-y-3 text-sm font-medium text-gray-600">
-                    <p class="flex items-center gap-2">
-                        <span>📞</span>
-                        <span dir="ltr">01068260189</span>
-                    </p>
-                    <p class="flex items-center gap-2">
-                        <span>📍</span>
-                        <span>البحيرة، دمنهور ،العمرية</span>
-                    </p>
-                </div>
-            </div>
-
-            <!-- Column 3: Commitments -->
-            <div>
-                <h3 class="text-lg font-black text-curexTeal mb-4">التزامنا</h3>
-                <div class="space-y-3 text-sm font-medium text-gray-600">
-                    <p class="flex items-center gap-2">
-                        <span class="text-curexCoral">🛡️</span>
-                        <span>منتجات موثوقة</span>
-                    </p>
-                    <p class="flex items-center gap-2">
-                        <span class="text-curexCoral">🚚</span>
-                        <span>توصيل منظم</span>
-                    </p>
-                    <p class="flex items-center gap-2">
-                        <span class="text-curexCoral">🧡</span>
-                        <span>عناية مستمرة</span>
-                    </p>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="max-w-7xl mx-auto px-6 mt-12 pt-6 border-t border-gray-200/60 text-center text-xs font-bold text-gray-400">
-            &copy; 2026 CureX Healthcare Solutions. جميع الحقوق محفوظة.
-        </div>
-    </footer>
-
-    <!-- Logic JS -->
-    <script>
-        let allProducts = [];
+let allProducts = [];
         let selectedCategory = 'ALL';
 
         // Read Excel file CureX_Database.xlsx directly from local repository
@@ -270,7 +18,7 @@
                 allProducts = rawJson.map((row, index) => ({
                     item_code: row['كود المنتج'] || row['Item Code'] || row['Code'] || `P88${index + 1}`,
                     item_name: row['اسم المنتج'] || row['Item Name'] || row['Name'] || 'منتج طبي',
-                    category: row['القسم'] || row['الفئة'] || row['Category'] || 'أجهزة فحص',
+                    category: String(row['القسم'] || row['الفئة'] || row['Category'] || 'عام').trim(),
                     selling_price: parseFloat(row['سعر البيع'] || row['Price'] || row['سعر'] || 0),
                     unit: row['الوحدة'] || row['Unit'] || 'قطعة',
                     current_stock: parseInt(row['الكمية'] || row['المخزون'] || row['Stock'] || 10)
@@ -289,17 +37,30 @@
 
         function renderProducts() {
             const grid = document.getElementById('products-grid');
-            const search = document.getElementById('search-input').value.toLowerCase();
+            const search = document.getElementById('search-input').value.toLowerCase().trim();
 
             const filtered = allProducts.filter(p => {
-                const matchesCat = selectedCategory === 'ALL' || (p.category && p.category.includes(selectedCategory));
+                const catText = (p.category || '').toLowerCase();
+                
+                // Flexible matching logic for categories
+                let matchesCat = false;
+                if (selectedCategory === 'ALL') {
+                    matchesCat = true;
+                } else if (selectedCategory === 'CHECK') {
+                    // Matches "أجهزة" or "فحص"
+                    matchesCat = catText.includes('أجهزة') || catText.includes('فحص') || catText.includes('جهاز');
+                } else if (selectedCategory === 'CONSUMABLE') {
+                    // Matches "استهلاكية" or "مستلزمات" or "مصرفات"
+                    matchesCat = catText.includes('استهلاك') || catText.includes('مصرف') || catText.includes('استهلاكية');
+                }
+
                 const matchesSearch = (p.item_name && p.item_name.toLowerCase().includes(search)) || 
                                       (p.item_code && p.item_code.toString().toLowerCase().includes(search));
                 return matchesCat && matchesSearch;
             });
 
             if (filtered.length === 0) {
-                grid.innerHTML = `<p class="text-gray-400 text-center col-span-full py-12 font-bold">لا توجد منتجات مطابقة في الشيت.</p>`;
+                grid.innerHTML = `<p class="text-gray-400 text-center col-span-full py-12 font-bold">لا توجد منتجات مطابقة لهذا القسم في الشيت.</p>`;
                 return;
             }
 
@@ -334,14 +95,16 @@
             `).join('');
         }
 
-        function setCategory(cat) {
-            selectedCategory = cat;
+        function setCategory(catKey, btnElement) {
+            selectedCategory = catKey;
             document.querySelectorAll('.cat-btn').forEach(btn => {
                 btn.classList.remove('bg-curexTeal', 'text-white');
                 btn.classList.add('bg-white', 'text-gray-600');
             });
-            event.target.classList.remove('bg-white', 'text-gray-600');
-            event.target.classList.add('bg-curexTeal', 'text-white');
+            if (btnElement) {
+                btnElement.classList.remove('bg-white', 'text-gray-600');
+                btnElement.classList.add('bg-curexTeal', 'text-white');
+            }
             renderProducts();
         }
 
@@ -381,6 +144,3 @@
         }
 
         window.onload = loadProductsFromExcel;
-    </script>
-</body>
-</html>
