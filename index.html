@@ -66,8 +66,9 @@
             </a>
 
             <div class="flex items-center gap-3">
+                <!-- زر الترس للوحة التحكم بجانب السلة -->
                 <button onclick="openAdminModal()" class="bg-stone-100 hover:bg-stone-200 text-stone-600 p-2.5 rounded-full transition" title="لوحة الإدارة">
-                    <i class="fa-solid fa-user-gear text-sm"></i>
+                    <i class="fa-solid fa-gear text-base"></i>
                 </button>
 
                 <button onclick="toggleCart()" class="bg-white hover:bg-stone-50 border border-stone-200 shadow-sm px-5 py-2 rounded-full flex items-center gap-3 transition">
@@ -131,7 +132,7 @@
         <div class="flex justify-between items-center mb-8 border-b pb-4">
             <div>
                 <h1 class="text-2xl font-black text-brand-teal">لوحة تحكم Inventory Balance</h1>
-                <p class="text-xs text-brand-textMuted font-bold">متابعة الأرباح، النواقص، والرصيد الحالي لكل منتج</p>
+                <p class="text-xs text-brand-textMuted font-bold">متابعة النواقص والرصيد الحالي لكل منتج</p>
             </div>
             <button onclick="closeAdminView()" class="bg-stone-200 hover:bg-stone-300 text-stone-800 font-bold px-4 py-2 rounded-xl text-xs transition">
                 <i class="fa-solid fa-arrow-right ml-1"></i> العودة للمتجر
@@ -139,11 +140,7 @@
         </div>
 
         <!-- KPI Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm text-right">
-                <span class="text-xs font-bold text-stone-400 block mb-1">إجمالي الربح (Total Profit)</span>
-                <div class="text-2xl font-black text-emerald-600" id="stat-total-profit">0.00 ج.م</div>
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm text-right">
                 <span class="text-xs font-bold text-stone-400 block mb-1">إجمالي الوحدات المباعة (Total Sold)</span>
                 <div class="text-2xl font-black text-brand-orange" id="stat-total-sold">0</div>
@@ -158,7 +155,7 @@
         <div class="bg-red-50/50 border border-red-200 rounded-2xl p-6 text-right mb-8">
             <h2 class="text-base font-extrabold text-red-700 mb-3 flex items-center gap-2">
                 <i class="fa-solid fa-triangle-exclamation"></i>
-                تنبيه: منتجات بلغت حد الطلب أو أقل من الرصيد المطلوبة
+                تنبيه: منتجات بلغت حد الطلب أو أقل من الرصيد المطلوب
             </h2>
             <div class="overflow-x-auto">
                 <table class="w-full text-xs text-right border-collapse">
@@ -190,11 +187,10 @@
                             <th class="py-3 px-2">إجمالي المباع (Total Sold)</th>
                             <th class="py-3 px-2">الرصيد الحالي (Current Balance)</th>
                             <th class="py-3 px-2">حد الطلب (Reorder Point)</th>
-                            <th class="py-3 px-2">إجمالي الربح (Total Profit)</th>
                         </tr>
                     </thead>
                     <tbody id="inventory-table-body" class="divide-y divide-stone-100 font-semibold">
-                        <tr><td colspan="7" class="text-center py-6 text-stone-400">جاري تحميل البيانات من inventory balance...</td></tr>
+                        <tr><td colspan="6" class="text-center py-6 text-stone-400">جاري تحميل البيانات من inventory balance...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -231,10 +227,10 @@
         </div>
     </div>
 
-    <!-- Footer -->
+    <!-- Original Footer Restored -->
     <footer id="footer-section" class="bg-brand-bg border-t border-stone-200/80 pt-16 pb-8 mt-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12 text-right">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-12 text-right">
                 <div>
                     <div class="flex items-center gap-3 mb-4">
                         <div class="relative">
@@ -264,14 +260,6 @@
                         </li>
                     </ul>
                 </div>
-
-                <div>
-                    <h4 class="font-extrabold text-brand-teal text-sm mb-4">الإدارة</h4>
-                    <button onclick="openAdminModal()" class="text-xs text-brand-teal font-bold hover:underline flex items-center gap-1">
-                        <i class="fa-solid fa-lock text-brand-orange"></i>
-                        <span>لوحة التحكم (Inventory Balance)</span>
-                    </button>
-                </div>
             </div>
 
             <div class="border-t border-stone-200/60 pt-6 text-center text-xs text-brand-textMuted font-medium">
@@ -282,7 +270,6 @@
 
     <!-- JavaScript Logic -->
     <script>
-        // رابط الـ Apps Script الجديد والمعدل
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGk_WAoLh_e-eTQugCj1gmRswj-m8pAVTh0QebHy9o5jegyAJG2fZ6pnEnJEyun8yj/exec";
 
         let allProducts = [];
@@ -306,24 +293,27 @@
 
         function renderProducts(products) {
             const grid = document.getElementById('products-grid');
-            grid.innerHTML = products.map(product => `
+            grid.innerHTML = products.map(product => {
+                // قراءة السعر وتفادي إظهار 0 بشكل خاطئ
+                const priceVal = Number(product.selling_price || product.price || 0);
+                
+                return `
                 <div class="bg-brand-cardBg rounded-2xl p-4 border border-stone-200/80 shadow-sm flex flex-col justify-between text-right">
                     <div>
                         <div class="bg-brand-cardImageBg rounded-xl h-40 flex items-center justify-center mb-3">
                             <i class="fa-solid fa-box text-3xl text-brand-teal/60"></i>
                         </div>
-                        <span class="text-[10px] font-bold text-stone-400 block">${product.item_code}</span>
-                        <h3 class="font-extrabold text-sm text-brand-teal mb-2">${product.item_name}</h3>
+                        <span class="text-[10px] font-bold text-stone-400 block">${product.item_code || product.code || ''}</span>
+                        <h3 class="font-extrabold text-sm text-brand-teal mb-2">${product.item_name || product.name || ''}</h3>
                     </div>
                     <div class="pt-2 border-t flex items-center justify-between">
-                        <div class="text-sm font-black text-brand-teal">${Number(product.selling_price).toFixed(2)} ج.م</div>
+                        <div class="text-sm font-black text-brand-teal">${priceVal.toFixed(2)} ج.م</div>
                         <button class="bg-brand-teal text-white text-xs px-3 py-1.5 rounded-lg font-bold">أضف للسلة</button>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
-        // Admin Dashboard Render Logic
         function openAdminModal() { document.getElementById('admin-login-modal').classList.remove('hidden'); }
         function closeAdminModal() { document.getElementById('admin-login-modal').classList.add('hidden'); }
 
@@ -361,38 +351,46 @@
         }
 
         function renderDashboard(data) {
-            document.getElementById('stat-total-profit').innerText = `${Number(data.totalProfitSum || 0).toFixed(2)} ج.م`;
             document.getElementById('stat-total-sold').innerText = data.totalSoldUnits || 0;
-            document.getElementById('stat-reorder-count').innerText = data.reorderAlertList.length;
 
-            // Reorder Table
+            // فلترة وحساب المنتجات التي بلغت أو قلت عن حد الطلب بدقة (تحويل لنصوص وأرقام)
+            const reorderAlerts = (data.inventory || []).filter(item => {
+                const curr = Number(item.currentBalance || 0);
+                const reorder = Number(item.reorderPoint || 0);
+                return curr <= reorder;
+            });
+
+            document.getElementById('stat-reorder-count').innerText = reorderAlerts.length;
+
+            // جدول النواقص
             const reorderBody = document.getElementById('reorder-table-body');
-            if (data.reorderAlertList.length === 0) {
+            if (reorderAlerts.length === 0) {
                 reorderBody.innerHTML = `<tr><td colspan="4" class="text-center py-3 text-emerald-600 font-bold">جميع المنتجات فوق حد الطلب 👍</td></tr>`;
             } else {
-                reorderBody.innerHTML = data.reorderAlertList.map(item => `
+                reorderBody.innerHTML = reorderAlerts.map(item => `
                     <tr class="font-bold text-red-700">
                         <td class="py-2 px-2">${item.code}</td>
                         <td class="py-2 px-2">${item.name}</td>
-                        <td class="py-2 px-2">${item.currentBalance} ${item.unit}</td>
-                        <td class="py-2 px-2">${item.reorderPoint} ${item.unit}</td>
+                        <td class="py-2 px-2">${item.currentBalance} ${item.unit || ''}</td>
+                        <td class="py-2 px-2">${item.reorderPoint} ${item.unit || ''}</td>
                     </tr>
                 `).join('');
             }
 
-            // Full Inventory Balance Table
+            // جدول Inventory Balance الكامل بدون خانة الربح
             const invBody = document.getElementById('inventory-table-body');
-            invBody.innerHTML = data.inventory.map(item => `
+            invBody.innerHTML = (data.inventory || []).map(item => {
+                const isReorder = Number(item.currentBalance || 0) <= Number(item.reorderPoint || 0);
+                return `
                 <tr class="hover:bg-stone-50 font-semibold border-b">
                     <td class="py-3 px-2 text-stone-500">${item.code}</td>
                     <td class="py-3 px-2 font-bold text-brand-teal">${item.name}</td>
-                    <td class="py-3 px-2 text-stone-600">${item.unit}</td>
-                    <td class="py-3 px-2 text-brand-orange">${item.totalSold}</td>
-                    <td class="py-3 px-2 font-bold ${item.currentBalance <= item.reorderPoint ? 'text-red-600' : 'text-stone-800'}">${item.currentBalance}</td>
+                    <td class="py-3 px-2 text-stone-600">${item.unit || ''}</td>
+                    <td class="py-3 px-2 text-brand-orange">${item.totalSold || 0}</td>
+                    <td class="py-3 px-2 font-bold ${isReorder ? 'text-red-600' : 'text-stone-800'}">${item.currentBalance}</td>
                     <td class="py-3 px-2 text-stone-500">${item.reorderPoint}</td>
-                    <td class="py-3 px-2 font-bold text-emerald-600">${Number(item.totalProfit).toFixed(2)} ج.م</td>
                 </tr>
-            `).join('');
+            `}).join('');
         }
 
         async function handleStockUpdate(e) {
