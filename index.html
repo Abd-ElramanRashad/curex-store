@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js for Sales Chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -66,9 +68,9 @@
             </a>
 
             <div class="flex items-center gap-3">
-                <!-- زر الترس للوحة التحكم بجانب السلة -->
+                <!-- أيقونة لوحة التحكم (أيقونة شخص) -->
                 <button onclick="openAdminModal()" class="bg-stone-100 hover:bg-stone-200 text-stone-600 p-2.5 rounded-full transition" title="لوحة الإدارة">
-                    <i class="fa-solid fa-gear text-base"></i>
+                    <i class="fa-solid fa-user-gear text-base"></i>
                 </button>
 
                 <button onclick="toggleCart()" class="bg-white hover:bg-stone-50 border border-stone-200 shadow-sm px-5 py-2 rounded-full flex items-center gap-3 transition">
@@ -132,7 +134,7 @@
         <div class="flex justify-between items-center mb-8 border-b pb-4">
             <div>
                 <h1 class="text-2xl font-black text-brand-teal">لوحة تحكم Inventory Balance</h1>
-                <p class="text-xs text-brand-textMuted font-bold">متابعة النواقص والرصيد الحالي لكل منتج</p>
+                <p class="text-xs text-brand-textMuted font-bold">متابعة النواقص، الرصيد الحالي، وإحصائيات المبيعات</p>
             </div>
             <button onclick="closeAdminView()" class="bg-stone-200 hover:bg-stone-300 text-stone-800 font-bold px-4 py-2 rounded-xl text-xs transition">
                 <i class="fa-solid fa-arrow-right ml-1"></i> العودة للمتجر
@@ -148,6 +150,16 @@
             <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm text-right">
                 <span class="text-xs font-bold text-stone-400 block mb-1">منتجات تحت حد الطلب (Reorder Alert)</span>
                 <div class="text-2xl font-black text-red-600" id="stat-reorder-count">0</div>
+            </div>
+        </div>
+
+        <!-- Sales Chart Section -->
+        <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm text-right mb-8">
+            <h2 class="text-base font-extrabold text-brand-teal mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-chart-column text-brand-orange"></i> رسم بياني لمبيعات المنتجات (Total Sold)
+            </h2>
+            <div class="h-64 relative">
+                <canvas id="salesChart"></canvas>
             </div>
         </div>
 
@@ -227,10 +239,11 @@
         </div>
     </div>
 
-    <!-- Original Footer Restored -->
+    <!-- Restored Layout Footer Matches The Screenshot Exactly -->
     <footer id="footer-section" class="bg-brand-bg border-t border-stone-200/80 pt-16 pb-8 mt-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-12 text-right">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12 text-right">
+                <!-- Brand Info -->
                 <div>
                     <div class="flex items-center gap-3 mb-4">
                         <div class="relative">
@@ -247,16 +260,40 @@
                     </p>
                 </div>
 
+                <!-- Contact Info -->
                 <div>
                     <h4 class="font-extrabold text-brand-teal text-sm mb-4">نحن هنا للمساعدة</h4>
                     <ul class="space-y-3 text-xs text-brand-textMuted font-semibold">
                         <li class="flex items-center justify-start gap-2">
-                            <i class="fa-solid fa-phone text-brand-orange"></i>
                             <span dir="ltr">01068260189</span>
+                            <i class="fa-solid fa-phone text-brand-orange"></i>
                         </li>
                         <li class="flex items-center justify-start gap-2">
-                            <i class="fa-solid fa-envelope text-brand-orange"></i>
+                            <span>جمهورية مصر العربية</span>
+                            <i class="fa-solid fa-location-dot text-brand-orange"></i>
+                        </li>
+                        <li class="flex items-center justify-start gap-2">
                             <span>abdelramanrashad572@gmail.com</span>
+                            <i class="fa-solid fa-envelope text-brand-orange"></i>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Our Commitments Section -->
+                <div>
+                    <h4 class="font-extrabold text-brand-teal text-sm mb-4">التزامنا</h4>
+                    <ul class="space-y-3 text-xs text-brand-textMuted font-semibold">
+                        <li class="flex items-center justify-start gap-2">
+                            <span>منتجات موثوقة</span>
+                            <i class="fa-regular fa-shield-check text-brand-orange"></i>
+                        </li>
+                        <li class="flex items-center justify-start gap-2">
+                            <span>توصيل منظم</span>
+                            <i class="fa-solid fa-truck-fast text-brand-orange"></i>
+                        </li>
+                        <li class="flex items-center justify-start gap-2">
+                            <span>عناية مستمرة</span>
+                            <i class="fa-regular fa-heart text-brand-orange"></i>
                         </li>
                     </ul>
                 </div>
@@ -274,6 +311,7 @@
 
         let allProducts = [];
         let savedAdminPassword = "";
+        let salesChartInstance = null;
 
         async function fetchProducts() {
             document.getElementById('loading').classList.remove('hidden');
@@ -291,11 +329,16 @@
             }
         }
 
+        // قراءة السعر بجميع احتمالات أسمائه القادمة من الشيت
+        function getPriceVal(product) {
+            const price = product.selling_price || product.sellingPrice || product.price || product.Price || product['سعر_البيع'] || product['سعر البيع'] || 0;
+            return Number(price) || 0;
+        }
+
         function renderProducts(products) {
             const grid = document.getElementById('products-grid');
             grid.innerHTML = products.map(product => {
-                // قراءة السعر وتفادي إظهار 0 بشكل خاطئ
-                const priceVal = Number(product.selling_price || product.price || 0);
+                const priceVal = getPriceVal(product);
                 
                 return `
                 <div class="bg-brand-cardBg rounded-2xl p-4 border border-stone-200/80 shadow-sm flex flex-col justify-between text-right">
@@ -312,6 +355,16 @@
                     </div>
                 </div>
             `}).join('');
+        }
+
+        function filterProducts() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filtered = allProducts.filter(p => {
+                const name = (p.item_name || p.name || '').toLowerCase();
+                const code = (p.item_code || p.code || '').toLowerCase();
+                return name.includes(query) || code.includes(query);
+            });
+            renderProducts(filtered);
         }
 
         function openAdminModal() { document.getElementById('admin-login-modal').classList.remove('hidden'); }
@@ -353,8 +406,13 @@
         function renderDashboard(data) {
             document.getElementById('stat-total-sold').innerText = data.totalSoldUnits || 0;
 
-            // فلترة وحساب المنتجات التي بلغت أو قلت عن حد الطلب بدقة (تحويل لنصوص وأرقام)
-            const reorderAlerts = (data.inventory || []).filter(item => {
+            const inventoryList = data.inventory || [];
+
+            // إعداد رسم بياني لمبيعات المنتجات
+            renderSalesChart(inventoryList);
+
+            // تصفية النواقص بدقة كأرقام
+            const reorderAlerts = inventoryList.filter(item => {
                 const curr = Number(item.currentBalance || 0);
                 const reorder = Number(item.reorderPoint || 0);
                 return curr <= reorder;
@@ -377,9 +435,9 @@
                 `).join('');
             }
 
-            // جدول Inventory Balance الكامل بدون خانة الربح
+            // جدول المخزون الكامل
             const invBody = document.getElementById('inventory-table-body');
-            invBody.innerHTML = (data.inventory || []).map(item => {
+            invBody.innerHTML = inventoryList.map(item => {
                 const isReorder = Number(item.currentBalance || 0) <= Number(item.reorderPoint || 0);
                 return `
                 <tr class="hover:bg-stone-50 font-semibold border-b">
@@ -391,6 +449,48 @@
                     <td class="py-3 px-2 text-stone-500">${item.reorderPoint}</td>
                 </tr>
             `}).join('');
+        }
+
+        // دالة إنشاء الرسم البياني لبيانات المبيعات
+        function renderSalesChart(inventory) {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            
+            const labels = inventory.map(item => item.name);
+            const salesData = inventory.map(item => Number(item.totalSold) || 0);
+
+            if (salesChartInstance) {
+                salesChartInstance.destroy();
+            }
+
+            salesChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'عدد الوحدات المباعة',
+                        data: salesData,
+                        backgroundColor: '#E67E51',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                font: { family: 'Cairo', weight: 'bold' }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { precision: 0 }
+                        }
+                    }
+                }
+            });
         }
 
         async function handleStockUpdate(e) {
