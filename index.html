@@ -68,7 +68,7 @@
             </a>
 
             <div class="flex items-center gap-3">
-                <!-- أيقونة لوحة التحكم (أيقونة شخص) -->
+                <!-- أيقونة لوحة التحكم (أيقونة شخص إداري) -->
                 <button onclick="openAdminModal()" class="bg-stone-100 hover:bg-stone-200 text-stone-600 p-2.5 rounded-full transition" title="لوحة الإدارة">
                     <i class="fa-solid fa-user-gear text-base"></i>
                 </button>
@@ -122,7 +122,7 @@
 
             <div id="loading" class="text-center py-16">
                 <i class="fa-solid fa-spinner fa-spin text-4xl text-brand-teal"></i>
-                <p class="mt-3 text-sm text-brand-textMuted font-bold">جاري تحميل المنتجات...</p>
+                <p class="mt-3 text-sm text-brand-textMuted font-bold">جاري تحميل المنتجات والأسعار من الشيت...</p>
             </div>
 
             <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 hidden"></div>
@@ -198,7 +198,7 @@
                             <th class="py-3 px-2">الوحدة (Unit)</th>
                             <th class="py-3 px-2">إجمالي المباع (Total Sold)</th>
                             <th class="py-3 px-2">الرصيد الحالي (Current Balance)</th>
-                            <th class="py-3 px-2">حد الطلب (Reorder Point)</th>
+                            <th class="py-3 px-2">حالة حد الطلب (Reorder Point)</th>
                         </tr>
                     </thead>
                     <tbody id="inventory-table-body" class="divide-y divide-stone-100 font-semibold">
@@ -239,7 +239,7 @@
         </div>
     </div>
 
-    <!-- Restored Layout Footer Matches The Screenshot Exactly -->
+    <!-- Restored Layout Footer with RTL Icon Order (Right to Left) -->
     <footer id="footer-section" class="bg-brand-bg border-t border-stone-200/80 pt-16 pb-8 mt-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12 text-right">
@@ -260,40 +260,40 @@
                     </p>
                 </div>
 
-                <!-- Contact Info -->
+                <!-- Contact Info (Icons Correctly Mirrored to Right Side) -->
                 <div>
                     <h4 class="font-extrabold text-brand-teal text-sm mb-4">نحن هنا للمساعدة</h4>
                     <ul class="space-y-3 text-xs text-brand-textMuted font-semibold">
-                        <li class="flex items-center justify-start gap-2">
+                        <li class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-phone text-brand-orange text-sm w-4 text-center"></i>
                             <span dir="ltr">01068260189</span>
-                            <i class="fa-solid fa-phone text-brand-orange"></i>
                         </li>
-                        <li class="flex items-center justify-start gap-2">
+                        <li class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-location-dot text-brand-orange text-sm w-4 text-center"></i>
                             <span>جمهورية مصر العربية</span>
-                            <i class="fa-solid fa-location-dot text-brand-orange"></i>
                         </li>
-                        <li class="flex items-center justify-start gap-2">
+                        <li class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-envelope text-brand-orange text-sm w-4 text-center"></i>
                             <span>abdelramanrashad572@gmail.com</span>
-                            <i class="fa-solid fa-envelope text-brand-orange"></i>
                         </li>
                     </ul>
                 </div>
 
-                <!-- Our Commitments Section -->
+                <!-- Our Commitments Section (Icons Correctly Mirrored to Right Side) -->
                 <div>
                     <h4 class="font-extrabold text-brand-teal text-sm mb-4">التزامنا</h4>
                     <ul class="space-y-3 text-xs text-brand-textMuted font-semibold">
-                        <li class="flex items-center justify-start gap-2">
+                        <li class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-shield-halved text-brand-orange text-sm w-4 text-center"></i>
                             <span>منتجات موثوقة</span>
-                            <i class="fa-regular fa-shield-check text-brand-orange"></i>
                         </li>
-                        <li class="flex items-center justify-start gap-2">
+                        <li class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-truck-fast text-brand-orange text-sm w-4 text-center"></i>
                             <span>توصيل منظم</span>
-                            <i class="fa-solid fa-truck-fast text-brand-orange"></i>
                         </li>
-                        <li class="flex items-center justify-start gap-2">
+                        <li class="flex items-center gap-2.5">
+                            <i class="fa-regular fa-heart text-brand-orange text-sm w-4 text-center"></i>
                             <span>عناية مستمرة</span>
-                            <i class="fa-regular fa-heart text-brand-orange"></i>
                         </li>
                     </ul>
                 </div>
@@ -329,16 +329,45 @@
             }
         }
 
-        // قراءة السعر بجميع احتمالات أسمائه القادمة من الشيت
+        // دالة حاسمة ومحدثة لاستخراج السعر مهما كان مسمى العمود بالشيت
         function getPriceVal(product) {
-            const price = product.selling_price || product.sellingPrice || product.price || product.Price || product['سعر_البيع'] || product['سعر البيع'] || 0;
-            return Number(price) || 0;
+            if (!product) return 0;
+
+            // البحث عن القيمة في كافة الحقول المحتملة
+            const possibleKeys = [
+                'selling_price', 'sellingPrice', 'price', 'Price', 'PRICE',
+                'سعر_البيع', 'سعر البيع', 'السعر', 'سعر', 'Selling Price'
+            ];
+
+            for (let key of possibleKeys) {
+                if (product[key] !== undefined && product[key] !== null && product[key] !== '') {
+                    // تنظيف النص من أية رموز عملة أو مسافات تحسباً
+                    const cleaned = String(product[key]).replace(/[^\d.]/g, '');
+                    const parsed = parseFloat(cleaned);
+                    if (!isNaN(parsed) && parsed > 0) {
+                        return parsed;
+                    }
+                }
+            }
+
+            // محاولة البحث عن أي مفتاح يحتوي كلمة price أو سعر
+            for (let k in product) {
+                if (k.toLowerCase().includes('price') || k.includes('سعر')) {
+                    const cleaned = String(product[k]).replace(/[^\d.]/g, '');
+                    const parsed = parseFloat(cleaned);
+                    if (!isNaN(parsed) && parsed > 0) return parsed;
+                }
+            }
+
+            return 0;
         }
 
         function renderProducts(products) {
             const grid = document.getElementById('products-grid');
             grid.innerHTML = products.map(product => {
                 const priceVal = getPriceVal(product);
+                const code = product.item_code || product.code || product.Code || '';
+                const name = product.item_name || product.name || product.Name || 'منتج بدون اسم';
                 
                 return `
                 <div class="bg-brand-cardBg rounded-2xl p-4 border border-stone-200/80 shadow-sm flex flex-col justify-between text-right">
@@ -346,11 +375,11 @@
                         <div class="bg-brand-cardImageBg rounded-xl h-40 flex items-center justify-center mb-3">
                             <i class="fa-solid fa-box text-3xl text-brand-teal/60"></i>
                         </div>
-                        <span class="text-[10px] font-bold text-stone-400 block">${product.item_code || product.code || ''}</span>
-                        <h3 class="font-extrabold text-sm text-brand-teal mb-2">${product.item_name || product.name || ''}</h3>
+                        <span class="text-[10px] font-bold text-stone-400 block">${code}</span>
+                        <h3 class="font-extrabold text-sm text-brand-teal mb-2">${name}</h3>
                     </div>
                     <div class="pt-2 border-t flex items-center justify-between">
-                        <div class="text-sm font-black text-brand-teal">${priceVal.toFixed(2)} ج.م</div>
+                        <div class="text-sm font-black text-brand-teal">${priceVal > 0 ? priceVal.toFixed(2) + ' ج.م' : 'اتصل للسعر'}</div>
                         <button class="bg-brand-teal text-white text-xs px-3 py-1.5 rounded-lg font-bold">أضف للسلة</button>
                     </div>
                 </div>
@@ -360,8 +389,8 @@
         function filterProducts() {
             const query = document.getElementById('search-input').value.toLowerCase();
             const filtered = allProducts.filter(p => {
-                const name = (p.item_name || p.name || '').toLowerCase();
-                const code = (p.item_code || p.code || '').toLowerCase();
+                const name = String(p.item_name || p.name || '').toLowerCase();
+                const code = String(p.item_code || p.code || '').toLowerCase();
                 return name.includes(query) || code.includes(query);
             });
             renderProducts(filtered);
@@ -435,18 +464,26 @@
                 `).join('');
             }
 
-            // جدول المخزون الكامل
+            // جدول المخزون الكامل - تحويل خانة حد الطلب إلى Safe أو Reorder لعدم ظهور null
             const invBody = document.getElementById('inventory-table-body');
             invBody.innerHTML = inventoryList.map(item => {
-                const isReorder = Number(item.currentBalance || 0) <= Number(item.reorderPoint || 0);
+                const current = Number(item.currentBalance || 0);
+                const reorderVal = item.reorderPoint !== undefined && item.reorderPoint !== null && item.reorderPoint !== '' ? Number(item.reorderPoint) : 0;
+                
+                // تحديد الحالة بدقة: Reorder أو Safe
+                const isNeedsReorder = current <= reorderVal;
+                const statusBadge = isNeedsReorder 
+                    ? `<span class="bg-red-100 text-red-700 font-bold px-2.5 py-1 rounded-full text-[11px] inline-flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation"></i> Reorder (${reorderVal})</span>` 
+                    : `<span class="bg-emerald-100 text-emerald-700 font-bold px-2.5 py-1 rounded-full text-[11px] inline-flex items-center gap-1"><i class="fa-solid fa-check-circle"></i> Safe (${reorderVal})</span>`;
+
                 return `
                 <tr class="hover:bg-stone-50 font-semibold border-b">
                     <td class="py-3 px-2 text-stone-500">${item.code}</td>
                     <td class="py-3 px-2 font-bold text-brand-teal">${item.name}</td>
                     <td class="py-3 px-2 text-stone-600">${item.unit || ''}</td>
-                    <td class="py-3 px-2 text-brand-orange">${item.totalSold || 0}</td>
-                    <td class="py-3 px-2 font-bold ${isReorder ? 'text-red-600' : 'text-stone-800'}">${item.currentBalance}</td>
-                    <td class="py-3 px-2 text-stone-500">${item.reorderPoint}</td>
+                    <td class="py-3 px-2 text-brand-orange font-extrabold">${item.totalSold || 0}</td>
+                    <td class="py-3 px-2 font-bold ${isNeedsReorder ? 'text-red-600' : 'text-stone-800'}">${current}</td>
+                    <td class="py-3 px-2">${statusBadge}</td>
                 </tr>
             `}).join('');
         }
