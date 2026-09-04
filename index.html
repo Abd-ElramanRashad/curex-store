@@ -9,13 +9,22 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        curexBlue: '#0B3C84',
+                        curexTeal: '#00B5B5',
+                        curexDarkBlue: '#062352',
+                        curexLightBg: '#F4F8FA'
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; color: #1e293b; }
-        .brand-blue { color: #003B73; }
-        .bg-brand-blue { background-color: #003B73; }
-        .brand-teal { color: #00A896; }
-        .bg-brand-teal { background-color: #00A896; }
-        .border-brand-teal { border-color: #00A896; }
+        body { font-family: 'Cairo', sans-serif; background-color: #F4F8FA; color: #1e293b; }
     </style>
 </head>
 <body class="flex flex-col min-h-screen justify-between">
@@ -25,8 +34,8 @@
         <div class="max-w-7xl mx-auto px-6 py-4 flex flex-wrap justify-between items-center">
             <div class="flex items-center space-x-4 space-x-reverse">
                 <div class="flex items-center">
-                    <span class="text-3xl font-extrabold brand-blue tracking-tight">Cure</span>
-                    <span class="text-3xl font-extrabold brand-teal flex items-center">X
+                    <span class="text-3xl font-extrabold text-curexBlue tracking-tight">Cure</span>
+                    <span class="text-3xl font-extrabold text-curexTeal flex items-center">X
                         <svg class="w-8 h-8 ml-1 inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                         </svg>
@@ -35,23 +44,27 @@
                 <span class="hidden md:block text-xs font-semibold text-gray-400 border-r pr-3 border-gray-300">HEALTHCARE SOLUTIONS</span>
             </div>
             <div>
-                <a href="admin.html" class="text-sm font-bold bg-gray-100 text-gray-700 hover:bg-brand-blue hover:text-white px-4 py-2 rounded-lg transition">لوحة الأدمن 🔒</a>
+                <a href="admin.html" class="text-sm font-bold bg-gray-100 text-gray-700 hover:bg-curexBlue hover:text-white px-4 py-2 rounded-lg transition flex items-center gap-1">
+                    🔒 لوحة الأدمن
+                </a>
             </div>
         </div>
     </header>
 
     <!-- Hero Banner -->
-    <section class="bg-gradient-to-r from-[#003B73] to-[#00A896] text-white py-12 text-center shadow-inner">
-        <h1 class="text-3xl md:text-5xl font-extrabold mb-3">حلول الرعاية الصحية بين يديك</h1>
-        <p class="text-lg opacity-90">تصفح أفضل المستلزمات الطبية واطلب بسهولة مع التوصيل السريع</p>
+    <section class="bg-gradient-to-r from-curexBlue to-curexTeal text-white py-12 text-center shadow-inner">
+        <h1 class="text-3xl md:text-5xl font-extrabold mb-3">حلول الرعاية الصحية بين يديك 🏥</h1>
+        <p class="text-lg opacity-90">تصفح أفضل المستلزمات الطبية واطلب بسهولة مع التوصيل السريع 🚚</p>
     </section>
 
     <!-- Main Products Grid -->
     <main class="max-w-7xl mx-auto px-6 py-10 flex-grow w-full">
-        <h2 class="text-2xl font-bold mb-6 brand-blue border-r-4 border-brand-teal pr-3">قائمة المنتجات المتاحة</h2>
+        <h2 class="text-2xl font-bold mb-6 text-curexBlue border-r-4 border-curexTeal pr-3 flex items-center gap-2">
+            📦 قائمة المنتجات المتاحة
+        </h2>
         <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <!-- المنتجات سيتم تحميلها ديناميكياً هنا -->
-            <p class="text-gray-500 col-span-full text-center py-8">جاري تحميل المنتجات...</p>
+            <p class="text-gray-500 col-span-full text-center py-8">⏳ جاري تحميل المنتجات...</p>
         </div>
     </main>
 
@@ -59,8 +72,8 @@
     <div id="order-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative animate-fade-in">
             <button onclick="closeModal()" class="absolute top-4 left-4 text-gray-400 hover:text-gray-600 text-2xl font-bold">&times;</button>
-            <h3 class="text-xl font-bold brand-blue mb-4">تأكيد طلب الشراء</h3>
-            <div id="modal-product-info" class="bg-blue-50 p-3 rounded-lg mb-4 text-sm"></div>
+            <h3 class="text-xl font-bold text-curexBlue mb-4 flex items-center gap-2">🛒 تأكيد طلب الشراء</h3>
+            <div id="modal-product-info" class="bg-teal-50 p-3 rounded-lg mb-4 text-sm text-curexBlue border border-teal-100"></div>
 
             <form id="order-form" onsubmit="submitOrder(event)" class="space-y-4">
                 <input type="hidden" id="selected-item-code">
@@ -68,73 +81,75 @@
                 <input type="hidden" id="selected-item-name">
 
                 <div>
-                    <label class="block text-sm font-semibold mb-1">الكمية المطلوبة</label>
-                    <input type="number" id="order-qty" min="1" value="1" oninput="calculateTotal()" class="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-teal-500 outline-none" required>
+                    <label class="block text-sm font-semibold mb-1">🔢 الكمية المطلوبة</label>
+                    <input type="number" id="order-qty" min="1" value="1" oninput="calculateTotal()" class="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-curexTeal outline-none" required>
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold mb-1">اسم العميل بالكامل</label>
-                    <input type="text" id="client-name" class="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-teal-500 outline-none" placeholder="أدخل اسمك" required>
+                    <label class="block text-sm font-semibold mb-1">👤 اسم العميل بالكامل</label>
+                    <input type="text" id="client-name" class="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-curexTeal outline-none" placeholder="أدخل اسمك" required>
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold mb-1">رقم الهاتف</label>
-                    <input type="tel" id="client-phone" class="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-teal-500 outline-none" placeholder="01xxxxxxxxx" required>
+                    <label class="block text-sm font-semibold mb-1">📞 رقم الهاتف</label>
+                    <input type="tel" id="client-phone" class="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-curexTeal outline-none" placeholder="01xxxxxxxxx" required>
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold mb-1">العنوان التفصيلي</label>
-                    <input type="text" id="client-address" class="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-teal-500 outline-none" placeholder="المدينة / الشارع / علامة مميزة" required>
+                    <label class="block text-sm font-semibold mb-1">📍 العنوان التفصيلي</label>
+                    <input type="text" id="client-address" class="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-curexTeal outline-none" placeholder="المدينة / الشارع / علامة مميزة" required>
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold mb-1">البريد الإلكتروني <span class="text-gray-400 font-normal">(اختياري)</span></label>
-                    <input type="email" id="client-email" class="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-teal-500 outline-none" placeholder="example@domain.com">
+                    <label class="block text-sm font-semibold mb-1">✉️ البريد الإلكتروني <span class="text-gray-400 font-normal">(اختياري)</span></label>
+                    <input type="email" id="client-email" class="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-curexTeal outline-none" placeholder="example@domain.com">
                 </div>
 
                 <div class="border-t pt-3 flex justify-between items-center text-lg font-bold">
-                    <span>الإجمالي:</span>
-                    <span id="total-price-display" class="brand-teal">0 ج.م</span>
+                    <span>💵 الإجمالي:</span>
+                    <span id="total-price-display" class="text-curexTeal">0 ج.م</span>
                 </div>
 
-                <button type="submit" class="w-full bg-brand-teal text-white py-3 rounded-xl font-bold hover:bg-opacity-90 transition shadow-lg">تأكيد إرسال الطلب</button>
+                <button type="submit" class="w-full bg-curexTeal text-white py-3 rounded-xl font-bold hover:bg-opacity-90 transition shadow-lg flex items-center justify-center gap-2">
+                    ✅ تأكيد إرسال الطلب
+                </button>
             </form>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="bg-[#002855] text-white pt-10 pb-6 border-t-4 border-brand-teal">
+    <footer class="bg-curexDarkBlue text-white pt-10 pb-6 border-t-4 border-curexTeal">
         <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 text-center md:text-right">
             <div>
-                <h3 class="text-xl font-extrabold mb-3 text-brand-teal">نحن هنا للمساعدة</h3>
+                <h3 class="text-xl font-extrabold mb-3 text-curexTeal flex items-center justify-center md:justify-start gap-2">
+                    🤝 نحن هنا للمساعدة
+                </h3>
                 <p class="text-gray-300 text-sm leading-relaxed mb-4">فريق CureX Healthcare Solutions جاهز تماماً لتلبية كافة احتياجاتكم من المستلزمات والحلول الطبية عالية الجودة.</p>
             </div>
-            <div class="space-y-2 text-sm">
+            <div class="space-y-3 text-sm">
                 <p class="flex items-center justify-center md:justify-start gap-2">
-                    <span class="font-bold text-brand-teal">📞 الهاتف:</span> 01068260189
+                    <span>📞</span> <span class="font-bold text-curexTeal">الرقم:</span> 01068260189
                 </p>
                 <p class="flex items-center justify-center md:justify-start gap-2">
-                    <span class="font-bold text-brand-teal">📍 العنوان:</span> البحيرة، دمنهور، العمرية
+                    <span>📍</span> <span class="font-bold text-curexTeal">العنوان:</span> البحيرة، دمنهور ،العمرية
                 </p>
                 <p class="flex items-center justify-center md:justify-start gap-2">
-                    <span class="font-bold text-brand-teal">✉️ البريد الإلكتروني:</span> abdelramanrashad572@gmail.com
+                    <span>✉️</span> <span class="font-bold text-curexTeal">البريد:</span> abdelramanrashad572@gmail.com
                 </p>
             </div>
         </div>
-        <div class="text-center text-xs text-gray-500 mt-8 border-t border-gray-800 pt-4">
+        <div class="text-center text-xs text-gray-400 mt-8 border-t border-gray-800 pt-4">
             جميع الحقوق محفوظة &copy; 2026 CureX Healthcare Solutions
         </div>
     </footer>
 
     <!-- Logic JS -->
     <script>
-        // إعدادات قاعدة البيانات Supabase (قم باستبدالها ببيانات مشروعك)
         const SUPABASE_URL = 'YOUR_SUPABASE_URL';
         const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
         const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // تحميل المنتجات عند فتح الصفحة
         async function loadProducts() {
             const { data: products, error } = await db.from('products').select('*');
             const grid = document.getElementById('products-grid');
             if (error || !products) {
-                grid.innerHTML = `<p class="text-red-500 text-center col-span-full">حدث خطأ أثناء تحميل البيانات أو يُرجى ضبط إعدادات Supabase.</p>`;
+                grid.innerHTML = `<p class="text-red-500 text-center col-span-full">❌ حدث خطأ أثناء تحميل البيانات أو يُرجى ضبط إعدادات Supabase.</p>`;
                 return;
             }
 
@@ -142,20 +157,20 @@
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between hover:shadow-md transition">
                     <div>
                         <div class="flex justify-between items-start mb-2">
-                            <span class="text-xs bg-teal-50 text-brand-teal font-semibold px-2.5 py-1 rounded-full">${p.category}</span>
-                            <span class="text-xs text-gray-400">كود: ${p.item_code}</span>
+                            <span class="text-xs bg-teal-50 text-curexTeal font-semibold px-2.5 py-1 rounded-full">🏷️ ${p.category}</span>
+                            <span class="text-xs text-gray-400">🔢 كود: ${p.item_code}</span>
                         </div>
-                        <h3 class="text-lg font-bold brand-blue mb-2">${p.item_name}</h3>
-                        <p class="text-2xl font-extrabold brand-teal mb-4">${p.selling_price} <span class="text-xs font-normal text-gray-500">ج.م / ${p.unit || 'وحدة'}</span></p>
+                        <h3 class="text-lg font-bold text-curexBlue mb-2">${p.item_name}</h3>
+                        <p class="text-2xl font-extrabold text-curexTeal mb-4">${p.selling_price} <span class="text-xs font-normal text-gray-500">ج.م / ${p.unit || 'وحدة'}</span></p>
                     </div>
                     <div>
-                        <p class="text-xs ${p.current_stock > p.reorder_point ? 'text-green-600' : 'text-red-500'} mb-3">
-                            المتاح بالمخزون: ${p.current_stock}
+                        <p class="text-xs ${p.current_stock > p.reorder_point ? 'text-green-600' : 'text-red-500'} mb-3 font-semibold">
+                            📊 المتاح بالمخزون: ${p.current_stock}
                         </p>
                         <button onclick="openOrderModal('${p.item_code}', '${p.item_name}', ${p.selling_price}, ${p.current_stock})" 
                             ${p.current_stock <= 0 ? 'disabled' : ''} 
-                            class="w-full bg-brand-blue text-white py-2.5 rounded-xl font-bold hover:bg-brand-teal disabled:bg-gray-300 transition">
-                            ${p.current_stock > 0 ? 'اطلب الآن' : 'غير متوفر'}
+                            class="w-full bg-curexBlue text-white py-2.5 rounded-xl font-bold hover:bg-curexTeal disabled:bg-gray-300 transition flex items-center justify-center gap-2">
+                            ${p.current_stock > 0 ? '🛒 اطلب الآن' : '❌ غير متوفر'}
                         </button>
                     </div>
                 </div>
@@ -168,7 +183,7 @@
             document.getElementById('selected-item-name').value = name;
             document.getElementById('order-qty').max = stock;
             document.getElementById('order-qty').value = 1;
-            document.getElementById('modal-product-info').innerHTML = `المنتج: <strong>${name}</strong> | السعر: <strong>${price} ج.م</strong>`;
+            document.getElementById('modal-product-info').innerHTML = `📦 المنتج: <strong>${name}</strong> | 💵 السعر: <strong>${price} ج.م</strong>`;
             calculateTotal();
             document.getElementById('order-modal').classList.remove('hidden');
         }
@@ -195,7 +210,6 @@
             const clientAddress = document.getElementById('client-address').value;
             const clientEmail = document.getElementById('client-email').value;
 
-            // 1. إضافة المعاملة في جدول Transactions
             const { error: txError } = await db.from('transactions').insert([{
                 transaction_type: 'SALE',
                 item_code: code,
@@ -206,26 +220,23 @@
                 date: new Date().toISOString()
             }]);
 
-            if (txError) { alert('حدث خطأ أثناء تنفيذ الطلب'); return; }
+            if (txError) { alert('❌ حدث خطأ أثناء تنفيذ الطلب'); return; }
 
-            // 2. تحديث المخزون
             const { data: prod } = await db.from('products').select('current_stock, reorder_point').eq('item_code', code).single();
             const newStock = prod.current_stock - qty;
 
             await db.from('products').update({ current_stock: newStock }).eq('item_code', code);
 
-            // 3. فحص Reorder Point والتنبيه بالإيميل
             if (newStock <= prod.reorder_point) {
                 sendReorderEmail(code, name, newStock, prod.reorder_point);
             }
 
-            alert('تم تأكيد طلبك بنجاح! شكراً لثقتكم بـ CureX.');
+            alert('🎉 تم تأكيد طلبك بنجاح! شكراً لثقتكم بـ CureX.');
             closeModal();
             loadProducts();
         }
 
         function sendReorderEmail(code, name, stock, reorderPoint) {
-            // استخدام EmailJS لإرسال إيميل التنبيه تلقائياً
             emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
                 to_email: 'abdelramanrashad572@gmail.com',
                 product_code: code,
