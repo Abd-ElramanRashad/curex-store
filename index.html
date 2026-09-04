@@ -48,12 +48,7 @@
 </head>
 <body class="bg-brand-bg min-h-screen flex flex-col justify-between selection:bg-brand-orange selection:text-white">
 
-    <!-- Top Announcement Bar -->
-    <div class="bg-brand-teal text-white text-xs md:text-sm font-semibold py-2 px-4 text-center">
-        توريد موثوق للعيادات والصيدليات – نصل إليك في الوقت المناسب
-    </div>
-
-    <!-- Main Navigation Header -->
+    <!-- Header Navigation -->
     <header class="bg-brand-bg border-b border-stone-200/60 sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <a href="#" class="flex items-center gap-3 group">
@@ -68,72 +63,44 @@
             </a>
 
             <div class="flex items-center gap-3">
-                <button onclick="openAdminModal()" class="bg-stone-100 hover:bg-stone-200 text-stone-600 p-2.5 rounded-full transition" title="لوحة الإدارة">
-                    <i class="fa-solid fa-user-gear text-base"></i>
-                </button>
-
-                <button onclick="toggleCart()" class="bg-white hover:bg-stone-50 border border-stone-200 shadow-sm px-5 py-2 rounded-full flex items-center gap-3 transition">
-                    <span class="font-bold text-brand-teal text-sm">السلة</span>
-                    <span id="cart-count" class="bg-brand-orange text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center">0</span>
+                <button onclick="showAdminView()" class="bg-brand-teal hover:bg-brand-tealHover text-white px-4 py-2 rounded-xl font-bold text-xs flex items-center gap-2 transition shadow-sm">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>تقرير المخزن (Inventory)</span>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Main Store View -->
+    <!-- Store View Section -->
     <main id="store-view">
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 w-full">
-            <div class="flex flex-col items-start max-w-3xl text-right leading-relaxed">
-                <div class="inline-flex items-center gap-2 bg-brand-orangeLight border border-brand-orange/20 text-brand-orange font-bold text-xs px-3.5 py-1.5 rounded-full mb-6 select-none">
-                    <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
-                    <span>رعاية تبدأ من الاختيار الصحيح</span>
-                </div>
-
-                <h1 class="text-4xl md:text-6xl font-black tracking-tight mb-4 text-right">
-                    <span class="text-brand-teal block mb-2">كل ما تحتاجه</span>
-                    <span class="text-brand-orange block">لرعاية أفضل.</span>
-                </h1>
-
-                <p class="text-brand-textMuted text-base md:text-lg font-medium mb-8 leading-loose text-right max-w-2xl">
-                    مستلزمات صحية موثوقة، جاهزة لعيادتك أو منزلك. اكتشفها بأسلوب عصري وسهل واطلبها بثقة.
-                </p>
-
-                <a href="#products-section" class="bg-brand-teal hover:bg-brand-tealHover text-white font-bold px-8 py-3.5 rounded-xl shadow-md transition duration-200 flex items-center gap-3">
-                    <span>تصفح المنتجات</span>
-                    <i class="fa-solid fa-arrow-left text-sm"></i>
-                </a>
-            </div>
-        </section>
-
-        <section id="products-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-6">
                 <div class="text-right">
-                    <span class="text-[10px] font-bold text-brand-orange tracking-widest uppercase block mb-1">THE ESSENTIALS, CURATED</span>
-                    <h2 class="text-2xl md:text-3xl font-extrabold text-brand-teal">اختياراتنا لك</h2>
-                    <p class="text-xs md:text-sm text-brand-textMuted font-medium mt-1">ابحث بالاسم أو الكود، واختر ما يناسب احتياجك.</p>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-brand-teal">قائمة المنتجات المتاحة</h2>
+                    <p class="text-xs md:text-sm text-brand-textMuted font-medium mt-1">تصفح المنتجات المستوردة من شيت المخزن مباشرة.</p>
                 </div>
 
                 <div class="w-full md:w-80 relative">
-                    <input type="text" id="search-input" oninput="filterProducts()" placeholder="ابحث عن منتج..." class="w-full bg-white border border-stone-200 rounded-xl py-3 px-4 pr-10 text-sm focus:outline-none focus:border-brand-teal text-brand-textDark font-semibold placeholder:text-stone-400 text-right">
+                    <input type="text" id="search-input" oninput="filterProducts()" placeholder="ابحث بالاسم أو الكود..." class="w-full bg-white border border-stone-200 rounded-xl py-3 px-4 pr-10 text-sm focus:outline-none focus:border-brand-teal text-brand-textDark font-semibold placeholder:text-stone-400 text-right">
                     <i class="fa-solid fa-magnifying-glass absolute right-3 top-3.5 text-stone-400 text-sm"></i>
                 </div>
             </div>
 
             <div id="loading" class="text-center py-16">
                 <i class="fa-solid fa-spinner fa-spin text-4xl text-brand-teal"></i>
-                <p class="mt-3 text-sm text-brand-textMuted font-bold">جاري تحميل المنتجات...</p>
+                <p class="mt-3 text-sm text-brand-textMuted font-bold">جاري تحميل المنتجات من الشيت...</p>
             </div>
 
             <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 hidden"></div>
         </section>
     </main>
 
-    <!-- Admin Dashboard View -->
+    <!-- Admin & Inventory Dashboard View -->
     <section id="admin-view" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
         <div class="flex justify-between items-center mb-8 border-b pb-4">
             <div class="text-right">
-                <h1 class="text-2xl font-black text-brand-teal">لوحة تحكم Inventory Balance</h1>
-                <p class="text-xs text-brand-textMuted font-bold">متابعة مطابقة 100% لشيت Inventory Balance الأصلي</p>
+                <h1 class="text-2xl font-black text-brand-teal">تقرير المخزن والمبيعات (Inventory Balance)</h1>
+                <p class="text-xs text-brand-textMuted font-bold">بيانات دقيقة ومطابقة للشيت المرفوع 100%</p>
             </div>
             <button onclick="closeAdminView()" class="bg-stone-200 hover:bg-stone-300 text-stone-800 font-bold px-4 py-2 rounded-xl text-xs transition">
                 <i class="fa-solid fa-arrow-right ml-1"></i> العودة للمتجر
@@ -143,30 +110,30 @@
         <!-- KPI Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm text-right">
-                <span class="text-xs font-bold text-stone-400 block mb-1">إجمالي الوحدات المباعة (Total Sold)</span>
-                <div class="text-2xl font-black text-brand-orange" id="stat-total-sold">0</div>
+                <span class="text-xs font-bold text-stone-400 block mb-1">إجمالي المبيعات الكلي (Total Sold)</span>
+                <div class="text-3xl font-black text-brand-orange" id="stat-total-sold">0</div>
             </div>
             <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm text-right">
-                <span class="text-xs font-bold text-stone-400 block mb-1">منتجات في حالة Reorder 🚨</span>
-                <div class="text-2xl font-black text-red-600" id="stat-reorder-count">0</div>
+                <span class="text-xs font-bold text-stone-400 block mb-1">المنتجات الواصلة لـ (Reorder Point 🚨)</span>
+                <div class="text-3xl font-black text-red-600" id="stat-reorder-count">0</div>
             </div>
         </div>
 
-        <!-- Sales Chart Section -->
+        <!-- Sales Bar Chart -->
         <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm text-right mb-8">
             <h2 class="text-base font-extrabold text-brand-teal mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-chart-column text-brand-orange"></i> رسم بياني لمبيعات المنتجات (Total Sold)
+                <i class="fa-solid fa-chart-column text-brand-orange"></i> رسم بياني لإجمالي المبيعات (Total Sold)
             </h2>
-            <div class="h-64 relative">
+            <div class="h-72 relative">
                 <canvas id="salesChart"></canvas>
             </div>
         </div>
 
-        <!-- Reorder Warning Table -->
-        <div class="bg-red-50/50 border border-red-200 rounded-2xl p-6 text-right mb-8">
+        <!-- Reorder Point Warning Table -->
+        <div class="bg-red-50/60 border border-red-200 rounded-2xl p-6 text-right mb-8">
             <h2 class="text-base font-extrabold text-red-700 mb-3 flex items-center gap-2">
                 <i class="fa-solid fa-triangle-exclamation"></i>
-                تنبيه: المنتجات المطلوبة لإعادة الطلب (Reorder Alert)
+                تنبيه نواقص المخزن (Reorder Point)
             </h2>
             <div class="overflow-x-auto">
                 <table class="w-full text-xs text-right border-collapse">
@@ -185,131 +152,42 @@
             </div>
         </div>
 
-        <!-- Full Inventory Balance Table Section -->
+        <!-- Full Inventory Balance Table -->
         <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm text-right overflow-hidden mb-8">
-            <h2 class="text-base font-extrabold text-brand-teal mb-4">تقرير Inventory Balance الشامل</h2>
+            <h2 class="text-base font-extrabold text-brand-teal mb-4">جدول المخزن الكامل (مطابق للشيت)</h2>
             <div class="overflow-x-auto">
                 <table class="w-full text-xs text-right border-collapse">
                     <thead>
-                        <tr class="border-b text-stone-500 font-extrabold bg-stone-50">
-                            <th class="py-3 px-3 text-right">كود المنتج (Item Code)</th>
-                            <th class="py-3 px-3 text-right">اسم المنتج (Item Name)</th>
-                            <th class="py-3 px-3 text-right">الوحدة (Unit)</th>
-                            <th class="py-3 px-3 text-right">إجمالي المشتريات (Total Bought)</th>
-                            <th class="py-3 px-3 text-right">إجمالي المبيعات (Total Sold)</th>
-                            <th class="py-3 px-3 text-right">الرصيد الحالي (Current Balance)</th>
-                            <th class="py-3 px-3 text-right">حالة حد الطلب (Reorder Point)</th>
+                        <tr class="border-b text-stone-600 font-extrabold bg-stone-50">
+                            <th class="py-3.5 px-3 text-right">كود المنتج (Item Code)</th>
+                            <th class="py-3.5 px-3 text-right">اسم المنتج (Item Name)</th>
+                            <th class="py-3.5 px-3 text-right">الوحدة (Unit)</th>
+                            <th class="py-3.5 px-3 text-right">إجمالي المشتريات (Total Bought)</th>
+                            <th class="py-3.5 px-3 text-right">إجمالي المبيعات (Total Sold)</th>
+                            <th class="py-3.5 px-3 text-right">الرصيد الحالي (Current Balance)</th>
+                            <th class="py-3.5 px-3 text-right">حالة حد الطلب (Reorder Point)</th>
                         </tr>
                     </thead>
                     <tbody id="inventory-table-body" class="divide-y divide-stone-100 font-semibold">
-                        <tr><td colspan="7" class="text-center py-6 text-stone-400">جاري تحميل البيانات من الشيت...</td></tr>
+                        <tr><td colspan="7" class="text-center py-6 text-stone-400">جاري جلب البيانات من الشيت...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
-
-        <!-- Stock Update Form -->
-        <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm text-right max-w-xl">
-            <h2 class="text-base font-extrabold text-brand-teal mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-pen-to-square"></i> تحديث/إضافة بيانات الشيت
-            </h2>
-            <form onsubmit="handleStockUpdate(event)" class="space-y-3">
-                <input type="text" id="add-code" required placeholder="كود المنتج (Item Code) - مثال: P001" class="w-full p-2.5 border rounded-lg text-xs font-semibold text-right">
-                <input type="text" id="add-name" required placeholder="اسم المنتج (Item Name)" class="w-full p-2.5 border rounded-lg text-xs font-semibold text-right">
-                <input type="text" id="add-unit" placeholder="الوحدة (Unit) - مثال: قطع / علبة" class="w-full p-2.5 border rounded-lg text-xs font-semibold text-right">
-                <input type="number" id="add-bought" required placeholder="إجمالي المشتريات (Total Bought)" class="w-full p-2.5 border rounded-lg text-xs font-semibold text-right">
-                <input type="number" id="add-sold" required placeholder="إجمالي المباع (Total Sold)" class="w-full p-2.5 border rounded-lg text-xs font-semibold text-right">
-                <input type="number" id="add-stock" required placeholder="الرصيد الحالي (Current Balance)" class="w-full p-2.5 border rounded-lg text-xs font-semibold text-right">
-                
-                <button type="submit" id="add-btn" class="w-full bg-brand-teal hover:bg-brand-teal/90 text-white font-bold py-2.5 rounded-lg text-xs transition">
-                    حفظ التحديث للشيت
-                </button>
-            </form>
-        </div>
     </section>
 
-    <!-- Admin Login Modal -->
-    <div id="admin-login-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
-        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full text-right relative">
-            <button onclick="closeAdminModal()" class="absolute left-4 top-4 text-stone-400 hover:text-stone-600 text-xl font-bold">&times;</button>
-            <h3 class="text-lg font-black text-brand-teal mb-1">تسجيل دخول الأدمن</h3>
-            <p class="text-xs text-brand-textMuted mb-4 font-semibold">أدخل كلمة المرور لعرض Inventory Balance</p>
-            <form onsubmit="handleAdminLogin(event)" class="space-y-3">
-                <input type="password" id="admin-pass-input" required placeholder="كلمة المرور" class="w-full p-2.5 border border-stone-200 rounded-xl text-xs font-bold text-right focus:outline-none focus:border-brand-teal">
-                <button type="submit" id="admin-login-btn" class="w-full bg-brand-teal text-white py-2.5 rounded-xl text-xs font-bold hover:bg-brand-tealHover transition">دخول</button>
-            </form>
-        </div>
-    </div>
-
     <!-- Footer -->
-    <footer id="footer-section" class="bg-brand-bg border-t border-stone-200/80 pt-16 pb-8 mt-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12 text-right">
-                <div>
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="relative">
-                            <div class="w-9 h-9 bg-brand-orange rounded-lg absolute top-0.5 right-0.5"></div>
-                            <div class="w-9 h-9 bg-brand-teal text-white font-black text-base rounded-lg flex items-center justify-center relative z-10">CX</div>
-                        </div>
-                        <div class="flex flex-col text-right">
-                            <span class="text-lg font-extrabold text-brand-teal leading-none">CureX</span>
-                            <span class="text-[8px] font-bold text-brand-orange tracking-widest mt-0.5">HEALTHCARE SOLUTIONS</span>
-                        </div>
-                    </div>
-                    <p class="text-xs text-brand-textMuted font-medium leading-relaxed max-w-sm">
-                        نختار مستلزمات الرعاية الصحية بعناية، ونوصلها بوضوح وسرعة إلى من يعتمد عليها كل يوم.
-                    </p>
-                </div>
-
-                <div>
-                    <h4 class="font-extrabold text-brand-teal text-sm mb-4">نحن هنا للمساعدة</h4>
-                    <ul class="space-y-3 text-xs text-brand-textMuted font-semibold">
-                        <li class="flex items-center gap-2.5">
-                            <i class="fa-solid fa-phone text-brand-orange text-sm w-4 text-center"></i>
-                            <span dir="ltr">01068260189</span>
-                        </li>
-                        <li class="flex items-center gap-2.5">
-                            <i class="fa-solid fa-location-dot text-brand-orange text-sm w-4 text-center"></i>
-                            <span>جمهورية مصر العربية</span>
-                        </li>
-                        <li class="flex items-center gap-2.5">
-                            <i class="fa-solid fa-envelope text-brand-orange text-sm w-4 text-center"></i>
-                            <span>abdelramanrashad572@gmail.com</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="font-extrabold text-brand-teal text-sm mb-4">التزامنا</h4>
-                    <ul class="space-y-3 text-xs text-brand-textMuted font-semibold">
-                        <li class="flex items-center gap-2.5">
-                            <i class="fa-solid fa-shield-halved text-brand-orange text-sm w-4 text-center"></i>
-                            <span>منتجات موثوقة</span>
-                        </li>
-                        <li class="flex items-center gap-2.5">
-                            <i class="fa-solid fa-truck-fast text-brand-orange text-sm w-4 text-center"></i>
-                            <span>توصيل منظم</span>
-                        </li>
-                        <li class="flex items-center gap-2.5">
-                            <i class="fa-regular fa-heart text-brand-orange text-sm w-4 text-center"></i>
-                            <span>عناية مستمرة</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="border-t border-stone-200/60 pt-6 text-center text-xs text-brand-textMuted font-medium">
-                © 2026 CureX Healthcare Solutions. جميع الحقوق محفوظة.
-            </div>
+    <footer class="bg-brand-bg border-t border-stone-200/80 pt-10 pb-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-brand-textMuted font-medium">
+            © 2026 CureX Healthcare Solutions. جميع الحقوق محفوظة.
         </div>
     </footer>
 
-    <!-- JavaScript Engine -->
+    <!-- JavaScript Execution Engine -->
     <script>
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzNBwciTPQTh4tlya6_9eTl_UL6jD-PUgTSNTBi3uvVdVXy30H-TuvS9h_rbZW3Zo-K/exec";
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx7tIUW0qmgJi3VFTdXnUeBKT5a4NwCKy9-COtYla-YnYeSDHbfMfgMbUGMqMKXJaou/exec";
 
         let allProducts = [];
-        let savedAdminPassword = "";
         let salesChartInstance = null;
 
         async function fetchProducts() {
@@ -320,36 +198,23 @@
                 const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getProducts`);
                 allProducts = await response.json();
                 renderProducts(allProducts);
+                renderDashboard(allProducts);
             } catch (error) {
-                console.error("خطأ في جلب المنتجات:", error);
+                console.error("خطأ في جلب البيانات:", error);
             } finally {
                 document.getElementById('loading').classList.add('hidden');
                 document.getElementById('products-grid').classList.remove('hidden');
             }
         }
 
-        // دالة مرنة للحصول على قيمة الخاصية بغض النظر عن الاسم القادم من Google Apps Script
-        function getPropValue(item, propKeys, fallback = '') {
-            if (!item || typeof item !== 'object') return fallback;
-            
-            // 1. تجربة مفاتيح الكائنات الصريحة
-            for (let key of propKeys) {
-                if (item[key] !== undefined && item[key] !== null && String(item[key]).trim() !== '') {
-                    return item[key];
+        // قراءة قيمة الحقل بدقة بحسب مسميات الشيت المحددة
+        function getItemVal(item, keys, fallback = '') {
+            if (!item) return fallback;
+            for (let k of keys) {
+                if (item[k] !== undefined && item[k] !== null && String(item[k]).trim() !== '') {
+                    return item[k];
                 }
             }
-            
-            // 2. الدعم بالاعتماد على الترتيب من المصفوفة الخامية (إن كانت قادمة كمصفوفة أسطر)
-            if (Array.isArray(item)) {
-                if (propKeys.includes('Item Code') && item[0] !== undefined) return item[0];
-                if (propKeys.includes('Item Name') && item[1] !== undefined) return item[1];
-                if (propKeys.includes('Unit') && item[2] !== undefined) return item[2];
-                if (propKeys.includes('Total Bought') && item[3] !== undefined) return item[3];
-                if (propKeys.includes('Total Sold') && item[4] !== undefined) return item[4];
-                if (propKeys.includes('Current Balance') && item[5] !== undefined) return item[5];
-                if (propKeys.includes('Reorder Point') && item[6] !== undefined) return item[6];
-            }
-
             return fallback;
         }
 
@@ -357,31 +222,28 @@
             const grid = document.getElementById('products-grid');
             
             if (!products || products.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-8 font-bold text-stone-500">لا توجد منتجات لعرضها حالياً.</div>`;
+                grid.innerHTML = `<div class="col-span-full text-center py-8 font-bold text-stone-500">لا توجد بيانات متاحة.</div>`;
                 return;
             }
 
             grid.innerHTML = products.map(product => {
-                const name = getPropValue(product, ['Item Name', 'item_name', 'Name', 'name', 'اسم المنتج'], 'منتج بدون اسم');
-                const code = getPropValue(product, ['Item Code', 'item_code', 'Code', 'code', 'كود المنتج'], '');
-                const rawPrice = getPropValue(product, ['Selling Price', 'selling_price', 'Price', 'price', 'سعر البيع'], 0);
-                const priceVal = parseFloat(String(rawPrice).replace(/[^\d.]/g, '')) || 0;
-                
+                const code = getItemVal(product, ['Item Code', 'code'], '');
+                const name = getItemVal(product, ['Item Name', 'name'], 'منتج بدون اسم');
+                const unit = getItemVal(product, ['Unit', 'unit'], 'قطعة');
+                const stock = getItemVal(product, ['Current Balance', 'currentBalance'], 0);
+
                 return `
                 <div class="bg-brand-cardBg rounded-2xl p-4 border border-stone-200/80 shadow-sm flex flex-col justify-between text-right hover:shadow-md transition">
                     <div>
-                        <div class="bg-brand-cardImageBg rounded-xl h-40 flex items-center justify-center mb-3">
+                        <div class="bg-brand-cardImageBg rounded-xl h-36 flex items-center justify-center mb-3">
                             <i class="fa-solid fa-box text-3xl text-brand-teal/60"></i>
                         </div>
-                        ${code ? `<span class="text-[10px] font-bold text-stone-400 block mb-1">${code}</span>` : ''}
-                        <h3 class="font-extrabold text-base text-brand-teal mb-3 leading-snug">${name}</h3>
+                        <span class="text-[10px] font-bold text-stone-400 block mb-1">${code}</span>
+                        <h3 class="font-extrabold text-base text-brand-teal mb-2 leading-snug">${name}</h3>
                     </div>
                     <div class="pt-3 border-t border-stone-100 flex items-center justify-between mt-2">
-                        <div class="flex flex-col">
-                            <span class="text-[10px] font-bold text-stone-400">السعر</span>
-                            <span class="text-sm font-black text-brand-teal">${priceVal > 0 ? priceVal.toFixed(2) + ' ج.م' : 'غير محدد'}</span>
-                        </div>
-                        <button class="bg-brand-teal hover:bg-brand-tealHover text-white text-xs px-3 py-1.5 rounded-lg font-bold transition">أضف للسلة</button>
+                        <span class="text-xs font-bold text-stone-600">الرصيد: ${stock} ${unit}</span>
+                        <button class="bg-brand-teal hover:bg-brand-tealHover text-white text-xs px-3 py-1.5 rounded-lg font-bold transition">طلب المنتج</button>
                     </div>
                 </div>
             `}).join('');
@@ -390,42 +252,16 @@
         function filterProducts() {
             const query = document.getElementById('search-input').value.toLowerCase().trim();
             const filtered = allProducts.filter(p => {
-                const name = String(getPropValue(p, ['Item Name', 'item_name', 'Name', 'name'], '')).toLowerCase();
-                const code = String(getPropValue(p, ['Item Code', 'item_code', 'Code', 'code'], '')).toLowerCase();
+                const name = String(getItemVal(p, ['Item Name'], '')).toLowerCase();
+                const code = String(getItemVal(p, ['Item Code'], '')).toLowerCase();
                 return name.includes(query) || code.includes(query);
             });
             renderProducts(filtered);
         }
 
-        function openAdminModal() { document.getElementById('admin-login-modal').classList.remove('hidden'); }
-        function closeAdminModal() { document.getElementById('admin-login-modal').classList.add('hidden'); }
-
-        async function handleAdminLogin(e) {
-            e.preventDefault();
-            const pass = document.getElementById('admin-pass-input').value;
-            const btn = document.getElementById('admin-login-btn');
-            btn.disabled = true;
-            btn.innerText = "جاري التحميل...";
-
-            try {
-                const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getDashboardData&sheet=InventoryBalance&password=${encodeURIComponent(pass)}`);
-                const data = await res.json();
-
-                if (data.error) {
-                    alert(data.error);
-                } else {
-                    savedAdminPassword = pass;
-                    closeAdminModal();
-                    document.getElementById('store-view').classList.add('hidden');
-                    document.getElementById('admin-view').classList.remove('hidden');
-                    renderDashboard(data);
-                }
-            } catch (err) {
-                alert("حدث خطأ في الاتصال باللوحة!");
-            } finally {
-                btn.disabled = false;
-                btn.innerText = "دخول";
-            }
+        function showAdminView() {
+            document.getElementById('store-view').classList.add('hidden');
+            document.getElementById('admin-view').classList.remove('hidden');
         }
 
         function closeAdminView() {
@@ -433,89 +269,76 @@
             document.getElementById('store-view').classList.remove('hidden');
         }
 
-        function renderDashboard(data) {
-            const inventoryList = data.inventory || [];
-            
-            // 1. حساب Total Sold الكلي من العمود E الخاص بالشيت مباشرة
+        function renderDashboard(inventoryList) {
+            // 1. حساب إجمالي المباع الإجمالي
             let grandTotalSold = 0;
             inventoryList.forEach(item => {
-                const soldVal = Number(getPropValue(item, ['Total Sold', 'totalSold', 'TotalSold', 'إجمالي المباع'], 0));
-                grandTotalSold += isNaN(soldVal) ? 0 : soldVal;
+                const sold = Number(getItemVal(item, ['Total Sold'], 0));
+                grandTotalSold += isNaN(sold) ? 0 : sold;
             });
-            document.getElementById('stat-total-sold').innerText = grandTotalSold;
+            document.getElementById('stat-total-sold').innerText = grandTotalSold.toLocaleString('ar-EG');
 
-            renderSalesChart(inventoryList);
-
-            // 2. تصفية عناصر التنبيه بحسب عمود Reorder Point (G) أو الرصيد الصفري
+            // 2. فلترة المنتجات التي تحتاج إعادة طلب (Reorder Point)
             const reorderAlerts = inventoryList.filter(item => {
-                const reorderStatus = String(getPropValue(item, ['Reorder Point', 'reorderPoint', 'ReorderPoint'], '')).toLowerCase();
-                const currentBalance = Number(getPropValue(item, ['Current Balance', 'currentBalance', 'CurrentBalance'], 0));
-                return reorderStatus.includes('reorder') || currentBalance === 0;
+                const status = String(getItemVal(item, ['Reorder Point'], '')).toLowerCase();
+                const balance = Number(getItemVal(item, ['Current Balance'], 0));
+                return status.includes('reorder') || balance === 0;
             });
-
             document.getElementById('stat-reorder-count').innerText = reorderAlerts.length;
 
             // 3. عرض جدول التنبيهات
             const reorderBody = document.getElementById('reorder-table-body');
             if (reorderAlerts.length === 0) {
-                reorderBody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-emerald-600 font-bold">جميع المنتجات آمنة (Safe ✅)</td></tr>`;
+                reorderBody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-emerald-600 font-bold">جميع المنتجات في حالة آمنة (Safe ✅)</td></tr>`;
             } else {
-                reorderBody.innerHTML = reorderAlerts.map(item => {
-                    const code = getPropValue(item, ['Item Code', 'code', 'ItemCode'], '-');
-                    const name = getPropValue(item, ['Item Name', 'name', 'ItemName'], '-');
-                    const curr = getPropValue(item, ['Current Balance', 'currentBalance', 'CurrentBalance'], 0);
-                    const rp = getPropValue(item, ['Reorder Point', 'reorderPoint', 'ReorderPoint'], 'Reorder 🚨');
-
-                    return `
+                reorderBody.innerHTML = reorderAlerts.map(item => `
                     <tr class="font-bold text-red-700 border-b border-red-100 hover:bg-red-100/50 transition-colors">
-                        <td class="py-3 px-3 text-right">${code}</td>
-                        <td class="py-3 px-3 text-right">${name}</td>
-                        <td class="py-3 px-3 text-right font-black">${curr}</td>
-                        <td class="py-3 px-3 text-right text-red-600 font-black">${rp}</td>
+                        <td class="py-3 px-3 text-right">${getItemVal(item, ['Item Code'], '-')}</td>
+                        <td class="py-3 px-3 text-right">${getItemVal(item, ['Item Name'], '-')}</td>
+                        <td class="py-3 px-3 text-right font-black">${getItemVal(item, ['Current Balance'], 0)}</td>
+                        <td class="py-3 px-3 text-right text-red-600 font-black">Reorder 🚨</td>
                     </tr>
-                    `;
-                }).join('');
+                `).join('');
             }
 
-            // 4. عرض التقرير الشامل بقيم مطابقة 100% لأعمدة الشيت
+            // 4. بناء الجدول الكامل للمخزن
             const invBody = document.getElementById('inventory-table-body');
             invBody.innerHTML = inventoryList.map(item => {
-                const code = getPropValue(item, ['Item Code', 'code', 'ItemCode', 'Code'], '-');
-                const name = getPropValue(item, ['Item Name', 'name', 'ItemName', 'Name'], '-');
-                const unit = getPropValue(item, ['Unit', 'unit'], 'قطع');
-                const bought = getPropValue(item, ['Total Bought', 'totalBought', 'TotalBought'], 0);
-                const sold = getPropValue(item, ['Total Sold', 'totalSold', 'TotalSold'], 0);
-                const current = getPropValue(item, ['Current Balance', 'currentBalance', 'CurrentBalance'], 0);
-                const reorderStr = String(getPropValue(item, ['Reorder Point', 'reorderPoint', 'ReorderPoint'], 'Safe ✅'));
+                const code = getItemVal(item, ['Item Code'], '-');
+                const name = getItemVal(item, ['Item Name'], '-');
+                const unit = getItemVal(item, ['Unit'], 'قطعة');
+                const bought = getItemVal(item, ['Total Bought'], 0);
+                const sold = getItemVal(item, ['Total Sold'], 0);
+                const current = getItemVal(item, ['Current Balance'], 0);
+                const reorderStr = String(getItemVal(item, ['Reorder Point'], 'Safe ✅'));
                 
                 const isReorder = reorderStr.toLowerCase().includes('reorder') || Number(current) === 0;
                 
-                const statusBadge = isReorder 
-                    ? `<span class="bg-red-100 text-red-700 font-bold px-3 py-1 rounded-full text-xs inline-flex items-center gap-1 shadow-sm"><i class="fa-solid fa-triangle-exclamation"></i> Reorder 🚨</span>` 
-                    : `<span class="bg-emerald-100 text-emerald-700 font-bold px-3 py-1 rounded-full text-xs inline-flex items-center gap-1 shadow-sm"><i class="fa-solid fa-check-circle"></i> Safe ✅</span>`;
+                const badge = isReorder 
+                    ? `<span class="bg-red-100 text-red-700 font-bold px-3 py-1 rounded-full text-xs inline-flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation"></i> Reorder 🚨</span>` 
+                    : `<span class="bg-emerald-100 text-emerald-700 font-bold px-3 py-1 rounded-full text-xs inline-flex items-center gap-1"><i class="fa-solid fa-check-circle"></i> Safe ✅</span>`;
 
                 return `
-                <tr class="hover:bg-stone-50 font-semibold border-b border-stone-100 transition-colors">
-                    <td class="py-3.5 px-3 text-stone-500 text-right">${code}</td>
-                    <td class="py-3.5 px-3 font-bold text-brand-teal text-right">${name}</td>
+                <tr class="hover:bg-stone-50 border-b border-stone-100 transition-colors">
+                    <td class="py-3.5 px-3 text-stone-500 font-bold text-right">${code}</td>
+                    <td class="py-3.5 px-3 font-extrabold text-brand-teal text-right">${name}</td>
                     <td class="py-3.5 px-3 text-stone-600 text-right">${unit}</td>
-                    <td class="py-3.5 px-3 text-blue-700 font-extrabold text-right">${bought}</td>
-                    <td class="py-3.5 px-3 text-brand-orange font-extrabold text-right">${sold}</td>
-                    <td class="py-3.5 px-3 font-bold text-right ${isReorder ? 'text-red-600 font-black' : 'text-stone-800'}">${current}</td>
-                    <td class="py-3.5 px-3 text-right">${statusBadge}</td>
+                    <td class="py-3.5 px-3 text-blue-700 font-black text-right">${bought}</td>
+                    <td class="py-3.5 px-3 text-brand-orange font-black text-right">${sold}</td>
+                    <td class="py-3.5 px-3 font-extrabold text-right ${isReorder ? 'text-red-600 font-black' : 'text-stone-800'}">${current}</td>
+                    <td class="py-3.5 px-3 text-right">${badge}</td>
                 </tr>
             `}).join('');
+
+            renderSalesChart(inventoryList);
         }
 
         function renderSalesChart(inventory) {
             const ctx = document.getElementById('salesChart').getContext('2d');
-            
-            const labels = inventory.map(item => getPropValue(item, ['Item Name', 'name', 'ItemName'], '-'));
-            const salesData = inventory.map(item => Number(getPropValue(item, ['Total Sold', 'totalSold', 'TotalSold'], 0)));
+            const labels = inventory.map(item => getItemVal(item, ['Item Name'], '-'));
+            const salesData = inventory.map(item => Number(getItemVal(item, ['Total Sold'], 0)));
 
-            if (salesChartInstance) {
-                salesChartInstance.destroy();
-            }
+            if (salesChartInstance) salesChartInstance.destroy();
 
             salesChartInstance = new Chart(ctx, {
                 type: 'bar',
@@ -525,63 +348,23 @@
                         label: 'إجمالي المبيعات (Total Sold)',
                         data: salesData,
                         backgroundColor: '#E67E51',
-                        borderRadius: 8
+                        borderRadius: 6
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            labels: { font: { family: 'Cairo', weight: 'bold' } }
-                        }
+                        legend: { labels: { font: { family: 'Cairo', weight: 'bold' } } }
                     },
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { precision: 0 }
-                        }
+                        y: { beginAtZero: true, ticks: { precision: 0 } }
                     }
                 }
             });
         }
 
-        async function handleStockUpdate(e) {
-            e.preventDefault();
-            const btn = document.getElementById('add-btn');
-            btn.disabled = true;
-
-            const payload = {
-                action: "updateInventory",
-                sheetTarget: "InventoryBalance",
-                password: savedAdminPassword,
-                item: {
-                    code: document.getElementById('add-code').value,
-                    name: document.getElementById('add-name').value,
-                    unit: document.getElementById('add-unit').value,
-                    totalBought: Number(document.getElementById('add-bought').value),
-                    totalSold: Number(document.getElementById('add-sold').value),
-                    currentBalance: Number(document.getElementById('add-stock').value)
-                }
-            };
-
-            try {
-                await fetch(GOOGLE_SCRIPT_URL, {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(payload)
-                });
-
-                alert("تم التحديث بنجاح في الشيت!");
-                closeAdminView();
-            } catch (err) {
-                alert("حدث خطأ أثناء التحديث!");
-            } finally {
-                btn.disabled = false;
-            }
-        }
-
+        // تشغيل الجلب فور فتح الصفحة
         fetchProducts();
     </script>
 </body>
