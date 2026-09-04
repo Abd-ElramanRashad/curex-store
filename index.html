@@ -48,7 +48,7 @@
 
     <!-- Top Announcement Bar -->
     <div class="bg-brand-teal text-white text-xs md:text-sm font-semibold py-2 px-4 text-center">
-        توريد موثوق للمستشفيات والعيادات والصيدليات – نصل إليك في الوقت المناسب
+        توريد موثوق للعيادات والصيدليات – نصل إليك في الوقت المناسب
     </div>
 
     <!-- Main Navigation Header -->
@@ -88,7 +88,7 @@
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 w-full">
         <div class="flex flex-col items-start max-w-3xl text-right leading-relaxed">
             
-            <!-- Badge (Icon updated to FontAwesome icon) -->
+            <!-- Badge -->
             <div class="inline-flex items-center gap-2 bg-brand-orangeLight border border-brand-orange/20 text-brand-orange font-bold text-xs px-3.5 py-1.5 rounded-full mb-6 select-none">
                 <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
                 <span>رعاية تبدأ من الاختيار الصحيح</span>
@@ -225,8 +225,10 @@
                 <button onclick="toggleCart()" class="text-white hover:text-stone-200 text-2xl font-bold">&times;</button>
             </div>
             
+            <!-- Items Container -->
             <div id="cart-items" class="flex-1 overflow-y-auto p-5 space-y-4"></div>
 
+            <!-- Total and Checkout Form -->
             <div class="p-5 border-t bg-stone-50 space-y-4">
                 <div class="flex justify-between items-center font-bold text-base text-brand-textDark">
                     <span>الإجمالي:</span>
@@ -234,11 +236,24 @@
                 </div>
 
                 <form id="checkout-form" onsubmit="handleCheckout(event)" class="space-y-3">
-                    <input type="text" id="client-name" required placeholder="الاسم بالكامل" class="w-full px-3.5 py-2.5 border border-stone-200 rounded-lg text-xs font-semibold focus:outline-none focus:border-brand-teal text-right">
-                    <input type="tel" id="client-phone" required placeholder="رقم الهاتف" class="w-full px-3.5 py-2.5 border border-stone-200 rounded-lg text-xs font-semibold focus:outline-none focus:border-brand-teal text-right">
-                    <textarea id="client-address" required placeholder="العنوان بالتفصيل" rows="2" class="w-full px-3.5 py-2.5 border border-stone-200 rounded-lg text-xs font-semibold focus:outline-none focus:border-brand-teal text-right"></textarea>
+                    <fieldset id="form-fieldset" class="space-y-3" disabled>
+                        <input type="text" id="client-name" required placeholder="الاسم بالكامل" class="w-full px-3.5 py-2.5 border border-stone-200 rounded-lg text-xs font-semibold focus:outline-none focus:border-brand-teal text-right disabled:bg-stone-100 disabled:cursor-not-allowed">
+                        <input type="tel" id="client-phone" required placeholder="رقم الهاتف" class="w-full px-3.5 py-2.5 border border-stone-200 rounded-lg text-xs font-semibold focus:outline-none focus:border-brand-teal text-right disabled:bg-stone-100 disabled:cursor-not-allowed">
+                        <textarea id="client-address" required placeholder="العنوان بالتفصيل" rows="2" class="w-full px-3.5 py-2.5 border border-stone-200 rounded-lg text-xs font-semibold focus:outline-none focus:border-brand-teal text-right disabled:bg-stone-100 disabled:cursor-not-allowed"></textarea>
+                        
+                        <!-- Payment Method Selection -->
+                        <div class="text-right">
+                            <label class="block text-xs font-bold text-brand-textDark mb-1.5">اختر طريقة الدفع:</label>
+                            <select id="payment-method" required class="w-full px-3.5 py-2.5 border border-stone-200 rounded-lg text-xs font-semibold focus:outline-none focus:border-brand-teal text-right bg-white disabled:bg-stone-100 disabled:cursor-not-allowed">
+                                <option value="" disabled selected>-- اختر طريقة الدفع --</option>
+                                <option value="فودافون كاش">فودافون كاش (Vodafone Cash)</option>
+                                <option value="اتصالات كاش">اتصالات كاش (Etisalat Cash)</option>
+                                <option value="أورنج كاش">أورنج كاش (Orange Cash)</option>
+                            </select>
+                        </div>
+                    </fieldset>
                     
-                    <button type="submit" id="submit-btn" class="w-full bg-brand-teal hover:bg-brand-tealHover text-white py-3 rounded-xl font-bold transition text-xs flex justify-center items-center gap-2">
+                    <button type="submit" id="submit-btn" disabled class="w-full bg-brand-teal hover:bg-brand-tealHover disabled:bg-stone-300 disabled:cursor-not-allowed text-white py-3 rounded-xl font-bold transition text-xs flex justify-center items-center gap-2">
                         <span>تأكيد الطلب</span>
                     </button>
                 </form>
@@ -356,7 +371,7 @@
                     </div>
 
                     <!-- Price & Action -->
-                    <div class="pt-2 border-t border-stone-100 flex items-end justify-between">
+                    <div class="pt-3 border-t border-stone-100 flex items-center justify-between gap-2">
                         <div class="text-right">
                             <div class="text-base font-black text-brand-teal">
                                 ${Number(product.selling_price).toFixed(2)} <span class="text-xs font-bold text-stone-500">ج.م</span>
@@ -364,10 +379,12 @@
                             <span class="text-[10px] font-bold text-stone-400">لكل قطعة</span>
                         </div>
 
+                        <!-- Add to Cart Button -->
                         <button onclick="addToCart('${product.item_code}')" 
                                 ${product.current_stock <= 0 ? 'disabled' : ''} 
-                                class="w-10 h-10 rounded-full bg-brand-teal hover:bg-brand-tealHover disabled:bg-stone-300 text-white flex items-center justify-center transition shadow-sm">
-                            <i class="fa-solid fa-plus"></i>
+                                class="bg-brand-teal hover:bg-brand-tealHover disabled:bg-stone-300 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition shadow-sm flex items-center gap-1.5 shrink-0">
+                            <i class="fa-solid fa-cart-plus"></i>
+                            <span>${product.current_stock <= 0 ? 'نفذت الكمية' : 'أضف للسلة'}</span>
                         </button>
                     </div>
                 </div>
@@ -392,11 +409,24 @@
         }
 
         function updateCartUI() {
-            document.getElementById('cart-count').innerText = cart.reduce((sum, item) => sum + item.qty, 0);
+            const cartCountElement = document.getElementById('cart-count');
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            cartCountElement.innerText = totalItems;
             
             const cartItemsContainer = document.getElementById('cart-items');
-            if(cart.length === 0) {
-                cartItemsContainer.innerHTML = `<p class="text-center text-xs text-stone-400 py-10 font-bold">السلة فارغة حالياً</p>`;
+            const fieldset = document.getElementById('form-fieldset');
+            const submitBtn = document.getElementById('submit-btn');
+
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div class="text-center py-12 px-4 border-2 border-dashed border-stone-200 rounded-2xl bg-stone-50/50">
+                        <i class="fa-solid fa-cart-flatbed text-3xl text-stone-300 mb-3"></i>
+                        <p class="text-xs text-brand-textMuted font-bold mb-1">السلة فارغة حالياً</p>
+                        <p class="text-[11px] text-stone-400">الرجاء إضافة منتجات أولاً لتتمكن من إتمام الطلب.</p>
+                    </div>
+                `;
+                fieldset.disabled = true;
+                submitBtn.disabled = true;
             } else {
                 cartItemsContainer.innerHTML = cart.map(item => `
                     <div class="flex justify-between items-center border-b border-stone-100 pb-3 text-right">
@@ -405,12 +435,14 @@
                             <p class="text-[10px] font-bold text-brand-teal">${item.selling_price} ج.م</p>
                         </div>
                         <div class="flex items-center gap-2">
-                            <button onclick="changeQty('${item.item_code}', -1)" class="w-6 h-6 bg-stone-100 rounded text-xs font-bold">-</button>
+                            <button onclick="changeQty('${item.item_code}', -1)" class="w-6 h-6 bg-stone-100 hover:bg-stone-200 rounded text-xs font-bold transition">-</button>
                             <span class="text-xs font-bold">${item.qty}</span>
-                            <button onclick="changeQty('${item.item_code}', 1)" class="w-6 h-6 bg-stone-100 rounded text-xs font-bold">+</button>
+                            <button onclick="changeQty('${item.item_code}', 1)" class="w-6 h-6 bg-stone-100 hover:bg-stone-200 rounded text-xs font-bold transition">+</button>
                         </div>
                     </div>
                 `).join('');
+                fieldset.disabled = false;
+                submitBtn.disabled = false;
             }
 
             const total = cart.reduce((sum, item) => sum + (item.selling_price * item.qty), 0);
@@ -442,7 +474,7 @@
         async function handleCheckout(e) {
             e.preventDefault();
             if (cart.length === 0) {
-                alert('السلة فارغة!');
+                alert('السلة فارغة! يرجى اختيار منتجات أولاً.');
                 return;
             }
 
@@ -451,6 +483,8 @@
             submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري الإرسال...`;
 
             try {
+                const paymentMethod = document.getElementById('payment-method').value;
+
                 for (const item of cart) {
                     const orderPayload = {
                         action: "createOrder",
@@ -458,6 +492,7 @@
                             client_name: document.getElementById('client-name').value,
                             client_phone: document.getElementById('client-phone').value,
                             client_address: document.getElementById('client-address').value,
+                            payment_method: paymentMethod,
                             item_code: item.item_code,
                             item_name: item.item_name,
                             qty: item.qty,
