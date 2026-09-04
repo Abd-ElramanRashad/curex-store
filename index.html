@@ -131,7 +131,7 @@
     <!-- Admin Dashboard View -->
     <section id="admin-view" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
         <div class="flex justify-between items-center mb-8 border-b pb-4">
-            <div>
+            <div class="text-right">
                 <h1 class="text-2xl font-black text-brand-teal">لوحة تحكم Inventory Balance</h1>
                 <p class="text-xs text-brand-textMuted font-bold">متابعة النواقص، الرصيد الحالي، وإحصائيات المبيعات</p>
             </div>
@@ -172,10 +172,10 @@
                 <table class="w-full text-xs text-right border-collapse">
                     <thead>
                         <tr class="border-b border-red-200 text-red-800 font-bold">
-                            <th class="py-2 px-2">كود المنتج</th>
-                            <th class="py-2 px-2">اسم المنتج</th>
-                            <th class="py-2 px-2">الرصيد الحالي (Current Balance)</th>
-                            <th class="py-2 px-2">حد الطلب (Reorder Point)</th>
+                            <th class="py-3 px-3 text-right">كود المنتج</th>
+                            <th class="py-3 px-3 text-right">اسم المنتج</th>
+                            <th class="py-3 px-3 text-right">الرصيد الحالي (Current Balance)</th>
+                            <th class="py-3 px-3 text-right">حد الطلب (Reorder Point)</th>
                         </tr>
                     </thead>
                     <tbody id="reorder-table-body">
@@ -192,12 +192,12 @@
                 <table class="w-full text-xs text-right border-collapse">
                     <thead>
                         <tr class="border-b text-stone-500 font-extrabold bg-stone-50">
-                            <th class="py-3 px-2">كود المنتج (Code)</th>
-                            <th class="py-3 px-2">اسم المنتج (Item Name)</th>
-                            <th class="py-3 px-2">الوحدة (Unit)</th>
-                            <th class="py-3 px-2">إجمالي المباع (Total Sold)</th>
-                            <th class="py-3 px-2">الرصيد الحالي (Current Balance)</th>
-                            <th class="py-3 px-2">حالة حد الطلب (Reorder Point)</th>
+                            <th class="py-3 px-3 text-right">كود المنتج (Code)</th>
+                            <th class="py-3 px-3 text-right">اسم المنتج (Item Name)</th>
+                            <th class="py-3 px-3 text-right">الوحدة (Unit)</th>
+                            <th class="py-3 px-3 text-right">إجمالي المباع (Total Sold)</th>
+                            <th class="py-3 px-3 text-right">الرصيد الحالي (Current Balance)</th>
+                            <th class="py-3 px-3 text-right">حالة حد الطلب (Reorder Point)</th>
                         </tr>
                     </thead>
                     <tbody id="inventory-table-body" class="divide-y divide-stone-100 font-semibold">
@@ -316,7 +316,6 @@
             try {
                 const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getProducts`);
                 allProducts = await response.json();
-                console.log("البيانات القادمة من الشيت:", allProducts);
                 renderProducts(allProducts);
             } catch (error) {
                 console.error("خطأ في جلب المنتجات:", error);
@@ -326,7 +325,6 @@
             }
         }
 
-        // 1. دالة استخراج اسم المنتج بمرونة من الشيت
         function getNameVal(product) {
             if (!product || typeof product !== 'object') return 'منتج بدون اسم';
             const targetKeys = ['Item Name', 'item_name', 'Name', 'name', 'اسم المنتج', 'اسم_المنتج', 'المنتج', 'Product Name'];
@@ -346,7 +344,6 @@
             return 'منتج بدون اسم';
         }
 
-        // 2. دالة استخراج الكود بمرونة من الشيت
         function getCodeVal(product) {
             if (!product || typeof product !== 'object') return '';
             const targetKeys = ['Code', 'code', 'item_code', 'Item Code', 'كود المنتج', 'الكود', 'كود'];
@@ -358,7 +355,6 @@
             return '';
         }
 
-        // 3. دالة استخراج السعر بمرونة من الشيت
         function getPriceVal(product) {
             if (!product || typeof product !== 'object') return 0;
             const targetKeys = ['Selling Price', 'SellingPrice', 'selling_price', 'sellingPrice', 'PRICE', 'Price', 'سعر_البيع', 'سعر البيع', 'السعر'];
@@ -465,52 +461,59 @@
             const inventoryList = data.inventory || [];
             renderSalesChart(inventoryList);
 
+            // تصفية النواقص والمنتجات التي وصلت حد الطلب أو أقل منه
             const reorderAlerts = inventoryList.filter(item => {
                 const curr = Number(item.currentBalance || 0);
-                const reorder = item.reorderPoint !== undefined && item.reorderPoint !== null && item.reorderPoint !== '' ? Number(item.reorderPoint) : 0;
-                return curr <= reorder;
+                const hasReorderPoint = item.reorderPoint !== undefined && item.reorderPoint !== null && item.reorderPoint !== '' && String(item.reorderPoint).toLowerCase() !== 'null';
+                const reorder = hasReorderPoint ? Number(item.reorderPoint) : 0;
+                
+                return curr <= reorder || (!hasReorderPoint && curr <= 2);
             });
 
             document.getElementById('stat-reorder-count').innerText = reorderAlerts.length;
 
+            // 1. جدول تنبيهات حد الطلب
             const reorderBody = document.getElementById('reorder-table-body');
             if (reorderAlerts.length === 0) {
-                reorderBody.innerHTML = `<tr><td colspan="4" class="text-center py-3 text-emerald-600 font-bold">جميع المنتجات فوق حد الطلب 👍</td></tr>`;
+                reorderBody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-emerald-600 font-bold">جميع المنتجات فوق حد الطلب 👍</td></tr>`;
             } else {
                 reorderBody.innerHTML = reorderAlerts.map(item => {
                     const rPointDisplay = (item.reorderPoint !== null && item.reorderPoint !== undefined && item.reorderPoint !== '' && String(item.reorderPoint).toLowerCase() !== 'null') 
                         ? `${item.reorderPoint} ${item.unit || ''}` 
-                        : 'Reorder';
+                        : 'غير محدد';
 
                     return `
-                    <tr class="font-bold text-red-700 border-b border-red-100">
-                        <td class="py-2 px-2">${item.code}</td>
-                        <td class="py-2 px-2">${item.name}</td>
-                        <td class="py-2 px-2">${item.currentBalance} ${item.unit || 'قطعة'}</td>
-                        <td class="py-2 px-2 text-red-600 font-black">${rPointDisplay}</td>
+                    <tr class="font-bold text-red-700 border-b border-red-100 hover:bg-red-100/50 transition-colors">
+                        <td class="py-3 px-3 text-right">${item.code}</td>
+                        <td class="py-3 px-3 text-right">${item.name}</td>
+                        <td class="py-3 px-3 text-right font-black">${item.currentBalance} ${item.unit || 'قطعة'}</td>
+                        <td class="py-3 px-3 text-right text-red-600 font-black">${rPointDisplay}</td>
                     </tr>
                     `;
                 }).join('');
             }
 
+            // 2. جدول تقرير Inventory Balance الكامل
             const invBody = document.getElementById('inventory-table-body');
             invBody.innerHTML = inventoryList.map(item => {
                 const current = Number(item.currentBalance || 0);
-                const reorderVal = (item.reorderPoint !== undefined && item.reorderPoint !== null && item.reorderPoint !== '' && String(item.reorderPoint).toLowerCase() !== 'null') ? Number(item.reorderPoint) : 0;
+                const hasReorderPoint = item.reorderPoint !== undefined && item.reorderPoint !== null && item.reorderPoint !== '' && String(item.reorderPoint).toLowerCase() !== 'null';
+                const reorderVal = hasReorderPoint ? Number(item.reorderPoint) : 0;
                 
-                const isNeedsReorder = current <= reorderVal;
+                const isNeedsReorder = current <= reorderVal || (!hasReorderPoint && current <= 2);
+                
                 const statusBadge = isNeedsReorder 
-                    ? `<span class="bg-red-100 text-red-700 font-bold px-2.5 py-1 rounded-full text-[11px] inline-flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation"></i> Reorder (${reorderVal})</span>` 
-                    : `<span class="bg-emerald-100 text-emerald-700 font-bold px-2.5 py-1 rounded-full text-[11px] inline-flex items-center gap-1"><i class="fa-solid fa-check-circle"></i> Safe (${reorderVal})</span>`;
+                    ? `<span class="bg-red-100 text-red-700 font-bold px-3 py-1 rounded-full text-xs inline-flex items-center gap-1 shadow-sm"><i class="fa-solid fa-triangle-exclamation"></i> Reorder (${reorderVal})</span>` 
+                    : `<span class="bg-emerald-100 text-emerald-700 font-bold px-3 py-1 rounded-full text-xs inline-flex items-center gap-1 shadow-sm"><i class="fa-solid fa-check-circle"></i> Safe (${reorderVal})</span>`;
 
                 return `
-                <tr class="hover:bg-stone-50 font-semibold border-b">
-                    <td class="py-3 px-2 text-stone-500">${item.code}</td>
-                    <td class="py-3 px-2 font-bold text-brand-teal">${item.name}</td>
-                    <td class="py-3 px-2 text-stone-600">${item.unit || ''}</td>
-                    <td class="py-3 px-2 text-brand-orange font-extrabold">${item.totalSold || 0}</td>
-                    <td class="py-3 px-2 font-bold ${isNeedsReorder ? 'text-red-600' : 'text-stone-800'}">${current}</td>
-                    <td class="py-3 px-2">${statusBadge}</td>
+                <tr class="hover:bg-stone-50 font-semibold border-b border-stone-100 transition-colors">
+                    <td class="py-3.5 px-3 text-stone-500 text-right">${item.code}</td>
+                    <td class="py-3.5 px-3 font-bold text-brand-teal text-right">${item.name}</td>
+                    <td class="py-3.5 px-3 text-stone-600 text-right">${item.unit || ''}</td>
+                    <td class="py-3.5 px-3 text-brand-orange font-extrabold text-right">${item.totalSold || 0}</td>
+                    <td class="py-3.5 px-3 font-bold text-right ${isNeedsReorder ? 'text-red-600 font-black' : 'text-stone-800'}">${current}</td>
+                    <td class="py-3.5 px-3 text-right">${statusBadge}</td>
                 </tr>
             `}).join('');
         }
