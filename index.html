@@ -39,6 +39,8 @@
             font-family: 'Cairo', sans-serif;
             background-color: #FAF6F0;
             color: #1C2833;
+            direction: rtl;
+            text-align: right;
         }
     </style>
 </head>
@@ -53,28 +55,28 @@
     <header class="bg-brand-bg border-b border-stone-200/60 sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             
-            <!-- Logo Section -->
+            <!-- Logo Section (Right Side in RTL) -->
             <a href="#" class="flex items-center gap-3 group">
                 <div class="relative">
-                    <div class="w-11 h-11 bg-brand-orange rounded-xl absolute top-1 left-1 group-hover:top-0 group-hover:left-0 transition-all"></div>
+                    <div class="w-11 h-11 bg-brand-orange rounded-xl absolute top-1 right-1 group-hover:top-0 group-hover:right-0 transition-all"></div>
                     <div class="w-11 h-11 bg-brand-teal text-white font-black text-lg rounded-xl flex items-center justify-center relative z-10">
                         CX
                     </div>
                 </div>
-                <div class="flex flex-col">
+                <div class="flex flex-col text-right">
                     <span class="text-xl font-extrabold text-brand-teal leading-none tracking-tight">CureX</span>
                     <span class="text-[9px] font-bold text-brand-orange tracking-widest mt-1">HEALTHCARE SOLUTIONS</span>
                 </div>
             </a>
 
-            <!-- Navigation Links -->
+            <!-- Navigation Links (Center) -->
             <nav class="hidden md:flex items-center gap-8 font-bold text-sm text-brand-textDark">
                 <a href="#products-section" class="hover:text-brand-teal transition">المنتجات</a>
                 <a href="#" class="hover:text-brand-teal transition">لماذا CureX؟</a>
                 <a href="#footer-section" class="hover:text-brand-teal transition">تواصل معنا</a>
             </nav>
 
-            <!-- Cart Button -->
+            <!-- Cart Button (Left Side in RTL) -->
             <button onclick="toggleCart()" class="bg-white hover:bg-stone-50 border border-stone-200 shadow-sm px-5 py-2 rounded-full flex items-center gap-3 transition">
                 <span class="font-bold text-brand-teal text-sm">السلة</span>
                 <span id="cart-count" class="bg-brand-orange text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center">0</span>
@@ -83,8 +85,8 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
-        <div class="flex flex-col items-start max-w-3xl mr-auto leading-relaxed">
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 w-full">
+        <div class="flex flex-col items-start max-w-3xl text-right leading-relaxed">
             
             <!-- Badge -->
             <div class="inline-flex items-center gap-2 bg-brand-orangeLight border border-brand-orange/20 text-brand-orange font-bold text-xs px-3.5 py-1.5 rounded-full mb-6">
@@ -115,22 +117,22 @@
         <!-- Section Header -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-6">
             
-            <!-- Search Box -->
-            <div class="w-full md:w-80 relative">
-                <input type="text" id="search-input" oninput="filterProducts()" placeholder="ابحث عن منتج..." class="w-full bg-white border border-stone-200 rounded-xl py-3 px-4 pr-10 text-sm focus:outline-none focus:border-brand-teal text-brand-textDark font-semibold placeholder:text-stone-400">
-                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3.5 text-stone-400 text-sm"></i>
-            </div>
-
-            <!-- Titles -->
+            <!-- Titles (Right) -->
             <div class="text-right">
                 <span class="text-[10px] font-bold text-brand-orange tracking-widest uppercase block mb-1">THE ESSENTIALS, CURATED</span>
                 <h2 class="text-2xl md:text-3xl font-extrabold text-brand-teal">اختياراتنا لك</h2>
                 <p class="text-xs md:text-sm text-brand-textMuted font-medium mt-1">ابحث بالاسم أو الكود، واختر ما يناسب احتياجك.</p>
             </div>
+
+            <!-- Search Box (Left) -->
+            <div class="w-full md:w-80 relative">
+                <input type="text" id="search-input" oninput="filterProducts()" placeholder="ابحث عن منتج..." class="w-full bg-white border border-stone-200 rounded-xl py-3 px-4 pr-10 text-sm focus:outline-none focus:border-brand-teal text-brand-textDark font-semibold placeholder:text-stone-400 text-right">
+                <i class="fa-solid fa-magnifying-glass absolute right-3 top-3.5 text-stone-400 text-sm"></i>
+            </div>
         </div>
 
         <!-- Filter Pills -->
-        <div id="category-filters" class="flex flex-wrap items-center justify-end gap-2.5 mb-10">
+        <div id="category-filters" class="flex flex-wrap items-center justify-start gap-2.5 mb-10">
             <button onclick="filterCategory('all')" class="cat-btn active bg-brand-teal text-white font-bold text-xs px-5 py-2 rounded-full transition">الكل</button>
         </div>
 
@@ -153,12 +155,12 @@
                 <div>
                     <div class="flex items-center gap-3 mb-4">
                         <div class="relative">
-                            <div class="w-9 h-9 bg-brand-orange rounded-lg absolute top-0.5 left-0.5"></div>
+                            <div class="w-9 h-9 bg-brand-orange rounded-lg absolute top-0.5 right-0.5"></div>
                             <div class="w-9 h-9 bg-brand-teal text-white font-black text-base rounded-lg flex items-center justify-center relative z-10">
                                 CX
                             </div>
                         </div>
-                        <div class="flex flex-col">
+                        <div class="flex flex-col text-right">
                             <span class="text-lg font-extrabold text-brand-teal leading-none">CureX</span>
                             <span class="text-[8px] font-bold text-brand-orange tracking-widest mt-0.5">HEALTHCARE SOLUTIONS</span>
                         </div>
@@ -168,17 +170,21 @@
                     </p>
                 </div>
 
-                <!-- Col 2: Help -->
+                <!-- Col 2: Help & Contact -->
                 <div>
                     <h4 class="font-extrabold text-brand-teal text-sm mb-4">نحن هنا للمساعدة</h4>
                     <ul class="space-y-3 text-xs text-brand-textMuted font-semibold">
-                        <li class="flex items-center justify-end gap-2">
-                            <span>9200 184 26</span>
+                        <li class="flex items-center justify-start gap-2">
                             <i class="fa-solid fa-phone text-brand-orange"></i>
+                            <span dir="ltr">01068260189</span>
                         </li>
-                        <li class="flex items-center justify-end gap-2">
-                            <span>الرياض، المملكة العربية السعودية</span>
+                        <li class="flex items-center justify-start gap-2">
+                            <i class="fa-solid fa-envelope text-brand-orange"></i>
+                            <span>abdelramanrashad572@gmail.com</span>
+                        </li>
+                        <li class="flex items-center justify-start gap-2">
                             <i class="fa-solid fa-location-dot text-brand-orange"></i>
+                            <span>جمهورية مصر العربية</span>
                         </li>
                     </ul>
                 </div>
@@ -187,17 +193,17 @@
                 <div>
                     <h4 class="font-extrabold text-brand-teal text-sm mb-4">التزامنا</h4>
                     <ul class="space-y-3 text-xs text-brand-textMuted font-semibold">
-                        <li class="flex items-center justify-end gap-2">
-                            <span>منتجات موثوقة</span>
+                        <li class="flex items-center justify-start gap-2">
                             <i class="fa-solid fa-shield-halved text-brand-orange"></i>
+                            <span>منتجات موثوقة</span>
                         </li>
-                        <li class="flex items-center justify-end gap-2">
-                            <span>توصيل منظم</span>
+                        <li class="flex items-center justify-start gap-2">
                             <i class="fa-solid fa-truck text-brand-orange"></i>
+                            <span>توصيل منظم</span>
                         </li>
-                        <li class="flex items-center justify-end gap-2">
-                            <span>عناية مستمرة</span>
+                        <li class="flex items-center justify-start gap-2">
                             <i class="fa-solid fa-heart text-brand-orange"></i>
+                            <span>عناية مستمرة</span>
                         </li>
                     </ul>
                 </div>
@@ -210,21 +216,21 @@
     </footer>
 
     <!-- Cart Modal Side Sheet -->
-    <div id="cart-modal" class="fixed inset-0 bg-black/40 z-50 flex justify-end hidden backdrop-blur-sm transition-opacity">
+    <div id="cart-modal" class="fixed inset-0 bg-black/40 z-50 flex justify-start hidden backdrop-blur-sm transition-opacity">
         <div class="bg-white w-full max-w-md h-full flex flex-col shadow-2xl">
             <div class="p-5 bg-brand-teal text-white flex justify-between items-center">
-                <button onclick="toggleCart()" class="text-white hover:text-stone-200 text-2xl font-bold">&times;</button>
                 <h3 class="text-base font-bold flex items-center gap-2">
                     <i class="fa-solid fa-bag-shopping"></i> سلة الشراء
                 </h3>
+                <button onclick="toggleCart()" class="text-white hover:text-stone-200 text-2xl font-bold">&times;</button>
             </div>
             
             <div id="cart-items" class="flex-1 overflow-y-auto p-5 space-y-4"></div>
 
             <div class="p-5 border-t bg-stone-50 space-y-4">
                 <div class="flex justify-between items-center font-bold text-base text-brand-textDark">
-                    <span id="cart-total" class="text-brand-teal text-lg">0.00 ر.س</span>
                     <span>الإجمالي:</span>
+                    <span id="cart-total" class="text-brand-teal text-lg">0.00 ج.م</span>
                 </div>
 
                 <form id="checkout-form" onsubmit="handleCheckout(event)" class="space-y-3">
@@ -325,7 +331,7 @@
             }
 
             grid.innerHTML = currentFilteredProducts.map(product => `
-                <div class="bg-brand-cardBg rounded-2xl p-4 border border-stone-200/80 shadow-sm hover:shadow-md transition flex flex-col justify-between relative group">
+                <div class="bg-brand-cardBg rounded-2xl p-4 border border-stone-200/80 shadow-sm hover:shadow-md transition flex flex-col justify-between relative group text-right">
                     <div>
                         <!-- Product Box Placeholder Image -->
                         <div class="bg-brand-cardImageBg rounded-xl h-44 flex items-center justify-center relative mb-4 overflow-hidden">
@@ -334,35 +340,35 @@
                             </span>
                             <div class="w-16 h-16 border-2 border-brand-teal/40 rounded-lg flex items-center justify-center relative">
                                 <i class="fa-solid fa-box text-2xl text-brand-teal/60"></i>
-                                <i class="fa-solid fa-magnifying-glass text-xs text-brand-teal/60 absolute bottom-3 right-3"></i>
+                                <i class="fa-solid fa-magnifying-glass text-xs text-brand-teal/60 absolute bottom-3 left-3"></i>
                             </div>
                         </div>
 
                         <!-- Category -->
-                        <span class="text-[11px] font-bold text-stone-400 block mb-1 text-right">
+                        <span class="text-[11px] font-bold text-stone-400 block mb-1">
                             ${product.category || 'مستلزمات طبية'}
                         </span>
 
                         <!-- Item Name -->
-                        <h3 class="font-extrabold text-base text-brand-teal mb-3 text-right leading-tight">
+                        <h3 class="font-extrabold text-base text-brand-teal mb-3 leading-tight">
                             ${product.item_name}
                         </h3>
                     </div>
 
                     <!-- Price & Action -->
                     <div class="pt-2 border-t border-stone-100 flex items-end justify-between">
+                        <div class="text-right">
+                            <div class="text-base font-black text-brand-teal">
+                                ${Number(product.selling_price).toFixed(2)} <span class="text-xs font-bold text-stone-500">ج.م</span>
+                            </div>
+                            <span class="text-[10px] font-bold text-stone-400">لكل قطعة</span>
+                        </div>
+
                         <button onclick="addToCart('${product.item_code}')" 
                                 ${product.current_stock <= 0 ? 'disabled' : ''} 
                                 class="w-10 h-10 rounded-full bg-brand-teal hover:bg-brand-tealHover disabled:bg-stone-300 text-white flex items-center justify-center transition shadow-sm">
                             <i class="fa-solid fa-plus"></i>
                         </button>
-                        
-                        <div class="text-left">
-                            <div class="text-base font-black text-brand-teal">
-                                ${Number(product.selling_price).toFixed(2)} <span class="text-xs font-bold text-stone-500">ر.س</span>
-                            </div>
-                            <span class="text-[10px] font-bold text-stone-400">لكل قطعة</span>
-                        </div>
                     </div>
                 </div>
             `).join('');
@@ -394,21 +400,21 @@
             } else {
                 cartItemsContainer.innerHTML = cart.map(item => `
                     <div class="flex justify-between items-center border-b border-stone-100 pb-3 text-right">
+                        <div>
+                            <h4 class="font-bold text-xs text-brand-textDark">${item.item_name}</h4>
+                            <p class="text-[10px] font-bold text-brand-teal">${item.selling_price} ج.م</p>
+                        </div>
                         <div class="flex items-center gap-2">
                             <button onclick="changeQty('${item.item_code}', -1)" class="w-6 h-6 bg-stone-100 rounded text-xs font-bold">-</button>
                             <span class="text-xs font-bold">${item.qty}</span>
                             <button onclick="changeQty('${item.item_code}', 1)" class="w-6 h-6 bg-stone-100 rounded text-xs font-bold">+</button>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-xs text-brand-textDark">${item.item_name}</h4>
-                            <p class="text-[10px] font-bold text-brand-teal">${item.selling_price} ر.س</p>
                         </div>
                     </div>
                 `).join('');
             }
 
             const total = cart.reduce((sum, item) => sum + (item.selling_price * item.qty), 0);
-            document.getElementById('cart-total').innerText = `${total.toFixed(2)} ر.س`;
+            document.getElementById('cart-total').innerText = `${total.toFixed(2)} ج.م`;
         }
 
         function changeQty(itemCode, change) {
