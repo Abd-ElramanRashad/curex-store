@@ -3,188 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CureX Admin | لوحة التحليلات والمخزون</title>
+    <title>لوحة التحليلات والإدارة | CureX</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        curex: {
-                            teal: '#0D9488',
-                            darkTeal: '#0F766E',
-                            coral: '#F97316',
-                            bgLight: '#FAF7F2'
-                        }
-                    },
-                    fontFamily: { sans: ['Tajawal', 'sans-serif'] }
-                }
-            }
-        }
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <style> body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; } </style>
 </head>
-<body class="bg-[#FAF7F2] text-slate-800">
-
-    <div class="flex min-h-screen">
-        <!-- القائمة الجانبية -->
-        <aside class="w-64 bg-curex-darkTeal text-white p-6 hidden md:block shadow-lg">
-            <h2 class="text-2xl font-black text-white mb-8">CureX Dashboard</h2>
-            <nav class="space-y-3 font-bold">
-                <a href="index.html" class="block py-3 px-4 rounded-xl bg-white/10 text-white hover:bg-white/20 transition">العودة للمتجر 🛒</a>
-            </nav>
-        </aside>
-
-        <!-- المحتوى -->
-        <main class="flex-1 p-6 md:p-10">
-            <h1 class="text-3xl font-black text-curex-teal mb-8">تحليل المبيعات وإدارة المخزون</h1>
-
-            <!-- تنبيه حرج للواصلين لحد الطلب -->
-            <div id="reorder-alerts-container" class="mb-8 hidden">
-                <div class="bg-orange-50 border-r-4 border-curex-coral p-5 rounded-2xl shadow-sm">
-                    <h3 class="font-extrabold text-curex-coral text-lg flex items-center gap-2">⚠️ تنبيه هام: منتجات وصلت لحد أمان الطلب</h3>
-                    <p class="text-slate-600 text-xs mb-2">المنتجات التالية تحتاج إلى إعادة طلب فورية للتموين:</p>
-                    <ul id="reorder-alerts-list" class="text-sm text-slate-800 list-disc list-inside space-y-1 font-bold"></ul>
-                </div>
+<body class="p-6">
+    <div class="max-w-7xl mx-auto space-y-8">
+        
+        <!-- Header -->
+        <div class="flex justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <div>
+                <h1 class="text-2xl font-black text-slate-800">📊 لوحة تحكم وتحليلات المخزون (الشيت الذكي)</h1>
+                <p class="text-slate-500 text-xs mt-1">تتبع المبيعات، المخزون، والاستيراد فورياً دون الحاجة لملفات خارجية</p>
             </div>
+            <a href="index.html" class="bg-teal-600 hover:bg-teal-700 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition">العودة للمتجر 🏪</a>
+        </div>
 
-            <!-- إحصائيات عامة -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm">
-                    <span class="text-slate-400 text-xs font-bold block">إجمالي أرباح المبيعات</span>
-                    <p id="total-revenue" class="text-3xl font-black text-curex-teal mt-2">0.00 ر.س</p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm">
-                    <span class="text-slate-400 text-xs font-bold block">إجمالي القطع المباعة</span>
-                    <p id="total-qty-sold" class="text-3xl font-black text-curex-coral mt-2">0 قطعة</p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm">
-                    <span class="text-slate-400 text-xs font-bold block">إجمالي عدد المنتجات</span>
-                    <p id="total-products-count" class="text-3xl font-black text-slate-800 mt-2">0</p>
-                </div>
+        <!-- Analytics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <span class="text-slate-400 text-xs font-bold">إجمالي أصناف المنتجات</span>
+                <div id="stat-total-items" class="text-3xl font-black text-teal-700 mt-2">0</div>
             </div>
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <span class="text-slate-400 text-xs font-bold">منتجات تحتاج استيراد (قربت تخلص)</span>
+                <div id="stat-low-stock" class="text-3xl font-black text-red-600 mt-2">0</div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <span class="text-slate-400 text-xs font-bold">إجمالي القطع المبيعة</span>
+                <div id="stat-total-sold" class="text-3xl font-black text-orange-600 mt-2">0</div>
+            </div>
+        </div>
 
-            <!-- تحليل نسب بيع كل منتج -->
-            <div class="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm mb-8">
-                <h2 class="text-xl font-bold text-curex-teal mb-4">📊 تحليل نسب بيع المنتجات (حصة كل منتج)</h2>
-                <div id="sales-analytics-container" class="space-y-4">
-                    <!-- سيتم توليد شريط النسب ديناميكياً -->
-                </div>
-            </div>
+        <!-- Add New Product Form -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <h2 class="text-lg font-bold text-slate-800 mb-4">➕ إضافة منتج جديد للشيت</h2>
+            <form onsubmit="addNewProduct(event)" class="grid grid-cols-1 md:grid-cols-6 gap-4">
+                <input type="text" id="new-name" placeholder="اسم المنتج" required class="border p-2.5 rounded-xl text-sm md:col-span-2">
+                <select id="new-cat" class="border p-2.5 rounded-xl text-sm">
+                    <option value="devices">أجهزة طبية 🩺</option>
+                    <option value="consumables">مستلزمات استهلاكية 📦</option>
+                </select>
+                <input type="number" id="new-price" placeholder="السعر" required class="border p-2.5 rounded-xl text-sm">
+                <input type="number" id="new-stock" placeholder="الكمية المتاحة" required class="border p-2.5 rounded-xl text-sm">
+                <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2.5 px-4 rounded-xl text-sm transition">إضافة الشيت</button>
+            </form>
+        </div>
 
-            <!-- جدول المخزون الحالي -->
-            <div class="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-bold text-curex-teal">حالة المخزون الحالي</h2>
-                    <button onclick="exportToExcel()" class="bg-curex-teal text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow transition">
-                        تحميل ملف Excel المحدث 📥
-                    </button>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-right border-collapse">
-                        <thead>
-                            <tr class="bg-stone-50 text-slate-500 text-xs font-bold border-b">
-                                <th class="p-3">الكود</th>
-                                <th class="p-3">اسم المنتج</th>
-                                <th class="p-3">السعر</th>
-                                <th class="p-3">المخزون المتاحة</th>
-                                <th class="p-3">حد الطلب الأدنى</th>
-                                <th class="p-3">الحالة</th>
-                            </tr>
-                        </thead>
-                        <tbody id="inventory-table-body"></tbody>
-                    </table>
-                </div>
-            </div>
-        </main>
+        <!-- Inventory Table -->
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 overflow-x-auto">
+            <h2 class="text-lg font-bold text-slate-800 mb-4">📋 جدول المخزون الحالي وتحليلات البيع</h2>
+            <table class="w-full text-right text-sm">
+                <thead>
+                    <tr class="border-b text-slate-400 font-bold pb-3">
+                        <th class="pb-3">المنتج</th>
+                        <th class="pb-3">التصنيف</th>
+                        <th class="pb-3">السعر</th>
+                        <th class="pb-3">المخزون الحالي</th>
+                        <th class="pb-3">تم بيع</th>
+                        <th class="pb-3">الحالة / التنبيه</th>
+                        <th class="pb-3">استيراد (تزويد المخزون)</th>
+                    </tr>
+                </thead>
+                <tbody id="inventory-table-body"></tbody>
+            </table>
+        </div>
     </div>
 
     <script>
-        let products = JSON.parse(localStorage.getItem('curex_products') || '[]');
-        let sales = JSON.parse(localStorage.getItem('curex_sales') || '[]');
+        function getProducts() {
+            return JSON.parse(localStorage.getItem('curex_inventory')) || [];
+        }
 
-        window.addEventListener('DOMContentLoaded', renderDashboard);
+        function saveProducts(products) {
+            localStorage.setItem('curex_inventory', JSON.stringify(products));
+            renderDashboard();
+        }
 
         function renderDashboard() {
-            // 1. تنبيهات حَد الطلب
-            const alertItems = products.filter(p => p.Stock <= (p.MinStock || 5));
-            const alertsContainer = document.getElementById('reorder-alerts-container');
-            const alertsList = document.getElementById('reorder-alerts-list');
+            const products = getProducts();
+            
+            // تحديث الإحصائيات
+            document.getElementById('stat-total-items').innerText = products.length;
+            const lowStockCount = products.filter(p => p.stock <= p.minStock).length;
+            document.getElementById('stat-low-stock').innerText = lowStockCount;
+            const totalSold = products.reduce((acc, p) => acc + (p.sold || 0), 0);
+            document.getElementById('stat-total-sold').innerText = totalSold;
 
-            if (alertItems.length > 0) {
-                alertsContainer.classList.remove('hidden');
-                alertsList.innerHTML = alertItems.map(item => `
-                    <li>المنتج <b>[${item.ID}] ${item.Name}</b>: الكمية الحالية (<b>${item.Stock}</b>) وصلت لحد الطلب الأدنى (<b>${item.MinStock || 5}</b>).</li>
-                `).join('');
-            } else {
-                alertsContainer.classList.add('hidden');
-            }
-
-            // 2. حساب المبيعات والعدادات
-            const totalRevenue = sales.reduce((sum, s) => sum + s.total, 0);
-            const totalQtySold = sales.reduce((sum, s) => sum + s.qty, 0);
-
-            document.getElementById('total-revenue').innerText = `${totalRevenue.toFixed(2)} ر.س`;
-            document.getElementById('total-qty-sold').innerText = `${totalQtySold} قطعة`;
-            document.getElementById('total-products-count').innerText = products.length;
-
-            // 3. تحليل نسب بيع كل منتج
-            const analyticsContainer = document.getElementById('sales-analytics-container');
-            if (totalQtySold === 0) {
-                analyticsContainer.innerHTML = `<p class="text-slate-400 text-sm font-bold">لا توجد عمليات بيع مسجلة حتى الآن لتحليل النسب.</p>`;
-            } else {
-                // تجميع الكميات المباعة لكل منتج
-                const productSalesMap = {};
-                sales.forEach(s => {
-                    productSalesMap[s.productName] = (productSalesMap[s.productName] || 0) + s.qty;
-                });
-
-                analyticsContainer.innerHTML = Object.keys(productSalesMap).map(prodName => {
-                    const qty = productSalesMap[prodName];
-                    const percentage = ((qty / totalQtySold) * 100).toFixed(1);
-                    return `
-                        <div>
-                            <div class="flex justify-between text-sm font-bold mb-1">
-                                <span class="text-slate-800">${prodName}</span>
-                                <span class="text-curex-coral">${qty} قطعة (${percentage}%)</span>
-                            </div>
-                            <div class="w-full bg-stone-100 rounded-full h-3">
-                                <div class="bg-curex-teal h-3 rounded-full" style="width: ${percentage}%"></div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            }
-
-            // 4. جدول المخزون
+            // بناء الجدول
             const tbody = document.getElementById('inventory-table-body');
-            tbody.innerHTML = products.map(p => {
-                const isLow = p.Stock <= (p.MinStock || 5);
-                return `
-                    <tr class="border-b hover:bg-stone-50 text-sm">
-                        <td class="p-3 font-bold text-slate-400">${p.ID}</td>
-                        <td class="p-3 font-extrabold text-slate-800">${p.Name}</td>
-                        <td class="p-3 font-bold text-curex-teal">${p.Price.toFixed(2)} ر.س</td>
-                        <td class="p-3 font-bold ${isLow ? 'text-red-600 font-black' : ''}">${p.Stock}</td>
-                        <td class="p-3 text-slate-400 font-bold">${p.MinStock || 5}</td>
-                        <td class="p-3">
-                            <span class="px-3 py-1 rounded-full text-xs font-bold ${isLow ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700'}">
-                                ${isLow ? '⚠️ وصل لحد الطلب' : '✅ متوفر'}
-                            </span>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
+            tbody.innerHTML = products.map(p => `
+                <tr class="border-b font-medium hover:bg-slate-50">
+                    <td class="py-4 font-bold text-slate-800">${p.name}</td>
+                    <td class="py-4">${p.category === 'devices' ? '🩺 أجهزة طبية' : '📦 مستلزم استهلاكي'}</td>
+                    <td class="py-4 font-bold text-teal-700">${p.price} ج.م</td>
+                    <td class="py-4 font-black text-base ${p.stock <= p.minStock ? 'text-red-600' : 'text-slate-800'}">${p.stock}</td>
+                    <td class="py-4 font-bold text-orange-600">${p.sold || 0} قطعة</td>
+                    <td class="py-4">
+                        ${p.stock <= p.minStock 
+                            ? `<span class="bg-red-100 text-red-700 text-xs font-black px-3 py-1 rounded-full">⚠️ يوشك على النفاذ</span>` 
+                            : `<span class="bg-green-100 text-green-700 text-xs font-black px-3 py-1 rounded-full">✓ مستقر</span>`}
+                    </td>
+                    <td class="py-4">
+                        <button onclick="importStock(${p.id})" class="bg-slate-100 hover:bg-teal-50 text-teal-700 font-bold px-3 py-1.5 rounded-lg border border-teal-200 text-xs transition">
+                            + شحنة جديدة (استيراد)
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
         }
 
-        function exportToExcel() {
-            const ws = XLSX.utils.json_to_sheet(products);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Database");
-            XLSX.writeFile(wb, "_CureX_Cloud_Database.xlsx");
+        function importStock(id) {
+            const qty = prompt("أدخل كمية الشحنة الجديدة التي تم استيرادها:");
+            if (qty && !isNaN(qty) && parseInt(qty) > 0) {
+                let products = getProducts();
+                const index = products.findIndex(p => p.id === id);
+                if (index !== -1) {
+                    products[index].stock += parseInt(qty);
+                    saveProducts(products);
+                    alert(`تمت زيادة مخزون ${products[index].name} بـ ${qty} قطعة بنجاح!`);
+                }
+            }
         }
+
+        function addNewProduct(e) {
+            e.preventDefault();
+            let products = getProducts();
+            const newProduct = {
+                id: Date.now(),
+                name: document.getElementById('new-name').value,
+                category: document.getElementById('new-cat').value,
+                price: parseFloat(document.getElementById('new-price').value),
+                stock: parseInt(document.getElementById('new-stock').value),
+                minStock: 5,
+                sold: 0,
+                description: "منتج جديد تم إضافته حديثاً"
+            };
+
+            products.push(newProduct);
+            saveProducts(products);
+            alert("تمت إضافة المنتج الجديد إلى المخزن فوراً!");
+            e.target.reset();
+        }
+
+        window.addEventListener('DOMContentLoaded', renderDashboard);
     </script>
 </body>
 </html>
