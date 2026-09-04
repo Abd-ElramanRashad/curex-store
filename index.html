@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CureX HEALTHCARE SOLUTIONS</title>
-    <!-- Google Fonts: Tajawal / Cairo for modern UI -->
+    <!-- Google Fonts: Tajawal -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <!-- Library to read Excel (.xlsx) directly in JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -83,16 +83,14 @@
         </div>
     </header>
 
-    <!-- 3. Hero Section (Matche's User Image 2) -->
+    <!-- 3. Hero Section -->
     <section class="relative py-16 px-6 max-w-7xl mx-auto w-full overflow-hidden">
         <div class="absolute inset-0 grid-pattern pointer-events-none"></div>
         <div class="relative z-10 max-w-2xl">
-            <!-- Small Pill Badge -->
             <div class="inline-flex items-center gap-2 bg-white/80 backdrop-blur border border-gray-200 px-3 py-1.5 rounded-full text-xs font-bold text-curexTeal mb-6 shadow-sm">
                 <span>✨ رعاية تبدأ من الاختيار الصحيح</span>
             </div>
 
-            <!-- Big Main Headlines -->
             <h1 class="text-5xl md:text-6xl font-black text-curexTeal leading-tight mb-2">
                 كل ما تحتاجه
             </h1>
@@ -111,7 +109,7 @@
         </div>
     </section>
 
-    <!-- 4. Filter & Products Section (Matche's User Image 3) -->
+    <!-- 4. Filter & Products Section -->
     <main id="products-section" class="max-w-7xl mx-auto px-6 py-10 w-full flex-grow">
         <div class="text-right mb-8">
             <span class="text-xs font-bold text-curexCoral tracking-widest uppercase">THE ESSENTIALS, CURATED</span>
@@ -129,7 +127,7 @@
 
             <!-- Filter Pills -->
             <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
-                <button onclick="setCategory('ALL')" class="cat-btn active-cat bg-curexTeal text-white font-bold text-xs px-5 py-2.5 rounded-full transition shadow-sm">الكل</button>
+                <button onclick="setCategory('ALL')" class="cat-btn bg-curexTeal text-white font-bold text-xs px-5 py-2.5 rounded-full transition shadow-sm">الكل</button>
                 <button onclick="setCategory('أجهزة فحص')" class="cat-btn bg-white border border-gray-200 text-gray-600 hover:border-curexTeal font-bold text-xs px-5 py-2.5 rounded-full transition">مستلزمات طبية - أجهزة فحص</button>
                 <button onclick="setCategory('استهلاكية')" class="cat-btn bg-white border border-gray-200 text-gray-600 hover:border-curexTeal font-bold text-xs px-5 py-2.5 rounded-full transition">مستلزمات طبية - استهلاكية</button>
             </div>
@@ -137,8 +135,7 @@
 
         <!-- Products Grid -->
         <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Dynamically Loaded Cards -->
-            <p class="text-gray-400 text-center col-span-full py-12">جاري تحميل المنتجات...</p>
+            <p class="text-gray-400 text-center col-span-full py-12 font-bold">جاري تحميل المنتجات من شيت CureX_Database.xlsx...</p>
         </div>
     </main>
 
@@ -173,10 +170,6 @@
                     <label class="block text-xs font-bold text-gray-600 mb-1">العنوان التفصيلي</label>
                     <input type="text" id="client-address" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm focus:border-curexTeal outline-none" placeholder="المدينة / الشارع / علامة مميزة" required>
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-600 mb-1">البريد الإلكتروني <span class="text-gray-400 font-normal">(اختياري)</span></label>
-                    <input type="email" id="client-email" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm focus:border-curexTeal outline-none" placeholder="example@domain.com">
-                </div>
 
                 <div class="border-t border-gray-200 pt-4 flex justify-between items-center text-lg font-black">
                     <span class="text-gray-700">الإجمالي:</span>
@@ -190,7 +183,7 @@
         </div>
     </div>
 
-    <!-- 6. Footer Section (Matches User Image 1 Exactly) -->
+    <!-- 6. Footer Section -->
     <footer id="contact-us" class="bg-[#FAF7F2] border-t border-gray-200/80 pt-16 pb-8 text-right">
         <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12">
             
@@ -257,27 +250,41 @@
 
     <!-- Logic JS -->
     <script>
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-        const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
-        const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
         let allProducts = [];
         let selectedCategory = 'ALL';
 
-        async function loadProducts() {
-            const { data: products, error } = await db.from('products').select('*');
-            const grid = document.getElementById('products-grid');
+        // Read Excel file CureX_Database.xlsx directly from local repository
+        async function loadProductsFromExcel() {
+            try {
+                const response = await fetch('./CureX_Database.xlsx');
+                const arrayBuffer = await response.arrayBuffer();
+                const data = new Uint8Array(arrayBuffer);
+                const workbook = XLSX.read(data, { type: 'array' });
 
-            if (error || !products) {
-                // Fallback Mock Data for immediate visual test
-                allProducts = [
-                    { item_code: 'P881', item_name: 'جهاز الضغط الإلكتروني', category: 'أجهزة فحص', selling_price: 1400.00, unit: 'قطع', current_stock: 12, reorder_point: 3 },
-                    { item_code: 'P882', item_name: 'جهاز السكر المنزلي', category: 'أجهزة فحص', selling_price: 550.00, unit: 'قطع', current_stock: 5, reorder_point: 2 }
-                ];
-            } else {
-                allProducts = products;
+                // Read first worksheet (e.g. Products or Sheet1)
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                const rawJson = XLSX.utils.sheet_to_json(worksheet);
+
+                // Map Excel Columns dynamically to Product Properties
+                allProducts = rawJson.map((row, index) => ({
+                    item_code: row['كود المنتج'] || row['Item Code'] || row['Code'] || `P88${index + 1}`,
+                    item_name: row['اسم المنتج'] || row['Item Name'] || row['Name'] || 'منتج طبي',
+                    category: row['القسم'] || row['الفئة'] || row['Category'] || 'أجهزة فحص',
+                    selling_price: parseFloat(row['سعر البيع'] || row['Price'] || row['سعر'] || 0),
+                    unit: row['الوحدة'] || row['Unit'] || 'قطعة',
+                    current_stock: parseInt(row['الكمية'] || row['المخزون'] || row['Stock'] || 10)
+                }));
+
+                renderProducts();
+            } catch (err) {
+                console.error("Error loading Excel file:", err);
+                document.getElementById('products-grid').innerHTML = `
+                    <div class="col-span-full text-center py-12 text-red-500 font-bold">
+                        ⚠️ تعذر قراءة ملف CureX_Database.xlsx. يرجى التأكد من مسار الملف في المستودع.
+                    </div>
+                `;
             }
-            renderProducts();
         }
 
         function renderProducts() {
@@ -285,20 +292,21 @@
             const search = document.getElementById('search-input').value.toLowerCase();
 
             const filtered = allProducts.filter(p => {
-                const matchesCat = selectedCategory === 'ALL' || p.category.includes(selectedCategory);
-                const matchesSearch = p.item_name.toLowerCase().includes(search) || p.item_code.toLowerCase().includes(search);
+                const matchesCat = selectedCategory === 'ALL' || (p.category && p.category.includes(selectedCategory));
+                const matchesSearch = (p.item_name && p.item_name.toLowerCase().includes(search)) || 
+                                      (p.item_code && p.item_code.toString().toLowerCase().includes(search));
                 return matchesCat && matchesSearch;
             });
 
             if (filtered.length === 0) {
-                grid.innerHTML = `<p class="text-gray-400 text-center col-span-full py-12 font-bold">لا توجد منتجات مطابقة لجميع الفلاتر.</p>`;
+                grid.innerHTML = `<p class="text-gray-400 text-center col-span-full py-12 font-bold">لا توجد منتجات مطابقة في الشيت.</p>`;
                 return;
             }
 
             grid.innerHTML = filtered.map(p => `
                 <div class="bg-[#FAF7F2] border border-gray-200/80 rounded-3xl p-5 flex flex-col justify-between hover:shadow-md transition group">
                     <div>
-                        <!-- Image Container with Box Icon (Matches User Image 3) -->
+                        <!-- Box Image Banner -->
                         <div class="bg-[#F0ECE1] rounded-2xl h-44 w-full flex items-center justify-center mb-4 relative overflow-hidden">
                             <span class="absolute top-3 right-3 bg-white/80 text-[10px] font-bold text-gray-500 px-2.5 py-1 rounded-full">${p.item_code}</span>
                             <div class="text-gray-300 transform group-hover:scale-110 transition duration-300">
@@ -308,7 +316,7 @@
                             </div>
                         </div>
 
-                        <p class="text-xs text-gray-400 font-bold mb-1">مستلزمات طبية - ${p.category}</p>
+                        <p class="text-xs text-gray-400 font-bold mb-1">مستلزمات طبية - ${p.category || 'عام'}</p>
                         <h3 class="text-lg font-black text-curexTeal mb-4">${p.item_name}</h3>
                     </div>
 
@@ -368,20 +376,11 @@
 
         async function submitOrder(e) {
             e.preventDefault();
-            const code = document.getElementById('selected-item-code').value;
-            const name = document.getElementById('selected-item-name').value;
-            const price = parseFloat(document.getElementById('selected-item-price').value);
-            const qty = parseInt(document.getElementById('order-qty').value);
-            const total = price * qty;
-            const clientName = document.getElementById('client-name').value;
-            const clientPhone = document.getElementById('client-phone').value;
-            const clientAddress = document.getElementById('client-address').value;
-
             alert('✅ تم تسجيل الطلب بنجاح! شكراً لثقتكم بـ CureX Healthcare Solutions.');
             closeModal();
         }
 
-        window.onload = loadProducts;
+        window.onload = loadProductsFromExcel;
     </script>
 </body>
 </html>
