@@ -3,181 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CureX Healthcare Solutions</title>
+    <title>CureX Healthcare Solutions | متجر المستلزمات الطبية</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <style>
-        body { font-family: system-ui, -apple-system, sans-serif; background-color: #f8fafc; }
-        .bg-curex-dark { background-color: #0F172A; }
-        .bg-curex-teal { background-color: #0D9488; }
-    </style>
-</head>
-<body class="bg-slate-50 text-slate-800 pb-12">
-
-    <!-- Navbar -->
-    <header class="bg-curex-dark text-white shadow-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-3 space-x-reverse">
-                <div class="w-10 h-10 bg-curex-teal rounded-lg flex items-center justify-center font-bold text-xl text-white">CX</div>
-                <span class="font-bold text-xl">CureX <span class="text-teal-400 text-sm">Healthcare</span></span>
-            </div>
-            <a href="admin.html" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition">لوحة التحكم (Admin)</a>
-        </div>
-    </header>
-
-    <!-- الأقسام -->
-    <main class="max-w-7xl mx-auto px-4 py-8">
-        <div class="flex justify-center space-x-4 space-x-reverse mb-8">
-            <button onclick="switchTab('devices')" id="btn-devices" class="px-6 py-2.5 rounded-xl font-bold bg-curex-teal text-white shadow">الأجهزة الطبية 🩺</button>
-            <button onclick="switchTab('consumables')" id="btn-consumables" class="px-6 py-2.5 rounded-xl font-bold bg-slate-200 text-slate-700 hover:bg-slate-300">المنتجات الاستهلاكية 📦</button>
-        </div>
-
-        <!-- شبكة المنتجات -->
-        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <div class="col-span-full text-center py-12 text-slate-500">جاري تحميل المنتجات...</div>
-        </div>
-    </main>
-
-    <!-- Modal بيانات العميل -->
-    <div id="checkout-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl">
-            <h3 class="text-xl font-bold text-slate-900 mb-4 border-b pb-2">بيانات العميل لتأكيد الطلب</h3>
-            <form id="checkout-form" onsubmit="processOrder(event)">
-                <input type="hidden" id="selected-product-id">
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">الاسم بالكامل</label>
-                        <input type="text" id="cust-name" required class="w-full border rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-teal-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">رقم الهاتف / الواتساب</label>
-                        <input type="tel" id="cust-phone" required class="w-full border rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-teal-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">العنوان بالتفصيل</label>
-                        <textarea id="cust-address" required class="w-full border rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-teal-500" rows="2"></textarea>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">الكمية المطلوب شرائها</label>
-                        <input type="number" id="cust-qty" value="1" min="1" required class="w-full border rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-teal-500">
-                    </div>
-                </div>
-                <div class="flex space-x-3 space-x-reverse mt-6">
-                    <button type="submit" class="flex-1 bg-curex-teal hover:bg-teal-700 text-white font-bold py-2.5 rounded-lg">تأكيد الشراء والخصم من المخزن</button>
-                    <button type="button" onclick="closeCheckout()" class="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 rounded-lg text-slate-700 font-semibold">إلغاء</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    
     <script>
-        let allProducts = [];
-        let currentTab = 'devices';
-
-        // تحميل البيانات من localStorage أو الإكسيل
-        window.addEventListener('DOMContentLoaded', loadData);
-
-        function loadData() {
-            const saved = localStorage.getItem('curex_products');
-            if (saved) {
-                allProducts = JSON.parse(saved);
-                renderProducts();
-            } else {
-                fetch('_CureX_Cloud_Database.xlsx')
-                    .then(res => res.arrayBuffer())
-                    .then(data => {
-                        const wb = XLSX.read(data, { type: 'array' });
-                        allProducts = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-                        localStorage.setItem('curex_products', JSON.stringify(allProducts));
-                        renderProducts();
-                    })
-                    .catch(() => {
-                        // بيانات تجريبية في حالة عدم وجود الملف
-                        allProducts = [
-                            { ID: 1, Name: 'جهاز ضغط رقمي', Category: 'devices', Price: 1200, Stock: 15, MinStock: 5 },
-                            { ID: 2, Name: 'كمامات طبية (علبة 50 قطعة)', Category: 'consumables', Price: 75, Stock: 100, MinStock: 20 }
-                        ];
-                        localStorage.setItem('curex_products', JSON.stringify(allProducts));
-                        renderProducts();
-                    });
-            }
-        }
-
-        function switchTab(tab) {
-            currentTab = tab;
-            document.getElementById('btn-devices').className = tab === 'devices' ? 'px-6 py-2.5 rounded-xl font-bold bg-curex-teal text-white shadow' : 'px-6 py-2.5 rounded-xl font-bold bg-slate-200 text-slate-700';
-            document.getElementById('btn-consumables').className = tab === 'consumables' ? 'px-6 py-2.5 rounded-xl font-bold bg-curex-teal text-white shadow' : 'px-6 py-2.5 rounded-xl font-bold bg-slate-200 text-slate-700';
-            renderProducts();
-        }
-
-        function renderProducts() {
-            const grid = document.getElementById('products-grid');
-            const filtered = allProducts.filter(p => (p.Category || 'devices') === currentTab);
-            
-            if(filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500">لا توجد منتجات متاحة في هذا القسم حالياً.</div>`;
-                return;
-            }
-
-            grid.innerHTML = filtered.map(item => `
-                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col justify-between">
-                    <div>
-                        <span class="text-xs font-bold px-2.5 py-1 rounded-full ${item.Stock <= (item.MinStock || 5) ? 'bg-red-100 text-red-700' : 'bg-teal-100 text-teal-800'}">
-                            المخزون: ${item.Stock}
-                        </span>
-                        <h3 class="font-bold text-lg text-slate-900 mt-3">${item.Name}</h3>
-                        <p class="text-slate-500 text-sm mt-1">${item.Description || 'منتج طبي موثوق عالية الجودة.'}</p>
-                    </div>
-                    <div class="mt-6 flex justify-between items-center border-t pt-4">
-                        <span class="font-extrabold text-teal-700 text-xl">${item.Price} ج.م</span>
-                        <button onclick="openCheckout(${item.ID})" class="bg-slate-900 hover:bg-curex-teal text-white px-4 py-2 rounded-xl text-sm font-bold transition">شراء الآن</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function openCheckout(id) {
-            document.getElementById('selected-product-id').value = id;
-            document.getElementById('checkout-modal').classList.remove('hidden');
-        }
-
-        function closeCheckout() {
-            document.getElementById('checkout-modal').classList.add('hidden');
-        }
-
-        function processOrder(e) {
-            e.preventDefault();
-            const id = parseInt(document.getElementById('selected-product-id').value);
-            const qty = parseInt(document.getElementById('cust-qty').value);
-            const prodIndex = allProducts.findIndex(p => p.ID === id);
-
-            if (prodIndex !== -1) {
-                if (allProducts[prodIndex].Stock < qty) {
-                    alert('الكمية المطلوبة غير متوفرة بالكامل في المخزن!');
-                    return;
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        curex: {
+                            teal: '#0D9488',
+                            darkTeal: '#0F766E',
+                            coral: '#F97316',
+                            bgLight: '#FDFBF7',
+                            cardBg: '#FAF7F2'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Tajawal', 'sans-serif'],
+                    }
                 }
-
-                // تنقيص المخزن
-                allProducts[prodIndex].Stock -= qty;
-                localStorage.setItem('curex_products', JSON.stringify(allProducts));
-
-                // تسجيل حركة المبيعات
-                const sales = JSON.parse(localStorage.getItem('curex_sales') || '[]');
-                sales.push({
-                    productName: allProducts[prodIndex].Name,
-                    customer: document.getElementById('cust-name').value,
-                    phone: document.getElementById('cust-phone').value,
-                    qty: qty,
-                    total: qty * allProducts[prodIndex].Price,
-                    date: new Date().toLocaleDateString('ar-EG')
-                });
-                localStorage.setItem('curex_sales', JSON.stringify(sales));
-
-                alert('تم تسجيل عملية الشراء وخصم الكمية من المخزن بنجاح!');
-                closeCheckout();
-                renderProducts();
             }
         }
     </script>
-</body>
-</html>
+    <style>
+        body { font-family: 'Tajawal', sans-serif; background-color: #FDFBF7; }
+        .grid-pattern {
+            background-image: radial-gradient(#0d9488 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+            opacity: 0.05;
+        }
+    </style>
+</head>
+<body class="text-slate-800 relative min-h-screen pb-16">
+
+    <div class="bg-curex-darkTeal text-white text-center py-2 text-xs md:text-sm font-medium tracking-wide">
+        توريد موثوق للعيادات والصيدليات – نصل إليك في الوقت المناسب
+    </div>
+
+    <header class="bg-white/80 backdrop-blur-md border-b border-stone-200 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="w-12 h-12 bg-curex-teal text-white font-extrabold text-2xl rounded-2xl flex items-center justify-center shadow-md shadow-teal-900/10">
+                    CX
+                </div>
+                <div>
+                    <h1 class="font-black text-2xl text-curex-darkTeal leading-none">CureX</h1>
+                    <span class="text-[10px] uppercase tracking-wider font-bold text-slate-400 block mt-0.5">Healthcare Solutions</span>
+                </div>
+            </div>
+
+            <nav class="hidden md:flex items-center space-x-8 space-x-reverse font-bold text-slate-700">
+                <a href="#products-section" class="hover:text-curex-teal transition">المنتجات</a>
+                <a href="#features-section" class="hover:text-curex-teal transition">لماذا CureX؟</a>
+                <a href="admin.html" class="bg-stone-100 hover:bg-stone-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-bold transition">لوحة التحكم ⚙️</a>
+            </nav>
+
+            <div class="relative">
+                <button onclick="scrollToProducts()" class="bg-curex-teal hover:bg-curex-darkTeal text-white px-5 py-2.5 rounded-full font-bold text-sm flex items-center space-x-2 space-x-reverse shadow-lg shadow-teal-600/20 transition">
+                    <span>السلة</span>
+                    <span id="cart-count" class="bg-curex-coral text-white text-xs px-2 py-0.5 rounded-full font-black">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section class="relative bg-curex-bgLight py-12 md:py-20 px-4 overflow-hidden border-b border-stone-200">
+        <div class="absolute inset-0 grid-pattern pointer-events-none"></div>
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <span class="inline-flex items-center gap-1.5 bg-orange-100 border border-orange-200 text-curex-coral text-xs font-bold px-4 py-1.5 rounded-full mb-6">
+                <span>✨</span> رعاية تبدأ من الاختيار الصحيح
+            </span>
+            <h1 class="text-4xl md:text-6xl font-black text-curex-teal leading-tight mb-4">
+                كل ما تحتاجه <br><span class="text-curex-coral">لرعاية أفضل.</span>
+            </h1>
+            <p class="text-slate-600 text-base md:text-xl font-medium max-w-2xl mx-auto mb-8 leading-relaxed">
+                مستلزمات صحية موثوقة، جاهزة لعيادتك أو منزلك. اكتشفها بسهولة واطلبها بثقة.
+            </p>
+            <a href="#products-section" class="inline-flex items-center gap-2 bg-curex-teal hover:bg-curex-darkTeal text-white font-extrabold text-lg px-8 py-4 rounded-2xl shadow-xl shadow-teal-700/20 transition transform hover:-translate-y-0.5">
+                تصفح المنتجات <span>←</span>
+            </a>
+        </div>
+    </section>
+
+    <section id="features-section" class="py-12 bg-white border-b
