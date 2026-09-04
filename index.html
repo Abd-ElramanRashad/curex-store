@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CureX Healthcare Solutions | متجر المستلزمات الطبية</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
@@ -59,16 +58,8 @@
 
             <nav class="hidden md:flex items-center space-x-8 space-x-reverse font-bold text-slate-700">
                 <a href="#products-section" class="hover:text-curex-teal transition">المنتجات</a>
-                <a href="#features-section" class="hover:text-curex-teal transition">لماذا CureX؟</a>
-                <a href="admin.html" class="bg-stone-100 hover:bg-stone-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-bold transition">لوحة التحكم ⚙️</a>
+                <a href="admin.html" class="bg-curex-coral text-white px-4 py-2 rounded-xl text-sm font-bold transition shadow-md shadow-orange-500/20">لوحة التحكم والتحليلات 📊</a>
             </nav>
-
-            <div class="relative">
-                <button onclick="scrollToProducts()" class="bg-curex-teal hover:bg-curex-darkTeal text-white px-5 py-2.5 rounded-full font-bold text-sm flex items-center space-x-2 space-x-reverse shadow-lg shadow-teal-600/20 transition">
-                    <span>السلة</span>
-                    <span id="cart-count" class="bg-curex-coral text-white text-xs px-2 py-0.5 rounded-full font-black">0</span>
-                </button>
-            </div>
         </div>
     </header>
 
@@ -84,32 +75,10 @@
             <p class="text-slate-600 text-base md:text-xl font-medium max-w-2xl mx-auto mb-8 leading-relaxed">
                 مستلزمات صحية موثوقة، جاهزة لعيادتك أو منزلك. اكتشفها بسهولة واطلبها بثقة.
             </p>
-            <a href="#products-section" class="inline-flex items-center gap-2 bg-curex-teal hover:bg-curex-darkTeal text-white font-extrabold text-lg px-8 py-4 rounded-2xl shadow-xl shadow-teal-700/20 transition transform hover:-translate-y-0.5">
-                تصفح المنتجات <span>←</span>
-            </a>
         </div>
     </section>
 
-    <section id="features-section" class="py-12 bg-white border-b border-stone-200">
-        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-curex-cardBg p-6 rounded-2xl border border-stone-200">
-                <span class="text-curex-coral font-black text-lg">01</span>
-                <h3 class="font-extrabold text-xl text-curex-teal mt-2 mb-2">وضوح في كل خطوة</h3>
-                <p class="text-slate-600 text-sm">أسعار ومعلومات واضحة قبل أن تطلب.</p>
-            </div>
-            <div class="bg-curex-cardBg p-6 rounded-2xl border border-stone-200">
-                <span class="text-curex-coral font-black text-lg">02</span>
-                <h3 class="font-extrabold text-xl text-curex-teal mt-2 mb-2">مخزون يتحرك معك</h3>
-                <p class="text-slate-600 text-sm">نراقب توفر الأصناف حتى لا تتفاجأ.</p>
-            </div>
-            <div class="bg-curex-cardBg p-6 rounded-2xl border border-stone-200">
-                <span class="text-curex-coral font-black text-lg">03</span>
-                <h3 class="font-extrabold text-xl text-curex-teal mt-2 mb-2">شريك يمكن الاعتماد عليه</h3>
-                <p class="text-slate-600 text-sm">دعم سريع للعيادات والصيدليات.</p>
-            </div>
-        </div>
-    </section>
-
+    <!-- Products Section -->
     <section id="products-section" class="max-w-7xl mx-auto px-4 py-12">
         <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 border-b border-stone-200 pb-6">
             <div>
@@ -124,15 +93,14 @@
             </div>
         </div>
 
-        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div class="col-span-full text-center py-12 text-slate-400 font-bold">جاري جلب المنتجات المتاحة...</div>
-        </div>
+        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
     </section>
 
+    <!-- Modal الشراء -->
     <div id="checkout-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-stone-200">
             <h3 class="text-2xl font-black text-curex-teal mb-2">تأكيد طلب الشراء</h3>
-            <p class="text-slate-500 text-xs mb-6">أدخل بياناتك وسيتم خصم القطعة تلقائياً من الإكسيل/المخزن.</p>
+            <p class="text-slate-500 text-xs mb-6">سيتم خصم الكمية تلقائياً من المخزن وتسجيل عملية البيع.</p>
             
             <form id="checkout-form" onsubmit="processOrder(event)">
                 <input type="hidden" id="selected-product-id">
@@ -142,21 +110,13 @@
                         <input type="text" id="cust-name" required class="w-full border border-stone-300 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-curex-teal">
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">رقم الهاتف / الواتساب</label>
-                        <input type="tel" id="cust-phone" required class="w-full border border-stone-300 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-curex-teal">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">العنوان والتفاصيل</label>
-                        <textarea id="cust-address" required rows="2" class="w-full border border-stone-300 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-curex-teal"></textarea>
-                    </div>
-                    <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">الكمية المطلوب شرائها</label>
                         <input type="number" id="cust-qty" value="1" min="1" required class="w-full border border-stone-300 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-curex-teal">
                     </div>
                 </div>
 
                 <div class="flex space-x-3 space-x-reverse mt-6">
-                    <button type="submit" class="flex-1 bg-curex-teal hover:bg-curex-darkTeal text-white font-extrabold py-3 rounded-xl text-sm transition">تأكيد الشراء والخصم</button>
+                    <button type="submit" class="flex-1 bg-curex-teal hover:bg-curex-darkTeal text-white font-extrabold py-3 rounded-xl text-sm transition">تأكيد الشراء والخصم من المخزن</button>
                     <button type="button" onclick="closeCheckout()" class="px-5 py-3 bg-stone-100 hover:bg-stone-200 text-slate-700 font-bold rounded-xl text-sm">إلغاء</button>
                 </div>
             </form>
@@ -164,38 +124,32 @@
     </div>
 
     <script>
-        let allProducts = [];
+        // البيانات الأولية للشيت الافتراضي (يتم كتابتها مرة واحدة ويتم تحديثها محلياً)
+        const initialProducts = [
+            { id: 1, name: "جهاز قياس ضغط الدم الرقمي", category: "devices", price: 850, stock: 12, minStock: 3, sold: 15, description: "جهاز رقمي دقيق جداً لقياس الضغط الذاتي." },
+            { id: 2, name: "جهاز قياس السكر بالدم", category: "devices", price: 450, stock: 2, minStock: 5, sold: 28, description: "شامل 50 شريط اختبار وإبر شكّال." },
+            { id: 3, name: "كمامات طبية 3 طبقات (علبة 50 قطعة)", category: "consumables", price: 60, stock: 85, minStock: 20, sold: 140, description: "مقاومة للبكتيريا مع شريط أذن مريح." },
+            { id: 4, name: "قفازات طبية لنيتريل (علبة 100 قطعة)", category: "consumables", price: 180, stock: 4, minStock: 10, sold: 95, description: "خالية من البودرة ومناسبة للجلد الحساس." },
+            { id: 5, name: "مقياس حرارة بالليزر عن بعد", category: "devices", price: 650, stock: 8, minStock: 4, sold: 12, description: "قراءة فورية بدون ملامسة للجبهة." }
+        ];
+
         let currentCategory = 'all';
 
-        window.addEventListener('DOMContentLoaded', loadData);
-
-        function loadData() {
-            const saved = localStorage.getItem('curex_products');
-            if (saved) {
-                allProducts = JSON.parse(saved);
-                renderProducts();
-            } else {
-                fetch('_CureX_Cloud_Database.xlsx')
-                    .then(res => res.arrayBuffer())
-                    .then(data => {
-                        const wb = XLSX.read(data, { type: 'array' });
-                        allProducts = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-                        localStorage.setItem('curex_products', JSON.stringify(allProducts));
-                        renderProducts();
-                    })
-                    .catch(() => {
-                        // منتجات افتراضية بهوية CureX
-                        allProducts = [
-                            { ID: 101, Name: 'جهاز قياس الضغط الرقمي', Category: 'devices', Price: 1450, Stock: 12, MinStock: 3, Description: 'دقة عالية جداً للعيادات والمنازل' },
-                            { ID: 102, Name: 'جهاز قياس نسبة الأكسجين Oximeter', Category: 'devices', Price: 650, Stock: 25, MinStock: 5, Description: 'قياس سرعة النبض ونسبة الأكسجين' },
-                            { ID: 103, Name: 'علبة كمامات طبية معقمة (50 قطعة)', Category: 'consumables', Price: 85, Stock: 150, MinStock: 30, Description: 'حماية عالية 3 طبقات بفلتر' },
-                            { ID: 104, Name: 'قفازات طبية لاتكس (100 قطعة)', Category: 'consumables', Price: 220, Stock: 80, MinStock: 15, Description: 'مقاسات متعددة ناعمة ومريحة' }
-                        ];
-                        localStorage.setItem('curex_products', JSON.stringify(allProducts));
-                        renderProducts();
-                    });
+        // تهيئة قاعدة البيانات المحلية عند التشغيل
+        function getProducts() {
+            const data = localStorage.getItem('curex_inventory');
+            if (!data) {
+                localStorage.setItem('curex_inventory', JSON.stringify(initialProducts));
+                return initialProducts;
             }
+            return JSON.parse(data);
         }
+
+        function saveProducts(products) {
+            localStorage.setItem('curex_inventory', JSON.stringify(products));
+        }
+
+        window.addEventListener('DOMContentLoaded', renderProducts);
 
         function switchTab(cat) {
             currentCategory = cat;
@@ -207,36 +161,34 @@
         }
 
         function renderProducts() {
+            const products = getProducts();
             const grid = document.getElementById('products-grid');
             const filtered = currentCategory === 'all' 
-                ? allProducts 
-                : allProducts.filter(p => p.Category === currentCategory);
-
-            if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500 font-bold">لا توجد منتجات متاحة في هذا القسم حالياً.</div>`;
-                return;
-            }
+                ? products 
+                : products.filter(p => p.category === currentCategory);
 
             grid.innerHTML = filtered.map(item => `
                 <div class="bg-white rounded-3xl p-6 border border-stone-200 shadow-sm flex flex-col justify-between hover:shadow-xl hover:border-curex-teal/30 transition duration-300">
                     <div>
                         <div class="flex justify-between items-center mb-3">
-                            <span class="text-[11px] font-black px-3 py-1 rounded-full ${item.Stock <= (item.MinStock || 5) ? 'bg-red-100 text-red-700' : 'bg-teal-50 text-curex-teal'}">
-                                ${item.Category === 'devices' ? '🩺 أجهزة طبية' : '📦 استهلاكي'}
+                            <span class="text-[11px] font-black px-3 py-1 rounded-full ${item.category === 'devices' ? 'bg-teal-50 text-curex-teal' : 'bg-orange-50 text-curex-coral'}">
+                                ${item.category === 'devices' ? '🩺 جهاز طبي' : '📦 مستلزم استهلاكي'}
                             </span>
-                            <span class="text-xs font-bold text-slate-400">متبقي: ${item.Stock}</span>
+                            <span class="text-xs font-bold ${item.stock <= item.minStock ? 'text-red-600 bg-red-50 px-2 py-0.5 rounded' : 'text-slate-400'}">
+                                المتبقي: ${item.stock}
+                            </span>
                         </div>
-                        <h3 class="font-extrabold text-xl text-slate-900 mb-2 leading-snug">${item.Name}</h3>
-                        <p class="text-slate-500 text-xs leading-relaxed mb-4">${item.Description || 'منتج طبي موثوق بعناية عالية.'}</p>
+                        <h3 class="font-extrabold text-xl text-slate-900 mb-2 leading-snug">${item.name}</h3>
+                        <p class="text-slate-500 text-xs leading-relaxed mb-4">${item.description}</p>
                     </div>
 
                     <div class="pt-4 border-t border-stone-100 flex items-center justify-between">
                         <div>
                             <span class="text-xs text-slate-400 block font-bold">السعر</span>
-                            <span class="font-black text-2xl text-curex-coral">${item.Price} <span class="text-xs font-bold">ج.م</span></span>
+                            <span class="font-black text-2xl text-curex-coral">${item.price} <span class="text-xs font-bold">ج.م</span></span>
                         </div>
-                        <button onclick="openCheckout(${item.ID})" class="bg-curex-teal hover:bg-curex-darkTeal text-white font-extrabold px-4 py-2.5 rounded-xl text-sm transition shadow-md shadow-teal-600/10">
-                            شراء الآن
+                        <button onclick="openCheckout(${item.id})" ${item.stock === 0 ? 'disabled' : ''} class="${item.stock === 0 ? 'bg-slate-300 cursor-not-allowed' : 'bg-curex-teal hover:bg-curex-darkTeal'} text-white font-extrabold px-4 py-2.5 rounded-xl text-sm transition">
+                            ${item.stock === 0 ? 'نفذت الكمية' : 'شراء الآن'}
                         </button>
                     </div>
                 </div>
@@ -252,40 +204,26 @@
             document.getElementById('checkout-modal').classList.add('hidden');
         }
 
-        function scrollToProducts() {
-            document.getElementById('products-section').scrollIntoView({ behavior: 'smooth' });
-        }
-
         function processOrder(e) {
             e.preventDefault();
             const id = parseInt(document.getElementById('selected-product-id').value);
             const qty = parseInt(document.getElementById('cust-qty').value);
-            const idx = allProducts.findIndex(p => p.ID === id);
+            let products = getProducts();
+            
+            const productIndex = products.findIndex(p => p.id === id);
 
-            if (idx !== -1) {
-                if (allProducts[idx].Stock < qty) {
-                    alert('عذراً، الكمية المطلوبة غير متوفرة في المخزن حالياً!');
+            if (productIndex !== -1) {
+                if (products[productIndex].stock < qty) {
+                    alert('عذراً، الكمية المطلوبة غير متوفرة في المخزن!');
                     return;
                 }
 
-                // خصم الكمية
-                allProducts[idx].Stock -= qty;
-                localStorage.setItem('curex_products', JSON.stringify(allProducts));
+                // خصم من المخزن وزيادة عداد المبيعات
+                products[productIndex].stock -= qty;
+                products[productIndex].sold = (products[productIndex].sold || 0) + qty;
 
-                // حركه المبيعات
-                const sales = JSON.parse(localStorage.getItem('curex_sales') || '[]');
-                sales.push({
-                    productName: allProducts[idx].Name,
-                    customer: document.getElementById('cust-name').value,
-                    phone: document.getElementById('cust-phone').value,
-                    address: document.getElementById('cust-address').value,
-                    qty: qty,
-                    total: qty * allProducts[idx].Price,
-                    date: new Date().toLocaleDateString('ar-EG')
-                });
-                localStorage.setItem('curex_sales', JSON.stringify(sales));
-
-                alert('تمت عملية الشراء وخصم الكمية من قاعدة البيانات بنجاح!');
+                saveProducts(products);
+                alert(`تم الشراء بنجاح! تم خصم ${qty} قطعة من المخزن.`);
                 closeCheckout();
                 renderProducts();
             }
