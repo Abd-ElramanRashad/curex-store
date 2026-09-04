@@ -76,89 +76,194 @@
                 <a href="#footer-section" class="hover:text-brand-teal transition">تواصل معنا</a>
             </nav>
 
-            <!-- Cart Button -->
-            <button onclick="toggleCart()" class="bg-white hover:bg-stone-50 border border-stone-200 shadow-sm px-5 py-2 rounded-full flex items-center gap-3 transition">
-                <span class="font-bold text-brand-teal text-sm">السلة</span>
-                <span id="cart-count" class="bg-brand-orange text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center">0</span>
-            </button>
+            <!-- Actions (Cart & Admin Button) -->
+            <div class="flex items-center gap-3">
+                <!-- Admin Quick Access Button -->
+                <button onclick="openAdminModal()" class="bg-stone-100 hover:bg-stone-200 text-stone-600 p-2.5 rounded-full transition" title="لوحة الإدارة">
+                    <i class="fa-solid fa-user-gear text-sm"></i>
+                </button>
+
+                <!-- Cart Button -->
+                <button onclick="toggleCart()" class="bg-white hover:bg-stone-50 border border-stone-200 shadow-sm px-5 py-2 rounded-full flex items-center gap-3 transition">
+                    <span class="font-bold text-brand-teal text-sm">السلة</span>
+                    <span id="cart-count" class="bg-brand-orange text-white text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center">0</span>
+                </button>
+            </div>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 w-full">
-        <div class="flex flex-col items-start max-w-3xl text-right leading-relaxed">
-            
-            <!-- Badge -->
-            <div class="inline-flex items-center gap-2 bg-brand-orangeLight border border-brand-orange/20 text-brand-orange font-bold text-xs px-3.5 py-1.5 rounded-full mb-6 select-none">
-                <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
-                <span>رعاية تبدأ من الاختيار الصحيح</span>
+    <!-- Main Store Section -->
+    <main id="store-view">
+        <!-- Hero Section -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 w-full">
+            <div class="flex flex-col items-start max-w-3xl text-right leading-relaxed">
+                <div class="inline-flex items-center gap-2 bg-brand-orangeLight border border-brand-orange/20 text-brand-orange font-bold text-xs px-3.5 py-1.5 rounded-full mb-6 select-none">
+                    <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+                    <span>رعاية تبدأ من الاختيار الصحيح</span>
+                </div>
+
+                <h1 class="text-4xl md:text-6xl font-black tracking-tight mb-4 text-right">
+                    <span class="text-brand-teal block mb-2">كل ما تحتاجه</span>
+                    <span class="text-brand-orange block">لرعاية أفضل.</span>
+                </h1>
+
+                <p class="text-brand-textMuted text-base md:text-lg font-medium mb-8 leading-loose text-right max-w-2xl">
+                    مستلزمات صحية موثوقة، جاهزة لعيادتك أو منزلك. اكتشفها بأسلوب عصري وسهل واطلبها بثقة.
+                </p>
+
+                <a href="#products-section" class="bg-brand-teal hover:bg-brand-tealHover text-white font-bold px-8 py-3.5 rounded-xl shadow-md transition duration-200 flex items-center gap-3">
+                    <span>تصفح المنتجات</span>
+                    <i class="fa-solid fa-arrow-left text-sm"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- Products & Search Section -->
+        <section id="products-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-6">
+                <div class="text-right">
+                    <span class="text-[10px] font-bold text-brand-orange tracking-widest uppercase block mb-1">THE ESSENTIALS, CURATED</span>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-brand-teal">اختياراتنا لك</h2>
+                    <p class="text-xs md:text-sm text-brand-textMuted font-medium mt-1">ابحث بالاسم أو الكود، واختر ما يناسب احتياجك.</p>
+                </div>
+
+                <div class="w-full md:w-80 relative">
+                    <input type="text" id="search-input" oninput="filterProducts()" placeholder="ابحث عن منتج..." class="w-full bg-white border border-stone-200 rounded-xl py-3 px-4 pr-10 text-sm focus:outline-none focus:border-brand-teal text-brand-textDark font-semibold placeholder:text-stone-400 text-right">
+                    <i class="fa-solid fa-magnifying-glass absolute right-3 top-3.5 text-stone-400 text-sm"></i>
+                </div>
             </div>
 
-            <!-- Hero Main Titles -->
-            <h1 class="text-4xl md:text-6xl font-black tracking-tight mb-4 text-right">
-                <span class="text-brand-teal block mb-2">كل ما تحتاجه</span>
-                <span class="text-brand-orange block">لرعاية أفضل.</span>
-            </h1>
+            <!-- Filter Pills -->
+            <div id="category-filters" class="flex flex-wrap items-center justify-start gap-2.5 mb-10">
+                <button onclick="filterCategory('all')" class="cat-btn active bg-brand-teal text-white font-bold text-xs px-5 py-2 rounded-full transition">الكل</button>
+            </div>
 
-            <p class="text-brand-textMuted text-base md:text-lg font-medium mb-8 leading-loose text-right max-w-2xl">
-                مستلزمات صحية موثوقة، جاهزة لعيادتك أو منزلك. اكتشفها بأسلوب عصري وسهل واطلبها بثقة.
-            </p>
+            <!-- Loading Spinner -->
+            <div id="loading" class="text-center py-16">
+                <i class="fa-solid fa-spinner fa-spin text-4xl text-brand-teal"></i>
+                <p class="mt-3 text-sm text-brand-textMuted font-bold">جاري تحميل المنتجات من قاعدة البيانات...</p>
+            </div>
 
-            <a href="#products-section" class="bg-brand-teal hover:bg-brand-tealHover text-white font-bold px-8 py-3.5 rounded-xl shadow-md transition duration-200 flex items-center gap-3">
-                <span>تصفح المنتجات</span>
-                <i class="fa-solid fa-arrow-left text-sm"></i>
-            </a>
+            <!-- Products Grid -->
+            <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 hidden"></div>
+        </section>
+    </main>
+
+    <!-- Admin Dashboard View (Hidden by default) -->
+    <section id="admin-view" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+        <div class="flex justify-between items-center mb-8 border-b pb-4">
+            <div>
+                <h1 class="text-2xl font-black text-brand-teal">لوحة تحكم CureX</h1>
+                <p class="text-xs text-brand-textMuted font-bold">متابعة المبيعات، تحليل المنتجات وتعديل المخزون</p>
+            </div>
+            <button onclick="closeAdminView()" class="bg-stone-200 hover:bg-stone-300 text-stone-800 font-bold px-4 py-2 rounded-xl text-xs transition">
+                <i class="fa-solid fa-arrow-right ml-1"></i> العودة للمتجر
+            </button>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm text-right">
+                <span class="text-xs font-bold text-stone-400 block mb-1">إجمالي المبيعات</span>
+                <div class="text-2xl font-black text-brand-teal" id="stat-revenue">0.00 ج.م</div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm text-right">
+                <span class="text-xs font-bold text-stone-400 block mb-1">إجمالي عدد الطلبات</span>
+                <div class="text-2xl font-black text-brand-orange" id="stat-orders">0</div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm text-right">
+                <span class="text-xs font-bold text-stone-400 block mb-1">منتجات تحت حد الطلب</span>
+                <div class="text-2xl font-black text-red-600" id="stat-reorder-count">0</div>
+            </div>
+        </div>
+
+        <!-- Reorder Level Warning Table -->
+        <div class="bg-red-50/50 border border-red-200 rounded-2xl p-6 text-right mb-8">
+            <h2 class="text-base font-extrabold text-red-700 mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                تنبيه: منتجات وصلت لحد الطلب أو نفذت من المخزون
+            </h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-xs text-right border-collapse">
+                    <thead>
+                        <tr class="border-b border-red-200 text-red-800">
+                            <th class="py-2">كود المنتج</th>
+                            <th class="py-2">اسم المنتج</th>
+                            <th class="py-2">المخزون الحالي</th>
+                            <th class="py-2">حد الطلب</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reorder-table-body">
+                        <tr><td colspan="4" class="text-center py-4 text-stone-400">لا توجد نواقص حالياً</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Forms and Analysis -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm text-right">
+                <h2 class="text-base font-extrabold text-brand-teal mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-plus-circle"></i> إضافة/تحديث كمية في الشيت
+                </h2>
+                <form onsubmit="handleStockUpdate(event)" class="space-y-3">
+                    <input type="text" id="add-code" required placeholder="كود المنتج (CX-101)" class="w-full p-2.5 border rounded-lg text-xs font-semibold text-right">
+                    <input type="text" id="add-name" required placeholder="اسم المنتج" class="w-full p-2.5 border rounded-lg text-xs font-semibold text-right">
+                    <input type="text" id="add-category" placeholder="القسم (اختياري)" class="w-full p-2.5 border rounded-lg text-xs font-semibold text-right">
+                    <input type="number" step="0.01" id="add-price" required placeholder="سعر البيع (ج.م)" class="w-full p-2.5 border rounded-lg text-xs font-semibold text-right">
+                    <input type="number" id="add-stock" required placeholder="الكمية المضافة" class="w-full p-2.5 border rounded-lg text-xs font-semibold text-right">
+                    <input type="number" id="add-reorder" placeholder="حد الطلب (افتراضي 5)" class="w-full p-2.5 border rounded-lg text-xs font-semibold text-right">
+                    
+                    <button type="submit" id="add-btn" class="w-full bg-brand-teal hover:bg-brand-teal/90 text-white font-bold py-2.5 rounded-lg text-xs transition">
+                        حفظ للمتجر والشيت مباشرة
+                    </button>
+                </form>
+            </div>
+
+            <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-stone-200 shadow-sm text-right overflow-hidden">
+                <h2 class="text-base font-extrabold text-brand-teal mb-4">تحليل المبيعات والمخزون الحالي لكل منتج</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs text-right border-collapse">
+                        <thead>
+                            <tr class="border-b text-stone-400 font-bold">
+                                <th class="py-3">الكود</th>
+                                <th class="py-3">اسم المنتج</th>
+                                <th class="py-3">المخزون الحالي</th>
+                                <th class="py-3">الكمية المباعة</th>
+                                <th class="py-3">إجمالي الإيراد</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-table-body" class="divide-y divide-stone-100">
+                            <tr><td colspan="5" class="text-center py-6 text-stone-400">جاري تحميل البيانات...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Products & Search Section -->
-    <section id="products-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
-        
-        <!-- Section Header -->
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-6">
-            
-            <!-- Titles (Right) -->
-            <div class="text-right">
-                <span class="text-[10px] font-bold text-brand-orange tracking-widest uppercase block mb-1">THE ESSENTIALS, CURATED</span>
-                <h2 class="text-2xl md:text-3xl font-extrabold text-brand-teal">اختياراتنا لك</h2>
-                <p class="text-xs md:text-sm text-brand-textMuted font-medium mt-1">ابحث بالاسم أو الكود، واختر ما يناسب احتياجك.</p>
-            </div>
-
-            <!-- Search Box (Left) -->
-            <div class="w-full md:w-80 relative">
-                <input type="text" id="search-input" oninput="filterProducts()" placeholder="ابحث عن منتج..." class="w-full bg-white border border-stone-200 rounded-xl py-3 px-4 pr-10 text-sm focus:outline-none focus:border-brand-teal text-brand-textDark font-semibold placeholder:text-stone-400 text-right">
-                <i class="fa-solid fa-magnifying-glass absolute right-3 top-3.5 text-stone-400 text-sm"></i>
-            </div>
+    <!-- Admin Login Modal -->
+    <div id="admin-login-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full text-right relative">
+            <button onclick="closeAdminModal()" class="absolute left-4 top-4 text-stone-400 hover:text-stone-600 text-xl font-bold">&times;</button>
+            <h3 class="text-lg font-black text-brand-teal mb-1">تسجيل دخول الأدمن</h3>
+            <p class="text-xs text-brand-textMuted mb-4 font-semibold">أدخل كلمة المرور للوصول لوحة التحكم</p>
+            <form onsubmit="handleAdminLogin(event)" class="space-y-3">
+                <input type="password" id="admin-pass-input" required placeholder="كلمة المرور" class="w-full p-2.5 border border-stone-200 rounded-xl text-xs font-bold text-right focus:outline-none focus:border-brand-teal">
+                <button type="submit" id="admin-login-btn" class="w-full bg-brand-teal text-white py-2.5 rounded-xl text-xs font-bold hover:bg-brand-tealHover transition">دخول</button>
+            </form>
         </div>
-
-        <!-- Filter Pills -->
-        <div id="category-filters" class="flex flex-wrap items-center justify-start gap-2.5 mb-10">
-            <button onclick="filterCategory('all')" class="cat-btn active bg-brand-teal text-white font-bold text-xs px-5 py-2 rounded-full transition">الكل</button>
-        </div>
-
-        <!-- Loading Spinner -->
-        <div id="loading" class="text-center py-16">
-            <i class="fa-solid fa-spinner fa-spin text-4xl text-brand-teal"></i>
-            <p class="mt-3 text-sm text-brand-textMuted font-bold">جاري تحميل المنتجات من قاعدة البيانات...</p>
-        </div>
-
-        <!-- Products Grid -->
-        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 hidden"></div>
-    </section>
+    </div>
 
     <!-- Footer Section -->
     <footer id="footer-section" class="bg-brand-bg border-t border-stone-200/80 pt-16 pb-8 mt-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12 text-right">
-                
-                <!-- Col 1: About -->
                 <div>
                     <div class="flex items-center gap-3 mb-4">
                         <div class="relative">
                             <div class="w-9 h-9 bg-brand-orange rounded-lg absolute top-0.5 right-0.5"></div>
-                            <div class="w-9 h-9 bg-brand-teal text-white font-black text-base rounded-lg flex items-center justify-center relative z-10">
-                                CX
-                            </div>
+                            <div class="w-9 h-9 bg-brand-teal text-white font-black text-base rounded-lg flex items-center justify-center relative z-10">CX</div>
                         </div>
                         <div class="flex flex-col text-right">
                             <span class="text-lg font-extrabold text-brand-teal leading-none">CureX</span>
@@ -170,7 +275,6 @@
                     </p>
                 </div>
 
-                <!-- Col 2: Help & Contact -->
                 <div>
                     <h4 class="font-extrabold text-brand-teal text-sm mb-4">نحن هنا للمساعدة</h4>
                     <ul class="space-y-3 text-xs text-brand-textMuted font-semibold">
@@ -182,30 +286,15 @@
                             <i class="fa-solid fa-envelope text-brand-orange"></i>
                             <span>abdelramanrashad572@gmail.com</span>
                         </li>
-                        <li class="flex items-center justify-start gap-2">
-                            <i class="fa-solid fa-location-dot text-brand-orange"></i>
-                            <span>جمهورية مصر العربية</span>
-                        </li>
                     </ul>
                 </div>
 
-                <!-- Col 3: Commitment -->
                 <div>
-                    <h4 class="font-extrabold text-brand-teal text-sm mb-4">التزامنا</h4>
-                    <ul class="space-y-3 text-xs text-brand-textMuted font-semibold">
-                        <li class="flex items-center justify-start gap-2">
-                            <i class="fa-solid fa-shield-halved text-brand-orange"></i>
-                            <span>منتجات موثوقة</span>
-                        </li>
-                        <li class="flex items-center justify-start gap-2">
-                            <i class="fa-solid fa-truck text-brand-orange"></i>
-                            <span>توصيل منظم</span>
-                        </li>
-                        <li class="flex items-center justify-start gap-2">
-                            <i class="fa-solid fa-heart text-brand-orange"></i>
-                            <span>عناية مستمرة</span>
-                        </li>
-                    </ul>
+                    <h4 class="font-extrabold text-brand-teal text-sm mb-4">الإدارة</h4>
+                    <button onclick="openAdminModal()" class="text-xs text-brand-teal font-bold hover:underline flex items-center gap-1">
+                        <i class="fa-solid fa-lock text-brand-orange"></i>
+                        <span>لوحة التحكم الخاصة بالإدارة</span>
+                    </button>
                 </div>
             </div>
 
@@ -225,10 +314,8 @@
                 <button onclick="toggleCart()" class="text-white hover:text-stone-200 text-2xl font-bold">&times;</button>
             </div>
             
-            <!-- Items Container -->
             <div id="cart-items" class="flex-1 overflow-y-auto p-5 space-y-4"></div>
 
-            <!-- Total and Checkout Form -->
             <div class="p-5 border-t bg-stone-50 space-y-4">
                 <div class="flex justify-between items-center font-bold text-base text-brand-textDark">
                     <span>الإجمالي:</span>
@@ -241,7 +328,6 @@
                         <input type="tel" id="client-phone" required placeholder="رقم الهاتف" class="w-full px-3.5 py-2.5 border border-stone-200 rounded-lg text-xs font-semibold focus:outline-none focus:border-brand-teal text-right disabled:bg-stone-100 disabled:cursor-not-allowed">
                         <textarea id="client-address" required placeholder="العنوان بالتفصيل" rows="2" class="w-full px-3.5 py-2.5 border border-stone-200 rounded-lg text-xs font-semibold focus:outline-none focus:border-brand-teal text-right disabled:bg-stone-100 disabled:cursor-not-allowed"></textarea>
                         
-                        <!-- Payment Method Selection -->
                         <div class="text-right">
                             <label class="block text-xs font-bold text-brand-textDark mb-1.5">اختر طريقة الدفع:</label>
                             <select id="payment-method" required class="w-full px-3.5 py-2.5 border border-stone-200 rounded-lg text-xs font-semibold focus:outline-none focus:border-brand-teal text-right bg-white disabled:bg-stone-100 disabled:cursor-not-allowed">
@@ -263,12 +349,14 @@
 
     <!-- JavaScript Logic -->
     <script>
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyiFyZHof20CYN-DcTbV7vmY5d_aKV3b36SxqNjQnWxRkiSuUs9el2tQNdVSstj3320/exec";
+        // الرابط الخاص بك
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzFri-VaB1wbKxtsKXtskz3ewKPGMeUsvqLEDavw6rAB4bU1nNOH-0KKNkWkYUARpRg/exec";
 
         let allProducts = [];
         let currentFilteredProducts = [];
         let cart = [];
         let activeCategory = 'all';
+        let savedAdminPassword = "";
 
         // Fetch Products
         async function fetchProducts() {
@@ -312,32 +400,27 @@
             }).join('');
         }
 
-        // Filter Category
         function filterCategory(category) {
             activeCategory = category;
             setupCategoryFilters();
             applyFilters();
         }
 
-        // Filter Search
         function filterProducts() {
             applyFilters();
         }
 
         function applyFilters() {
             const searchTerm = document.getElementById('search-input').value.toLowerCase();
-            
             currentFilteredProducts = allProducts.filter(product => {
                 const matchesCategory = activeCategory === 'all' || product.category === activeCategory;
                 const matchesSearch = (product.item_name && product.item_name.toLowerCase().includes(searchTerm)) ||
                                       (product.item_code && String(product.item_code).toLowerCase().includes(searchTerm));
                 return matchesCategory && matchesSearch;
             });
-
             renderProducts();
         }
 
-        // Render Cards
         function renderProducts() {
             const grid = document.getElementById('products-grid');
             if (!currentFilteredProducts || currentFilteredProducts.length === 0) {
@@ -348,38 +431,31 @@
             grid.innerHTML = currentFilteredProducts.map(product => `
                 <div class="bg-brand-cardBg rounded-2xl p-4 border border-stone-200/80 shadow-sm hover:shadow-md transition flex flex-col justify-between relative group text-right">
                     <div>
-                        <!-- Product Box Placeholder Image -->
                         <div class="bg-brand-cardImageBg rounded-xl h-44 flex items-center justify-center relative mb-4 overflow-hidden">
                             <span class="absolute top-3 right-3 text-[10px] font-bold text-stone-400 bg-white/70 backdrop-blur-sm px-2 py-0.5 rounded">
                                 ${product.item_code}
                             </span>
                             <div class="w-16 h-16 border-2 border-brand-teal/40 rounded-lg flex items-center justify-center relative">
                                 <i class="fa-solid fa-box text-2xl text-brand-teal/60"></i>
-                                <i class="fa-solid fa-magnifying-glass text-xs text-brand-teal/60 absolute bottom-3 left-3"></i>
                             </div>
                         </div>
 
-                        <!-- Category -->
                         <span class="text-[11px] font-bold text-stone-400 block mb-1">
                             ${product.category || 'مستلزمات طبية'}
                         </span>
 
-                        <!-- Item Name -->
                         <h3 class="font-extrabold text-base text-brand-teal mb-3 leading-tight">
                             ${product.item_name}
                         </h3>
                     </div>
 
-                    <!-- Price & Action -->
                     <div class="pt-3 border-t border-stone-100 flex items-center justify-between gap-2">
                         <div class="text-right">
                             <div class="text-base font-black text-brand-teal">
                                 ${Number(product.selling_price).toFixed(2)} <span class="text-xs font-bold text-stone-500">ج.م</span>
                             </div>
-                            <span class="text-[10px] font-bold text-stone-400">لكل قطعة</span>
                         </div>
 
-                        <!-- Add to Cart Button -->
                         <button onclick="addToCart('${product.item_code}')" 
                                 ${product.current_stock <= 0 ? 'disabled' : ''} 
                                 class="bg-brand-teal hover:bg-brand-tealHover disabled:bg-stone-300 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition shadow-sm flex items-center gap-1.5 shrink-0">
@@ -409,9 +485,7 @@
         }
 
         function updateCartUI() {
-            const cartCountElement = document.getElementById('cart-count');
-            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
-            cartCountElement.innerText = totalItems;
+            document.getElementById('cart-count').innerText = cart.reduce((sum, item) => sum + item.qty, 0);
             
             const cartItemsContainer = document.getElementById('cart-items');
             const fieldset = document.getElementById('form-fieldset');
@@ -470,13 +544,9 @@
             document.getElementById('cart-modal').classList.toggle('hidden');
         }
 
-        // Checkout
         async function handleCheckout(e) {
             e.preventDefault();
-            if (cart.length === 0) {
-                alert('السلة فارغة! يرجى اختيار منتجات أولاً.');
-                return;
-            }
+            if (cart.length === 0) return;
 
             const submitBtn = document.getElementById('submit-btn');
             submitBtn.disabled = true;
@@ -516,10 +586,119 @@
                 fetchProducts();
             } catch (error) {
                 alert('حدث خطأ أثناء إرسال الطلب!');
-                console.error(error);
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = `<span>تأكيد الطلب</span>`;
+            }
+        }
+
+        // Admin Logic
+        function openAdminModal() {
+            document.getElementById('admin-login-modal').classList.remove('hidden');
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-login-modal').classList.add('hidden');
+        }
+
+        async function handleAdminLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('admin-pass-input').value;
+            const btn = document.getElementById('admin-login-btn');
+            btn.disabled = true;
+            btn.innerText = "جاري الدخول...";
+
+            try {
+                const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getDashboardData&password=${encodeURIComponent(pass)}`);
+                const data = await res.json();
+
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    savedAdminPassword = pass;
+                    closeAdminModal();
+                    document.getElementById('store-view').classList.add('hidden');
+                    document.getElementById('admin-view').classList.remove('hidden');
+                    renderDashboard(data);
+                }
+            } catch (err) {
+                alert("حدث خطأ أثناء الاتصال بالخادم!");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "دخول";
+            }
+        }
+
+        function closeAdminView() {
+            document.getElementById('admin-view').classList.add('hidden');
+            document.getElementById('store-view').classList.remove('hidden');
+        }
+
+        function renderDashboard(data) {
+            document.getElementById('stat-revenue').innerText = `${Number(data.totalSalesRevenue).toFixed(2)} ج.م`;
+            document.getElementById('stat-orders').innerText = data.totalOrdersCount;
+            document.getElementById('stat-reorder-count').innerText = data.reorderAlertList.length;
+
+            const reorderBody = document.getElementById('reorder-table-body');
+            if (data.reorderAlertList.length === 0) {
+                reorderBody.innerHTML = `<tr><td colspan="4" class="text-center py-3 text-emerald-600 font-bold">جميع المنتجات فوق حد الطلب 👍</td></tr>`;
+            } else {
+                reorderBody.innerHTML = data.reorderAlertList.map(item => `
+                    <tr class="font-bold text-red-700">
+                        <td class="py-2">${item.code}</td>
+                        <td class="py-2">${item.name}</td>
+                        <td class="py-2">${item.stock} قطعة</td>
+                        <td class="py-2">${item.reorderLevel} قطعة</td>
+                    </tr>
+                `).join('');
+            }
+
+            const invBody = document.getElementById('inventory-table-body');
+            invBody.innerHTML = data.inventory.map(item => `
+                <tr class="hover:bg-stone-50 font-semibold">
+                    <td class="py-3 text-stone-400">${item.code}</td>
+                    <td class="py-3 font-bold text-brand-teal">${item.name}</td>
+                    <td class="py-3">${item.stock}</td>
+                    <td class="py-3 text-brand-orange">${item.soldQty}</td>
+                    <td class="py-3 font-bold">${Number(item.soldRevenue).toFixed(2)} ج.م</td>
+                </tr>
+            `).join('');
+        }
+
+        async function handleStockUpdate(e) {
+            e.preventDefault();
+            const btn = document.getElementById('add-btn');
+            btn.disabled = true;
+            btn.innerText = "جاري الحفظ...";
+
+            const payload = {
+                action: "updateInventory",
+                password: savedAdminPassword,
+                item: {
+                    code: document.getElementById('add-code').value,
+                    name: document.getElementById('add-name').value,
+                    category: document.getElementById('add-category').value,
+                    price: Number(document.getElementById('add-price').value),
+                    stock: Number(document.getElementById('add-stock').value),
+                    reorderLevel: Number(document.getElementById('add-reorder').value) || 5
+                }
+            };
+
+            try {
+                await fetch(GOOGLE_SCRIPT_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                alert("تم إضافة / تحديث المنتج في الشيت والمتر بنجاح!");
+                fetchProducts();
+                closeAdminView();
+            } catch (err) {
+                alert("حدث خطأ أثناء التحديث!");
+            } finally {
+                btn.disabled = false;
             }
         }
 
