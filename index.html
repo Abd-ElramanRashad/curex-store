@@ -3,313 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CureX Healthcare Solutions | متجر المستلزمات الطبية</title>
+    <title>Replit IDE Interface</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- Google Fonts (Fira Code & Tajawal) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        curex: {
-                            teal: '#0D9488',
-                            darkTeal: '#0F766E',
-                            coral: '#F97316',
-                            bgLight: '#FAF7F2',
-                            cardBg: '#F5F1EA'
+                        replit: {
+                            bg: '#0E1117',
+                            sidebar: '#151921',
+                            panel: '#1C212B',
+                            border: '#2B3240',
+                            accent: '#F26207', /* برتقالي ريبليت الشهير */
+                            blue: '#007ACC',
+                            text: '#C9D1D9',
+                            muted: '#8B949E'
                         }
                     },
                     fontFamily: {
-                        sans: ['Tajawal', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                        sans: ['Tajawal', 'sans-serif']
                     }
                 }
             }
         }
     </script>
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #FAF7F2; }
-        .grid-pattern {
-            background-image: radial-gradient(#0d9488 0.5px, transparent 0.5px);
-            background-size: 24px 24px;
-            opacity: 0.05;
-        }
+        body { font-family: 'Tajawal', sans-serif; background-color: #0E1117; color: #C9D1D9; }
+        .code-font { font-family: 'Fira Code', monospace; }
+        /* Custom Scrollbar like Replit */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0E1117; }
+        ::-webkit-scrollbar-thumb { background: #2B3240; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3B4456; }
     </style>
 </head>
-<body class="text-slate-800 relative min-h-screen">
+<body class="h-screen flex flex-col overflow-hidden select-none">
 
-    <!-- الشريط العلوية -->
-    <div class="bg-curex-teal text-white text-center py-2 text-xs md:text-sm font-medium tracking-wide">
-        توريد موثوق للعيادات والصيدليات – نصل إليك في الوقت المناسب
-    </div>
-
-    <!-- القائمة العلوي (Header) -->
-    <header class="bg-white/80 backdrop-blur-md border-b border-stone-200 sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-3 space-x-reverse">
-                <div class="w-12 h-12 bg-curex-teal text-white font-extrabold text-2xl rounded-2xl flex items-center justify-center shadow-md">
-                    CX
-                </div>
-                <div>
-                    <h1 class="font-black text-2xl text-curex-teal leading-none">CureX</h1>
-                    <span class="text-[10px] uppercase tracking-wider font-bold text-slate-400 block mt-0.5">Healthcare Solutions</span>
-                </div>
+    <!-- Navbar / Header -->
+    <header class="h-12 bg-replit-sidebar border-b border-replit-border flex items-center justify-between px-4 shrink-0">
+        <!-- Replit Logo & Project Title -->
+        <div class="flex items-center space-x-3 space-x-reverse">
+            <!-- Replit Icon -->
+            <div class="w-7 h-7 bg-replit-accent rounded-lg flex items-center justify-center font-extrabold text-white text-xs shadow-md">
+                &lt;/&gt;
             </div>
+            <div class="flex items-center space-x-2 space-x-reverse text-sm font-bold">
+                <span class="text-white">my-awesome-app</span>
+                <span class="bg-replit-panel text-replit-muted text-[11px] px-2 py-0.5 rounded border border-replit-border">Public</span>
+            </div>
+        </div>
 
-            <nav class="hidden md:flex items-center space-x-8 space-x-reverse font-bold text-slate-700">
-                <a href="#products-section" class="hover:text-curex-teal transition">المنتجات</a>
-                <a href="#features-section" class="hover:text-curex-teal transition">لماذا CureX؟</a>
-                <a href="admin.html" class="bg-stone-100 hover:bg-stone-200 text-slate-700 px-4 py-2 rounded-xl text-sm font-bold transition">لوحة التحكم ⚙️</a>
-            </nav>
+        <!-- Center Search Bar / Command Palette -->
+        <div class="hidden md:flex items-center bg-replit-bg border border-replit-border rounded-lg px-3 py-1 w-1/3 text-xs text-replit-muted justify-between cursor-pointer hover:border-replit-muted transition">
+            <span class="flex items-center gap-2">🔍 Search files, docs, or commands...</span>
+            <kbd class="bg-replit-panel px-1.5 py-0.5 rounded text-[10px] border border-replit-border">Ctrl + K</kbd>
+        </div>
 
-            <button onclick="scrollToProducts()" class="bg-white border border-stone-200 text-curex-teal px-5 py-2.5 rounded-full font-bold text-sm flex items-center space-x-2 space-x-reverse shadow-sm">
-                <span>السلة</span>
-                <span id="cart-count" class="bg-curex-coral text-white text-xs px-2 py-0.5 rounded-full font-black">0</span>
+        <!-- Action Buttons -->
+        <div class="flex items-center space-x-3 space-x-reverse">
+            <button class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-4 py-1.5 rounded-lg flex items-center gap-1.5 transition shadow">
+                <span>▶ Run</span>
             </button>
+            <button class="bg-replit-panel hover:bg-replit-border text-white text-xs font-bold px-3 py-1.5 rounded-lg border border-replit-border transition">
+                Invite 👥
+            </button>
+            <div class="w-7 h-7 rounded-full bg-replit-accent text-white font-bold text-xs flex items-center justify-center border border-white/20">
+                U
+            </div>
         </div>
     </header>
 
-    <!-- الهيرو -->
-    <section class="relative bg-curex-bgLight py-12 md:py-20 px-4 overflow-hidden border-b border-stone-200">
-        <div class="absolute inset-0 grid-pattern pointer-events-none"></div>
-        <div class="max-w-4xl mx-auto text-center relative z-10">
-            <span class="inline-flex items-center gap-1.5 bg-orange-100 border border-orange-200 text-curex-coral text-xs font-bold px-4 py-1.5 rounded-full mb-6">
-                ✨ رعاية تبدأ من الاختيار الصحيح
-            </span>
-            <h1 class="text-4xl md:text-6xl font-black text-curex-teal leading-tight mb-4">
-                كل ما تحتاجه <br><span class="text-curex-coral">لرعاية أفضل.</span>
-            </h1>
-            <p class="text-slate-600 text-base md:text-xl font-medium max-w-2xl mx-auto mb-8 leading-relaxed">
-                مستلزمات صحية موثوقة، جاهزة لعيادتك أو منزلك. اكتشفها بسهولة واطلبها بثقة.
-            </p>
-            <a href="#products-section" class="inline-flex items-center gap-2 bg-curex-teal hover:bg-curex-darkTeal text-white font-extrabold text-lg px-8 py-4 rounded-2xl shadow-xl transition">
-                تصفح المنتجات <span>←</span>
-            </a>
-        </div>
-    </section>
+    <!-- Main Workspace Layout -->
+    <div class="flex-1 flex overflow-hidden">
 
-    <!-- قسم اختيار المنتجات المطور -->
-    <section id="products-section" class="max-w-7xl mx-auto px-4 py-12">
-        
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-6">
-            <!-- العنوان وشريط البحث -->
-            <div class="w-full md:w-1/2">
-                <span class="text-curex-coral text-xs font-extrabold tracking-widest uppercase block mb-1">THE ESSENTIALS, CURATED</span>
-                <h2 class="text-3xl md:text-4xl font-black text-curex-teal mb-2">اختياراتنا لك</h2>
-                <p class="text-slate-500 text-sm font-medium mb-4">ابحث بالاسم أو الكود، واختر ما يناسب احتياجك.</p>
+        <!-- Left Sidebar (Files & Tools) -->
+        <aside class="w-14 md:w-56 bg-replit-sidebar border-l border-replit-border flex flex-col shrink-0">
+            <!-- Top Tools Switcher -->
+            <div class="p-2 border-b border-replit-border flex space-x-1 space-x-reverse text-xs font-bold text-replit-muted">
+                <button class="flex-1 py-1.5 bg-replit-panel text-white rounded text-center border border-replit-border">Files</button>
+                <button class="flex-1 py-1.5 hover:bg-replit-panel rounded text-center transition">Tools</button>
+            </div>
+
+            <!-- File Tree -->
+            <div class="p-3 space-y-1 text-xs text-replit-text font-mono overflow-y-auto flex-1">
+                <div class="text-[11px] text-replit-muted uppercase font-bold tracking-wider mb-2 font-sans">Project Files</div>
                 
-                <!-- شريط البحث -->
-                <div class="relative w-full">
-                    <input type="text" id="search-input" oninput="renderProducts()" placeholder="ابحث عن منتج..." class="w-full bg-white border border-stone-300 rounded-2xl py-3 px-4 pr-10 text-sm outline-none focus:ring-2 focus:ring-curex-teal shadow-sm">
-                    <span class="absolute left-4 top-3 text-slate-400">🔍</span>
+                <div class="flex items-center gap-2 px-2 py-1.5 rounded bg-replit-panel text-white cursor-pointer font-medium">
+                    <span class="text-amber-400">📄</span> index.html
+                </div>
+                <div class="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-replit-panel/50 cursor-pointer text-replit-muted transition">
+                    <span class="text-blue-400">📄</span> style.css
+                </div>
+                <div class="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-replit-panel/50 cursor-pointer text-replit-muted transition">
+                    <span class="text-yellow-400">📄</span> main.js
+                </div>
+                <div class="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-replit-panel/50 cursor-pointer text-replit-muted transition">
+                    <span class="text-emerald-400">📊</span> database.json
                 </div>
             </div>
 
-            <!-- أزرار الأقسام -->
-            <div class="flex flex-wrap gap-2">
-                <button onclick="switchTab('all')" id="tab-all" class="px-6 py-2.5 rounded-full text-sm font-bold bg-curex-teal text-white shadow">الكل</button>
-                <button onclick="switchTab('devices')" id="tab-devices" class="px-6 py-2.5 rounded-full text-sm font-bold bg-white text-slate-700 hover:text-curex-teal border border-stone-200">مستلزمات طبية - أجهزة فحص</button>
-                <button onclick="switchTab('consumables')" id="tab-consumables" class="px-6 py-2.5 rounded-full text-sm font-bold bg-white text-slate-700 hover:text-curex-teal border border-stone-200">مستلزمات طبية - استهلاكية</button>
+            <!-- Bottom Settings -->
+            <div class="p-3 border-t border-replit-border text-xs text-replit-muted flex justify-between items-center">
+                <span class="cursor-pointer hover:text-white">⚙️ Settings</span>
+                <span class="text-[10px] bg-replit-panel px-1.5 py-0.5 rounded">v2.1</span>
             </div>
-        </div>
+        </aside>
 
-        <!-- شبكة المنتجات -->
-        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="col-span-full text-center py-12 text-slate-400 font-bold">جاري تحميل المنتجات...</div>
-        </div>
-    </section>
-
-    <!-- الفوتر (Footer) -->
-    <footer class="bg-curex-bgLight border-t border-stone-200 pt-12 pb-8 mt-16">
-        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-            <div>
-                <div class="flex items-center space-x-3 space-x-reverse mb-4">
-                    <div class="w-10 h-10 bg-curex-teal text-white font-extrabold text-xl rounded-xl flex items-center justify-center">CX</div>
-                    <div>
-                        <h3 class="font-black text-xl text-curex-teal leading-none">CureX</h3>
-                        <span class="text-[9px] uppercase tracking-wider font-bold text-slate-400 block">HEALTHCARE SOLUTIONS</span>
-                    </div>
+        <!-- Center Panel (Code Editor) -->
+        <main class="flex-1 bg-replit-bg flex flex-col border-l border-replit-border overflow-hidden">
+            <!-- Tabs Bar -->
+            <div class="h-9 bg-replit-sidebar border-b border-replit-border flex items-center px-2 space-x-1 space-x-reverse text-xs font-mono">
+                <div class="bg-replit-bg text-white px-3 py-1.5 rounded-t border-t-2 border-replit-accent flex items-center gap-2">
+                    <span class="text-amber-400 text-xs">📄</span> index.html
+                    <span class="text-replit-muted hover:text-white cursor-pointer text-[10px]">✕</span>
                 </div>
-                <p class="text-slate-600 text-sm leading-relaxed max-w-xs">نختار مستلزمات الرعاية الصحية بعناية، ونوصلها بوضوح وسرعة إلى من يعتمد عليها كل يوم.</p>
+                <div class="text-replit-muted px-3 py-1.5 hover:bg-replit-panel rounded-t flex items-center gap-2 cursor-pointer transition">
+                    <span class="text-blue-400 text-xs">📄</span> style.css
+                </div>
             </div>
 
-            <div>
-                <h4 class="font-black text-curex-teal text-lg mb-4">نحن هنا للمساعدة</h4>
-                <p class="text-slate-700 text-sm font-bold mb-2">📞 26 184 9200</p>
-                <p class="text-slate-600 text-sm">📍 الرياض، المملكة العربية السعودية</p>
-            </div>
-
-            <div>
-                <h4 class="font-black text-curex-teal text-lg mb-4">التزامنا</h4>
-                <ul class="space-y-2 text-sm text-slate-700 font-bold">
-                    <li class="flex items-center gap-2">🛡️ منتجات موثوقة</li>
-                    <li class="flex items-center gap-2">🚚 توصيل منظم</li>
-                    <li class="flex items-center gap-2">❤️ عناية مستمرة</li>
-                </ul>
-            </div>
-        </div>
-        <div class="text-center text-xs text-slate-400 font-bold border-t border-stone-200 pt-6">
-            © 2026 CureX Healthcare Solutions
-        </div>
-    </footer>
-
-    <!-- modal الشراء -->
-    <div id="checkout-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-stone-200">
-            <h3 class="text-2xl font-black text-curex-teal mb-2">تأكيد طلب الشراء</h3>
-            <form id="checkout-form" onsubmit="processOrder(event)">
-                <input type="hidden" id="selected-product-id">
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">الاسم بالكامل</label>
-                        <input type="text" id="cust-name" required class="w-full border border-stone-300 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-curex-teal">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">رقم الهاتف</label>
-                        <input type="tel" id="cust-phone" required class="w-full border border-stone-300 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-curex-teal">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">العنوان</label>
-                        <textarea id="cust-address" required rows="2" class="w-full border border-stone-300 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-curex-teal"></textarea>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">الكمية المطلوبة</label>
-                        <input type="number" id="cust-qty" value="1" min="1" required class="w-full border border-stone-300 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-curex-teal">
-                    </div>
+            <!-- Editor Lines Area -->
+            <div class="flex-1 p-4 code-font text-xs md:text-sm overflow-auto flex leading-relaxed">
+                <!-- Line Numbers -->
+                <div class="text-replit-muted/40 select-none text-left pl-3 pr-4 space-y-1 text-right font-mono border-l border-replit-border/30">
+                    <div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div><div>10</div><div>11</div><div>12</div>
                 </div>
 
-                <div class="flex space-x-3 space-x-reverse mt-6">
-                    <button type="submit" class="flex-1 bg-curex-teal hover:bg-curex-darkTeal text-white font-extrabold py-3 rounded-xl text-sm transition">تأكيد الشراء</button>
-                    <button type="button" onclick="closeCheckout()" class="px-5 py-3 bg-stone-100 text-slate-700 font-bold rounded-xl text-sm">إلغاء</button>
+                <!-- Code View -->
+                <div class="pr-4 space-y-1 text-replit-text flex-1">
+                    <div><span class="text-purple-400">&lt;!DOCTYPE</span> <span class="text-amber-300">html</span>&gt;</div>
+                    <div><span class="text-purple-400">&lt;html</span> <span class="text-amber-300">lang</span>=<span class="text-emerald-300">"ar"</span> <span class="text-amber-300">dir</span>=<span class="text-emerald-300">"rtl"</span>&gt;</div>
+                    <div>&nbsp;&nbsp;<span class="text-purple-400">&lt;head&gt;</span></div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">&lt;title&gt;</span><span class="text-white">Replit Inspired UI</span><span class="text-purple-400">&lt;/title&gt;</span></div>
+                    <div>&nbsp;&nbsp;<span class="text-purple-400">&lt;/head&gt;</span></div>
+                    <div>&nbsp;&nbsp;<span class="text-purple-400">&lt;body</span> <span class="text-amber-300">class</span>=<span class="text-emerald-300">"bg-dark"</span>&gt;</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">&lt;h1&gt;</span><span class="text-sky-300">مرحباً بك في واجهة ريبليت!</span><span class="text-purple-400">&lt;/h1&gt;</span></div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">&lt;script&gt;</span></div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-blue-400">console</span>.<span class="text-yellow-300">log</span>(<span class="text-emerald-300">"App running smoothly..."</span>);</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">&lt;/script&gt;</span></div>
+                    <div>&nbsp;&nbsp;<span class="text-purple-400">&lt;/body&gt;</span></div>
+                    <div><span class="text-purple-400">&lt;/html&gt;</span></div>
                 </div>
-            </form>
-        </div>
+            </div>
+        </main>
+
+        <!-- Right Panel (Web Preview / Output Console) -->
+        <aside class="w-1/3 bg-replit-panel border-l border-replit-border flex flex-col shrink-0 hidden lg:flex">
+            <!-- Preview Header Bar -->
+            <div class="h-9 bg-replit-sidebar border-b border-replit-border flex items-center justify-between px-3 text-xs">
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span class="font-bold text-white">WebView Preview</span>
+                </div>
+                <div class="flex items-center gap-2 text-replit-muted">
+                    <span class="cursor-pointer hover:text-white">🔄</span>
+                    <span class="cursor-pointer hover:text-white">🔗</span>
+                </div>
+            </div>
+
+            <!-- Preview Browser Address Bar -->
+            <div class="p-2 border-b border-replit-border bg-replit-bg">
+                <div class="bg-replit-sidebar border border-replit-border rounded py-1 px-3 text-[11px] text-replit-muted font-mono flex justify-between">
+                    <span>https://my-awesome-app.replit.app</span>
+                    <span>🔒</span>
+                </div>
+            </div>
+
+            <!-- Web Output Canvas -->
+            <div class="flex-1 bg-white text-slate-900 p-6 flex flex-col items-center justify-center text-center">
+                <div class="w-16 h-16 bg-replit-accent/10 rounded-2xl flex items-center justify-center text-replit-accent text-3xl mb-4 font-black">
+                    ⚡
+                </div>
+                <h2 class="text-2xl font-black mb-2 text-slate-800">التطبيق يعمل بنجاح!</h2>
+                <p class="text-slate-500 text-xs max-w-xs leading-relaxed mb-6">هذه الشاشة تمثل المعاينة الحية للمشروع المكتوب داخل محرر الكود.</p>
+                <button class="bg-replit-accent hover:bg-orange-600 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition shadow-lg">
+                    تفاعل مع العنصر
+                </button>
+            </div>
+
+            <!-- Bottom Terminal / Console Drawer -->
+            <div class="h-32 bg-replit-bg border-t border-replit-border p-3 code-font text-xs flex flex-col justify-between">
+                <div class="flex justify-between text-[11px] text-replit-muted border-b border-replit-border/50 pb-1 font-sans">
+                    <span>Console Output</span>
+                    <span>Clear</span>
+                </div>
+                <div class="text-emerald-400 space-y-1">
+                    <div>&gt; Replit container started successfully.</div>
+                    <div class="text-sky-400">&gt; "App running smoothly..."</div>
+                </div>
+                <div class="flex items-center text-replit-muted gap-1">
+                    <span class="text-replit-accent">&gt;</span>
+                    <span class="animate-pulse">_</span>
+                </div>
+            </div>
+        </aside>
+
     </div>
 
-    <script>
-        let allProducts = [];
-        let currentCategory = 'all';
-
-        window.addEventListener('DOMContentLoaded', loadData);
-
-        function loadData() {
-            const saved = localStorage.getItem('curex_products');
-            if (saved) {
-                allProducts = JSON.parse(saved);
-                renderProducts();
-            } else {
-                allProducts = [
-                    { ID: 'P001', Name: 'جهاز الضغط الإلكتروني', Category: 'devices', Price: 1400.00, Stock: 8, MinStock: 5, Description: 'مستلزمات طبية - أجهزة فحص' },
-                    { ID: 'P002', Name: 'جهاز السكر المنزلي', Category: 'devices', Price: 550.00, Stock: 3, MinStock: 5, Description: 'مستلزمات طبية - أجهزة فحص' },
-                    { ID: 'P003', Name: 'قفازات طبية معقمة', Category: 'consumables', Price: 120.00, Stock: 40, MinStock: 10, Description: 'مستلزمات طبية - استهلاكية' }
-                ];
-                localStorage.setItem('curex_products', JSON.stringify(allProducts));
-                renderProducts();
-            }
-        }
-
-        function switchTab(cat) {
-            currentCategory = cat;
-            document.querySelectorAll('[id^="tab-"]').forEach(btn => {
-                btn.className = 'px-6 py-2.5 rounded-full text-sm font-bold bg-white text-slate-700 hover:text-curex-teal border border-stone-200';
-            });
-            document.getElementById(`tab-${cat}`).className = 'px-6 py-2.5 rounded-full text-sm font-bold bg-curex-teal text-white shadow';
-            renderProducts();
-        }
-
-        function renderProducts() {
-            const grid = document.getElementById('products-grid');
-            const searchVal = document.getElementById('search-input').value.toLowerCase();
-
-            let filtered = currentCategory === 'all' 
-                ? allProducts 
-                : allProducts.filter(p => p.Category === currentCategory);
-
-            if (searchVal) {
-                filtered = filtered.filter(p => p.Name.toLowerCase().includes(searchVal) || p.ID.toLowerCase().includes(searchVal));
-            }
-
-            if (filtered.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500 font-bold">لا توجد منتجات مطابقة للبحث.</div>`;
-                return;
-            }
-
-            grid.innerHTML = filtered.map(item => `
-                <div class="bg-white rounded-3xl border border-stone-200 p-4 flex flex-col justify-between shadow-sm hover:shadow-md transition">
-                    <div>
-                        <!-- صورة وشبكة الكارت -->
-                        <div class="bg-curex-cardBg rounded-2xl h-48 flex items-center justify-center relative mb-4 border border-stone-100 grid-pattern">
-                            <span class="absolute top-3 right-3 bg-white/80 text-slate-500 text-xs font-bold px-2.5 py-1 rounded-full border border-stone-200">${item.ID}</span>
-                            <div class="w-16 h-16 border-2 border-curex-teal/40 rounded-xl flex items-center justify-center text-curex-teal">
-                                📦
-                            </div>
-                        </div>
-
-                        <span class="text-xs text-slate-400 font-bold block mb-1">${item.Description || 'مستلزمات طبية'}</span>
-                        <h3 class="font-extrabold text-2xl text-curex-teal mb-4">${item.Name}</h3>
-                    </div>
-
-                    <div class="flex items-center justify-between pt-2 border-t border-stone-100">
-                        <button onclick="openCheckout('${item.ID}')" class="w-10 h-10 bg-curex-teal hover:bg-curex-darkTeal text-white rounded-full flex items-center justify-center text-xl font-bold shadow-md transition">
-                            +
-                        </button>
-                        <div class="text-left">
-                            <span class="text-2xl font-black text-curex-teal">${item.Price.toFixed(2)} <span class="text-xs font-bold text-slate-500">ر.س</span></span>
-                            <span class="text-[10px] text-slate-400 font-bold block">لكل قطع</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function openCheckout(id) {
-            document.getElementById('selected-product-id').value = id;
-            document.getElementById('checkout-modal').classList.remove('hidden');
-        }
-
-        function closeCheckout() {
-            document.getElementById('checkout-modal').classList.add('hidden');
-        }
-
-        function scrollToProducts() {
-            document.getElementById('products-section').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function processOrder(e) {
-            e.preventDefault();
-            const id = document.getElementById('selected-product-id').value;
-            const qty = parseInt(document.getElementById('cust-qty').value);
-            const idx = allProducts.findIndex(p => p.ID === id);
-
-            if (idx !== -1) {
-                if (allProducts[idx].Stock < qty) {
-                    alert('عذراً، الكمية المطلوبة غير متوفرة بـ المخزن!');
-                    return;
-                }
-
-                allProducts[idx].Stock -= qty;
-                localStorage.setItem('curex_products', JSON.stringify(allProducts));
-
-                const sales = JSON.parse(localStorage.getItem('curex_sales') || '[]');
-                sales.push({
-                    productId: id,
-                    productName: allProducts[idx].Name,
-                    customer: document.getElementById('cust-name').value,
-                    phone: document.getElementById('cust-phone').value,
-                    qty: qty,
-                    total: qty * allProducts[idx].Price,
-                    date: new Date().toLocaleDateString('ar-EG')
-                });
-                localStorage.setItem('curex_sales', JSON.stringify(sales));
-
-                alert('تمت عملية الشراء بنجاح وتحديث المخزون!');
-                closeCheckout();
-                renderProducts();
-            }
-        }
-    </script>
 </body>
 </html>
