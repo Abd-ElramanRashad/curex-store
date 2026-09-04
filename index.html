@@ -68,7 +68,7 @@
             </a>
 
             <div class="flex items-center gap-3">
-                <!-- أيقونة لوحة التحكم (أيقونة شخص إداري) -->
+                <!-- أيقونة لوحة التحكم -->
                 <button onclick="openAdminModal()" class="bg-stone-100 hover:bg-stone-200 text-stone-600 p-2.5 rounded-full transition" title="لوحة الإدارة">
                     <i class="fa-solid fa-user-gear text-base"></i>
                 </button>
@@ -122,7 +122,7 @@
 
             <div id="loading" class="text-center py-16">
                 <i class="fa-solid fa-spinner fa-spin text-4xl text-brand-teal"></i>
-                <p class="mt-3 text-sm text-brand-textMuted font-bold">جاري تحميل المنتجات والأسعار من الشيت...</p>
+                <p class="mt-3 text-sm text-brand-textMuted font-bold">جاري تحميل المنتجات من الشيت...</p>
             </div>
 
             <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 hidden"></div>
@@ -239,11 +239,10 @@
         </div>
     </div>
 
-    <!-- Restored Layout Footer with RTL Icon Order (Right to Left) -->
+    <!-- Restored Layout Footer with RTL Icon Order -->
     <footer id="footer-section" class="bg-brand-bg border-t border-stone-200/80 pt-16 pb-8 mt-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12 text-right">
-                <!-- Brand Info -->
                 <div>
                     <div class="flex items-center gap-3 mb-4">
                         <div class="relative">
@@ -260,7 +259,6 @@
                     </p>
                 </div>
 
-                <!-- Contact Info (Icons Correctly Mirrored to Right Side) -->
                 <div>
                     <h4 class="font-extrabold text-brand-teal text-sm mb-4">نحن هنا للمساعدة</h4>
                     <ul class="space-y-3 text-xs text-brand-textMuted font-semibold">
@@ -279,7 +277,6 @@
                     </ul>
                 </div>
 
-                <!-- Our Commitments Section (Icons Correctly Mirrored to Right Side) -->
                 <div>
                     <h4 class="font-extrabold text-brand-teal text-sm mb-4">التزامنا</h4>
                     <ul class="space-y-3 text-xs text-brand-textMuted font-semibold">
@@ -329,36 +326,20 @@
             }
         }
 
-        // دالة حاسمة ومحدثة لاستخراج السعر مهما كان مسمى العمود بالشيت
+        // دالة قراءة السعر من أي عمود في الشيت
         function getPriceVal(product) {
             if (!product) return 0;
 
-            // البحث عن القيمة في كافة الحقول المحتملة
-            const possibleKeys = [
-                'selling_price', 'sellingPrice', 'price', 'Price', 'PRICE',
-                'سعر_البيع', 'سعر البيع', 'السعر', 'سعر', 'Selling Price'
-            ];
-
-            for (let key of possibleKeys) {
-                if (product[key] !== undefined && product[key] !== null && product[key] !== '') {
-                    // تنظيف النص من أية رموز عملة أو مسافات تحسباً
-                    const cleaned = String(product[key]).replace(/[^\d.]/g, '');
+            for (let key in product) {
+                const val = product[key];
+                if (val !== null && val !== undefined && val !== '') {
+                    const cleaned = String(val).replace(/[^\d.]/g, '');
                     const parsed = parseFloat(cleaned);
                     if (!isNaN(parsed) && parsed > 0) {
                         return parsed;
                     }
                 }
             }
-
-            // محاولة البحث عن أي مفتاح يحتوي كلمة price أو سعر
-            for (let k in product) {
-                if (k.toLowerCase().includes('price') || k.includes('سعر')) {
-                    const cleaned = String(product[k]).replace(/[^\d.]/g, '');
-                    const parsed = parseFloat(cleaned);
-                    if (!isNaN(parsed) && parsed > 0) return parsed;
-                }
-            }
-
             return 0;
         }
 
@@ -367,7 +348,7 @@
             grid.innerHTML = products.map(product => {
                 const priceVal = getPriceVal(product);
                 const code = product.item_code || product.code || product.Code || '';
-                const name = product.item_name || product.name || product.Name || 'منتج بدون اسم';
+                const name = product.item_name || product.name || product.Name || 'منتج';
                 
                 return `
                 <div class="bg-brand-cardBg rounded-2xl p-4 border border-stone-200/80 shadow-sm flex flex-col justify-between text-right">
@@ -379,7 +360,7 @@
                         <h3 class="font-extrabold text-sm text-brand-teal mb-2">${name}</h3>
                     </div>
                     <div class="pt-2 border-t flex items-center justify-between">
-                        <div class="text-sm font-black text-brand-teal">${priceVal > 0 ? priceVal.toFixed(2) + ' ج.م' : 'اتصل للسعر'}</div>
+                        <div class="text-sm font-black text-brand-teal">${priceVal.toFixed(2)} ج.م</div>
                         <button class="bg-brand-teal text-white text-xs px-3 py-1.5 rounded-lg font-bold">أضف للسلة</button>
                     </div>
                 </div>
@@ -437,40 +418,43 @@
 
             const inventoryList = data.inventory || [];
 
-            // إعداد رسم بياني لمبيعات المنتجات
             renderSalesChart(inventoryList);
 
-            // تصفية النواقص بدقة كأرقام
             const reorderAlerts = inventoryList.filter(item => {
                 const curr = Number(item.currentBalance || 0);
-                const reorder = Number(item.reorderPoint || 0);
+                const reorder = item.reorderPoint !== undefined && item.reorderPoint !== null && item.reorderPoint !== '' ? Number(item.reorderPoint) : 0;
                 return curr <= reorder;
             });
 
             document.getElementById('stat-reorder-count').innerText = reorderAlerts.length;
 
-            // جدول النواقص
+            // جدول التنبيه (استبدال null بـ Reorder)
             const reorderBody = document.getElementById('reorder-table-body');
             if (reorderAlerts.length === 0) {
                 reorderBody.innerHTML = `<tr><td colspan="4" class="text-center py-3 text-emerald-600 font-bold">جميع المنتجات فوق حد الطلب 👍</td></tr>`;
             } else {
-                reorderBody.innerHTML = reorderAlerts.map(item => `
+                reorderBody.innerHTML = reorderAlerts.map(item => {
+                    const rPointDisplay = (item.reorderPoint !== null && item.reorderPoint !== undefined && item.reorderPoint !== '' && String(item.reorderPoint).toLowerCase() !== 'null') 
+                        ? `${item.reorderPoint} ${item.unit || ''}` 
+                        : 'Reorder';
+
+                    return `
                     <tr class="font-bold text-red-700">
                         <td class="py-2 px-2">${item.code}</td>
                         <td class="py-2 px-2">${item.name}</td>
-                        <td class="py-2 px-2">${item.currentBalance} ${item.unit || ''}</td>
-                        <td class="py-2 px-2">${item.reorderPoint} ${item.unit || ''}</td>
+                        <td class="py-2 px-2">${item.currentBalance} ${item.unit || 'قطعة'}</td>
+                        <td class="py-2 px-2 text-red-600 font-black">${rPointDisplay}</td>
                     </tr>
-                `).join('');
+                    `;
+                }).join('');
             }
 
-            // جدول المخزون الكامل - تحويل خانة حد الطلب إلى Safe أو Reorder لعدم ظهور null
+            // جدول المخزون الكامل
             const invBody = document.getElementById('inventory-table-body');
             invBody.innerHTML = inventoryList.map(item => {
                 const current = Number(item.currentBalance || 0);
-                const reorderVal = item.reorderPoint !== undefined && item.reorderPoint !== null && item.reorderPoint !== '' ? Number(item.reorderPoint) : 0;
+                const reorderVal = (item.reorderPoint !== undefined && item.reorderPoint !== null && item.reorderPoint !== '' && String(item.reorderPoint).toLowerCase() !== 'null') ? Number(item.reorderPoint) : 0;
                 
-                // تحديد الحالة بدقة: Reorder أو Safe
                 const isNeedsReorder = current <= reorderVal;
                 const statusBadge = isNeedsReorder 
                     ? `<span class="bg-red-100 text-red-700 font-bold px-2.5 py-1 rounded-full text-[11px] inline-flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation"></i> Reorder (${reorderVal})</span>` 
@@ -488,7 +472,6 @@
             `}).join('');
         }
 
-        // دالة إنشاء الرسم البياني لبيانات المبيعات
         function renderSalesChart(inventory) {
             const ctx = document.getElementById('salesChart').getContext('2d');
             
