@@ -121,7 +121,7 @@
 
             <div id="loading" class="text-center py-16">
                 <i class="fa-solid fa-spinner fa-spin text-4xl text-brand-teal"></i>
-                <p class="mt-3 text-sm text-brand-textMuted font-bold">جاري جلب المنتجات والأسعار من السكربت الجديد...</p>
+                <p class="mt-3 text-sm text-brand-textMuted font-bold">جاري تحميل المنتجات...</p>
             </div>
 
             <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 hidden"></div>
@@ -303,7 +303,6 @@
 
     <!-- JavaScript Logic -->
     <script>
-        // رابط الاسكريبت الجديد المربوط
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzNBwciTPQTh4tlya6_9eTl_UL6jD-PUgTSNTBi3uvVdVXy30H-TuvS9h_rbZW3Zo-K/exec";
 
         let allProducts = [];
@@ -317,7 +316,7 @@
             try {
                 const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getProducts`);
                 allProducts = await response.json();
-                console.log("البيانات القادمة من السكربت الجديد:", allProducts);
+                console.log("البيانات القادمة من الشيت:", allProducts);
                 renderProducts(allProducts);
             } catch (error) {
                 console.error("خطأ في جلب المنتجات:", error);
@@ -327,11 +326,41 @@
             }
         }
 
-        // دالة الفحص المرنة الشاملة لاستخراج السعر من الشيت
+        // 1. دالة استخراج اسم المنتج بمرونة من الشيت
+        function getNameVal(product) {
+            if (!product || typeof product !== 'object') return 'منتج بدون اسم';
+            const targetKeys = ['Item Name', 'item_name', 'Name', 'name', 'اسم المنتج', 'اسم_المنتج', 'المنتج', 'Product Name'];
+            for (let key of targetKeys) {
+                if (product[key] !== undefined && product[key] !== null && String(product[key]).trim() !== '') {
+                    return String(product[key]).trim();
+                }
+            }
+            for (let k in product) {
+                const cleanKey = k.trim().toLowerCase().replace(/_/g, '').replace(/\s+/g, '');
+                if (cleanKey.includes('name') || cleanKey.includes('اسم') || cleanKey.includes('product')) {
+                    if (product[k] !== undefined && product[k] !== null && String(product[k]).trim() !== '') {
+                        return String(product[k]).trim();
+                    }
+                }
+            }
+            return 'منتج بدون اسم';
+        }
+
+        // 2. دالة استخراج الكود بمرونة من الشيت
+        function getCodeVal(product) {
+            if (!product || typeof product !== 'object') return '';
+            const targetKeys = ['Code', 'code', 'item_code', 'Item Code', 'كود المنتج', 'الكود', 'كود'];
+            for (let key of targetKeys) {
+                if (product[key] !== undefined && product[key] !== null && String(product[key]).trim() !== '') {
+                    return String(product[key]).trim();
+                }
+            }
+            return '';
+        }
+
+        // 3. دالة استخراج السعر بمرونة من الشيت
         function getPriceVal(product) {
             if (!product || typeof product !== 'object') return 0;
-
-            // 1. الفحص المباشر لأكثر المسميات شيوعاً
             const targetKeys = ['Selling Price', 'SellingPrice', 'selling_price', 'sellingPrice', 'PRICE', 'Price', 'سعر_البيع', 'سعر البيع', 'السعر'];
             for (let key of targetKeys) {
                 if (product[key] !== undefined && product[key] !== null && product[key] !== '') {
@@ -340,8 +369,6 @@
                     if (!isNaN(parsed)) return parsed;
                 }
             }
-
-            // 2. البحث المرن في جميع المفاتيح لمطابقة أي حقل يحتوي على كلمات متعلقة بالسعر
             for (let k in product) {
                 const cleanKey = k.trim().toLowerCase().replace(/_/g, '').replace(/\s+/g, '');
                 if (cleanKey.includes('price') || cleanKey.includes('selling') || cleanKey.includes('سعر')) {
@@ -362,10 +389,9 @@
             }
 
             grid.innerHTML = products.map(product => {
+                const name = getNameVal(product);
+                const code = getCodeVal(product);
                 const priceVal = getPriceVal(product);
-                
-                const code = product.item_code || product.Code || product.code || product['كود المنتج'] || '';
-                const name = product.item_name || product.Name || product.name || product['اسم المنتج'] || 'منتج بدون اسم';
                 
                 return `
                 <div class="bg-brand-cardBg rounded-2xl p-4 border border-stone-200/80 shadow-sm flex flex-col justify-between text-right hover:shadow-md transition">
@@ -373,8 +399,8 @@
                         <div class="bg-brand-cardImageBg rounded-xl h-40 flex items-center justify-center mb-3">
                             <i class="fa-solid fa-box text-3xl text-brand-teal/60"></i>
                         </div>
-                        <span class="text-[10px] font-bold text-stone-400 block">${code}</span>
-                        <h3 class="font-extrabold text-sm text-brand-teal mb-2">${name}</h3>
+                        ${code ? `<span class="text-[10px] font-bold text-stone-400 block mb-1">${code}</span>` : ''}
+                        <h3 class="font-extrabold text-base text-brand-teal mb-3 leading-snug">${name}</h3>
                     </div>
                     <div class="pt-3 border-t border-stone-100 flex items-center justify-between mt-2">
                         <div class="flex flex-col">
@@ -390,8 +416,8 @@
         function filterProducts() {
             const query = document.getElementById('search-input').value.toLowerCase().trim();
             const filtered = allProducts.filter(p => {
-                const name = String(p.item_name || p.Name || p.name || '').toLowerCase();
-                const code = String(p.item_code || p.Code || p.code || '').toLowerCase();
+                const name = getNameVal(p).toLowerCase();
+                const code = getCodeVal(p).toLowerCase();
                 return name.includes(query) || code.includes(query);
             });
             renderProducts(filtered);
