@@ -3,307 +3,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CureX - Healthcare Solutions</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>CureX Healthcare Solutions - متجر كيوركس</title>
+    <!-- Google Fonts & Tailwind CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
-        :root {
-            --bg-color: #F8F6F0;
-            --primary-green: #117565;
-            --accent-orange: #E87A41;
-            --dark-text: #2D3748;
-            --light-card: #FFFFFF;
-            --border-color: #E2E8F0;
-        }
-        body { font-family: 'Cairo', sans-serif; background-color: var(--bg-color); margin: 0; padding: 0; color: var(--dark-text); }
-        
-        /* Top Banner */
-        .top-banner { background-color: var(--primary-green); color: white; text-align: center; padding: 8px; font-size: 13px; font-weight: 600; }
-
-        /* Header */
-        header { background: var(--bg-color); padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #EAE5D9; }
-        .logo-container { display: flex; align-items: center; gap: 12px; }
-        .logo-box { background: var(--primary-green); color: white; width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px; }
-        .logo-text h1 { margin: 0; font-size: 20px; color: var(--primary-green); }
-        .logo-text span { color: var(--accent-orange); font-size: 11px; font-weight: 600; display: block; letter-spacing: 0.5px; }
-        
-        nav { display: flex; align-items: center; gap: 25px; }
-        nav a { color: var(--dark-text); text-decoration: none; font-weight: 600; font-size: 15px; transition: 0.3s; }
-        nav a:hover { color: var(--primary-green); }
-        
-        .cart-btn { background: white; border: 1px solid var(--primary-green); color: var(--primary-green); padding: 8px 18px; border-radius: 25px; font-weight: bold; display: flex; align-items: center; gap: 8px; cursor: pointer; }
-        .cart-badge { background: var(--accent-orange); color: white; border-radius: 50%; padding: 2px 8px; font-size: 12px; }
-
-        /* Hero Section */
-        .hero { padding: 60px 40px; text-align: right; max-width: 1200px; margin: 0 auto; }
-        .badge-pill { background: white; border: 1px solid var(--border-color); padding: 6px 15px; border-radius: 20px; font-size: 13px; color: var(--primary-green); display: inline-flex; align-items: center; gap: 5px; margin-bottom: 20px; }
-        .hero h2 { font-size: 48px; color: var(--primary-green); margin: 0 0 15px 0; line-height: 1.2; }
-        .hero h2 span { color: var(--accent-orange); display: block; }
-        .hero p { color: #64748b; font-size: 16px; max-width: 600px; margin-bottom: 30px; }
-        .btn-primary { background: var(--primary-green); color: white; border: none; padding: 12px 30px; border-radius: 30px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 10px; }
-        .btn-primary:hover { opacity: 0.9; }
-
-        /* Products Section */
-        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px; }
-        .section-title h3 { font-size: 32px; color: var(--primary-green); margin: 0; }
-        .section-title p { color: #64748b; margin: 5px 0 0 0; }
-
-        .search-box { width: 100%; max-width: 400px; padding: 12px 20px; border: 1px solid var(--border-color); border-radius: 25px; font-family: 'Cairo', sans-serif; font-size: 14px; outline: none; background: white; }
-        
-        .categories-filter { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
-        .cat-btn { background: white; border: 1px solid var(--border-color); padding: 8px 18px; border-radius: 20px; cursor: pointer; font-family: 'Cairo', sans-serif; font-weight: 600; color: var(--dark-text); transition: 0.3s; }
-        .cat-btn.active, .cat-btn:hover { background: var(--primary-green); color: white; border-color: var(--primary-green); }
-
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
-        .product-card { background: var(--light-card); border-radius: 16px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; position: relative; }
-        .product-tag { position: absolute; top: 15px; left: 15px; background: #EDF2F7; color: #4A5568; font-size: 11px; padding: 4px 10px; border-radius: 6px; font-weight: bold; }
-        
-        .product-img-placeholder { background: #F7FAFC; height: 140px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--primary-green); margin-bottom: 15px; font-size: 32px; }
-        .product-card h4 { margin: 0 0 8px 0; color: var(--primary-green); font-size: 18px; }
-        .product-cat { font-size: 12px; color: #718096; margin-bottom: 15px; }
-        .product-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #EDF2F7; padding-top: 15px; margin-top: auto; }
-        .price { font-size: 18px; color: var(--primary-green); font-weight: bold; }
-        .price span { font-size: 12px; color: #718096; font-weight: normal; }
-        
-        .add-to-cart-btn { background: var(--primary-green); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; transition: 0.3s; }
-        .add-to-cart-btn:hover { background: var(--accent-orange); }
-
-        /* Checkout Modal */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: white; padding: 30px; border-radius: 16px; width: 100%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .modal-header h3 { margin: 0; color: var(--primary-green); }
-        .close-modal { background: none; border: none; font-size: 20px; cursor: pointer; color: #718096; }
-        
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px; color: var(--dark-text); }
-        .form-group input { width: 100%; padding: 10px 15px; border: 1px solid var(--border-color); border-radius: 8px; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        
-        .checkout-submit { background: var(--accent-orange); color: white; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; }
-        
-        /* Footer */
-        footer { background: #1A202C; color: #A0AEC0; padding: 50px 20px; margin-top: 80px; }
-        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
-        .footer-content h3 { color: white; font-size: 18px; margin-bottom: 15px; border-bottom: 2px solid var(--primary-green); padding-bottom: 8px; display: inline-block; }
-        .footer-content p, .footer-content li { font-size: 14px; line-height: 1.8; list-style: none; padding: 0; }
-        .footer-bottom { text-align: center; border-top: 1px solid #2D3748; margin-top: 40px; padding-top: 20px; font-size: 13px; }
-
-        .success-alert { background: #C6F6D5; color: #22543D; padding: 15px; border-radius: 8px; text-align: center; font-weight: bold; margin-bottom: 20px; display: none; }
+        body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .brand-blue { color: #003B73; }
+        .bg-brand-blue { background-color: #003B73; }
+        .brand-teal { color: #00A896; }
+        .bg-brand-teal { background-color: #00A896; }
+        .border-brand-teal { border-color: #00A896; }
     </style>
 </head>
-<body>
+<body class="flex flex-col min-h-screen justify-between">
 
-    <div class="top-banner">
-        توريد موثوق للعيادات والصيدليات – نصل إليك في الوقت المناسب
-    </div>
-
-    <header>
-        <div class="logo-container">
-            <div class="logo-box">CX</div>
-            <div class="logo-text">
-                <h1>CureX</h1>
-                <span>HEALTHCARE SOLUTIONS</span>
+    <!-- Header Section -->
+    <header class="bg-white shadow-md border-b border-gray-100 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex flex-wrap justify-between items-center">
+            <div class="flex items-center space-x-4 space-x-reverse">
+                <div class="flex items-center">
+                    <span class="text-3xl font-extrabold brand-blue tracking-tight">Cure</span>
+                    <span class="text-3xl font-extrabold brand-teal flex items-center">X
+                        <svg class="w-8 h-8 ml-1 inline-block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                        </svg>
+                    </span>
+                </div>
+                <span class="hidden md:block text-xs font-semibold text-gray-400 border-r pr-3 border-gray-300">HEALTHCARE SOLUTIONS</span>
+            </div>
+            <div>
+                <a href="admin.html" class="text-sm font-bold bg-gray-100 text-gray-700 hover:bg-brand-blue hover:text-white px-4 py-2 rounded-lg transition">لوحة الأدمن 🔒</a>
             </div>
         </div>
-        <nav>
-            <a href="#">المنتجات</a>
-            <a href="#">لماذا CureX؟</a>
-            <a href="#">تواصل معنا</a>
-            <button class="cart-btn" onclick="openCartModal()">
-                🛒 السلة <span class="cart-badge" id="cartCount">0</span>
-            </button>
-        </nav>
     </header>
 
-    <div class="hero">
-        <div class="badge-pill">✨ رعاية تبدأ من الاختيار الصحيح</div>
-        <h2>كل ما تحتاجه <span>لرعاية أفضل.</span></h2>
-        <p>مستلزمات صحية موثوقة، جاهزة لعيادتك أو منزلك. اكتشفها بسهولة واطلبها بثقة.</p>
-        <button class="btn-primary" onclick="document.getElementById('shop-section').scrollIntoView({behavior: 'smooth'})">
-            تصفح المنتجات ←
-        </button>
-    </div>
+    <!-- Hero Banner -->
+    <section class="bg-gradient-to-r from-[#003B73] to-[#00A896] text-white py-12 text-center shadow-inner">
+        <h1 class="text-3xl md:text-5xl font-extrabold mb-3">حلول الرعاية الصحية بين يديك</h1>
+        <p class="text-lg opacity-90">تصفح أفضل المستلزمات الطبية واطلب بسهولة مع التوصيل السريع</p>
+    </section>
 
-    <div class="container" id="shop-section">
-        <div id="successAlert" class="success-alert">تم إرسال طلبك بنجاح! سنتواصل معك قريباً لتأكيد الشحن إلى دمنهور.</div>
-
-        <div class="section-header">
-            <div class="section-title">
-                <h3>اختياراتنا لك</h3>
-                <p>ابحث بالاسم أو الكود، واختار ما يناسب احتياجك.</p>
-            </div>
-            <input type="text" id="searchInput" class="search-box" placeholder="🔍 ابحث عن منتج أو كود..." onkeyup="filterProducts()">
+    <!-- Main Products Grid -->
+    <main class="max-w-7xl mx-auto px-6 py-10 flex-grow w-full">
+        <h2 class="text-2xl font-bold mb-6 brand-blue border-r-4 border-brand-teal pr-3">قائمة المنتجات المتاحة</h2>
+        <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- المنتجات سيتم تحميلها ديناميكياً هنا -->
+            <p class="text-gray-500 col-span-full text-center py-8">جاري تحميل المنتجات...</p>
         </div>
+    </main>
 
-        <div class="categories-filter">
-            <button class="cat-btn active" onclick="filterCategory('الكل', this)">الكل</button>
-            <button class="cat-btn" onclick="filterCategory('أجهزة فحص', this)">مستلزمات طبية - أجهزة فحص</button>
-            <button class="cat-btn" onclick="filterCategory('استهلاكية', this)">مستلزمات طبية - استهلاكية</button>
-            <button class="cat-btn" onclick="filterCategory('عناية منزلية', this)">مستلزمات طبية - عناية منزلية</button>
-        </div>
+    <!-- Order Modal / Form -->
+    <div id="order-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative animate-fade-in">
+            <button onclick="closeModal()" class="absolute top-4 left-4 text-gray-400 hover:text-gray-600 text-2xl font-bold">&times;</button>
+            <h3 class="text-xl font-bold brand-blue mb-4">تأكيد طلب الشراء</h3>
+            <div id="modal-product-info" class="bg-blue-50 p-3 rounded-lg mb-4 text-sm"></div>
 
-        <div class="products-grid" id="productsGrid">
-            <!-- سيتم توليد الـ 20 منتج ديناميكياً هنا -->
-        </div>
-    </div>
+            <form id="order-form" onsubmit="submitOrder(event)" class="space-y-4">
+                <input type="hidden" id="selected-item-code">
+                <input type="hidden" id="selected-item-price">
+                <input type="hidden" id="selected-item-name">
 
-    <!-- Modal سلة الطلبات وإدخال البيانات -->
-    <div class="modal" id="cartModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>إتمام الطلب</h3>
-                <button class="close-modal" onclick="closeCartModal()">&times;</button>
-            </div>
-            <div id="cartItemsList" style="max-height: 150px; overflow-y: auto; margin-bottom: 15px; font-size: 14px;"></div>
-            <form onsubmit="submitOrderFinal(event)">
-                <div class="form-group">
-                    <label>الاسم الكريم *</label>
-                    <input type="text" id="clientName" required placeholder="أدخل اسمك الكامل">
+                <div>
+                    <label class="block text-sm font-semibold mb-1">الكمية المطلوبة</label>
+                    <input type="number" id="order-qty" min="1" value="1" oninput="calculateTotal()" class="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-teal-500 outline-none" required>
                 </div>
-                <div class="form-group">
-                    <label>رقم الهاتف *</label>
-                    <input type="text" id="clientPhone" required placeholder="010xxxxxxxx">
+                <div>
+                    <label class="block text-sm font-semibold mb-1">اسم العميل بالكامل</label>
+                    <input type="text" id="client-name" class="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-teal-500 outline-none" placeholder="أدخل اسمك" required>
                 </div>
-                <div class="form-group">
-                    <label>العنوان بالتفصيل *</label>
-                    <input type="text" id="clientAddress" required value="البحيرة، دمنهور، العمرية" placeholder="العنوان بالتفصيل">
+                <div>
+                    <label class="block text-sm font-semibold mb-1">رقم الهاتف</label>
+                    <input type="tel" id="client-phone" class="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-teal-500 outline-none" placeholder="01xxxxxxxxx" required>
                 </div>
-                <div class="form-group">
-                    <label>البريد الإلكتروني (اختياري)</label>
-                    <input type="email" id="clientEmail" placeholder="example@gmail.com">
+                <div>
+                    <label class="block text-sm font-semibold mb-1">العنوان التفصيلي</label>
+                    <input type="text" id="client-address" class="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-teal-500 outline-none" placeholder="المدينة / الشارع / علامة مميزة" required>
                 </div>
-                <button type="submit" class="checkout-submit">تأكيد الطلب الآن</button>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">البريد الإلكتروني <span class="text-gray-400 font-normal">(اختياري)</span></label>
+                    <input type="email" id="client-email" class="w-full border rounded-lg p-2.5 focus:ring-2 focus:ring-teal-500 outline-none" placeholder="example@domain.com">
+                </div>
+
+                <div class="border-t pt-3 flex justify-between items-center text-lg font-bold">
+                    <span>الإجمالي:</span>
+                    <span id="total-price-display" class="brand-teal">0 ج.م</span>
+                </div>
+
+                <button type="submit" class="w-full bg-brand-teal text-white py-3 rounded-xl font-bold hover:bg-opacity-90 transition shadow-lg">تأكيد إرسال الطلب</button>
             </form>
         </div>
     </div>
 
-    <footer>
-        <div class="footer-content">
+    <!-- Footer -->
+    <footer class="bg-[#002855] text-white pt-10 pb-6 border-t-4 border-brand-teal">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-8 text-center md:text-right">
             <div>
-                <h3>عن CureX</h3>
-                <p>نختار مستلزمات الرعاية الصحية بعناية، ونوصلها بوضوح وسرعة إلى من يعتمد عليها كل يوم.</p>
+                <h3 class="text-xl font-extrabold mb-3 text-brand-teal">نحن هنا للمساعدة</h3>
+                <p class="text-gray-300 text-sm leading-relaxed mb-4">فريق CureX Healthcare Solutions جاهز تماماً لتلبية كافة احتياجاتكم من المستلزمات والحلول الطبية عالية الجودة.</p>
             </div>
-            <div>
-                <h3>نحن هنا للمساعدة</h3>
-                <p>📞 01068260189</p>
-                <p>📍 البحيرة، دمنهور، العمرية</p>
-            </div>
-            <div>
-                <h3>التزامنا</h3>
-                <p>✔️ منتجات موثوقة</p>
-                <p>🚚 توصيل منظم</p>
-                <p>❤️ عناية مستمرة</p>
+            <div class="space-y-2 text-sm">
+                <p class="flex items-center justify-center md:justify-start gap-2">
+                    <span class="font-bold text-brand-teal">📞 الهاتف:</span> 01068260189
+                </p>
+                <p class="flex items-center justify-center md:justify-start gap-2">
+                    <span class="font-bold text-brand-teal">📍 العنوان:</span> البحيرة، دمنهور، العمرية
+                </p>
+                <p class="flex items-center justify-center md:justify-start gap-2">
+                    <span class="font-bold text-brand-teal">✉️ البريد الإلكتروني:</span> abdelramanrashad572@gmail.com
+                </p>
             </div>
         </div>
-        <div class="footer-bottom">
-            © 2026 CureX Healthcare Solutions. All Rights Reserved.
+        <div class="text-center text-xs text-gray-500 mt-8 border-t border-gray-800 pt-4">
+            جميع الحقوق محفوظة &copy; 2026 CureX Healthcare Solutions
         </div>
     </footer>
 
+    <!-- Logic JS -->
     <script>
-        // الـ 20 منتجاً المتكاملة لمشروعك
-        const products = [
-            { code: "P001", name: "جهاز الضغط الإلكتروني", category: "أجهزة فحص", price: 1400.0 },
-            { code: "P002", name: "جهاز السكر المنزلي", category: "أجهزة فحص", price: 550.0 },
-            { code: "P003", name: "ترمومتر قياس الحرارة الرقمي", category: "أجهزة فحص", price: 180.0 },
-            { code: "P004", name: "جهاز قياس الأكسجين (Oximeter)", category: "أجهزة فحص", price: 350.0 },
-            { code: "P005", name: "سмаعة طبية مزدوجة", category: "أجهزة فحص", price: 260.0 },
-            { code: "P006", name: "كمامات طبية N95 (علبة 50)", category: "استهلاكية", price: 95.0 },
-            { code: "P007", name: "قفازات لاتكس طبية (علبة 100)", category: "استهلاكية", price: 110.0 },
-            { code: "P008", name: "شاش طبي معقم (لفة)", category: "استهلاكية", price: 40.0 },
-            { code: "P009", name: "قطن طبي معقم (500 جم)", category: "استهلاكية", price: 70.0 },
-            { code: "P010", name: "سرنجات 3 سم (علبة 100)", category: "استهلاكية", price: 130.0 },
-            { code: "P011", name: "جهاز استنشاق البخار (Nebulizer)", category: "أجهزة فحص", price: 850.0 },
-            { code: "P012", name: "شرائط تحليل السكر (50 شريط)", category: "استهلاكية", price: 250.0 },
-            { code: "P013", name: "محلول مطهر جروح (500 مل)", category: "استهلاكية", price: 55.0 },
-            { code: "P014", name: "كرسي متحرك قابل للطي", category: "عناية منزلية", price: 2900.0 },
-            { code: "P015", name: "عكازات ألومنيوم طبية (زوج)", category: "عناية منزلية", price: 300.0 },
-            { code: "P016", name: "مرتبة هوائية مضادة للقرحة", category: "عناية منزلية", price: 1150.0 },
-            { code: "P017", name: "حزام ظهر طبي داعم", category: "عناية منزلية", price: 220.0 },
-            { code: "P018", name: "جهاز قياس نبضات الجنين", category: "أجهزة فحص", price: 1500.0 },
-            { code: "P019", name: "بلاستر طبي جرح شفاف", category: "استهلاكية", price: 35.0 },
-            { code: "P020", name: "كحول إيثيلي 70% (لتر)", category: "استهلاكية", price: 80.0 }
-        ];
+        // إعدادات قاعدة البيانات Supabase (قم باستبدالها ببيانات مشروعك)
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        let cart = [];
-        let currentCategory = 'الكل';
-
-        function renderProducts(items) {
-            const grid = document.getElementById('productsGrid');
-            grid.innerHTML = '';
-            items.forEach(p => {
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.innerHTML = `
-                    <div class="product-tag">${p.code}</div>
-                    <div class="product-img-placeholder">📦</div>
-                    <div class="product-cat">مستلزمات طبية - ${p.category}</div>
-                    <h4>${p.name}</h4>
-                    <div class="product-footer">
-                        <div class="price">${p.price.toFixed(2)} <span>ر.س / ج.م</span></div>
-                        <button class="add-to-cart-btn" onclick="addToCart('${p.code}')">+</button>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function filterProducts() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = products.filter(p => {
-                const matchesCat = currentCategory === 'الكل' || p.category.includes(currentCategory);
-                const matchesQuery = p.name.toLowerCase().includes(query) || p.code.toLowerCase().includes(query);
-                return matchesCat && matchesQuery;
-            });
-            renderProducts(filtered);
-        }
-
-        function filterCategory(cat, btn) {
-            currentCategory = cat;
-            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            filterProducts();
-        }
-
-        function addToCart(code) {
-            const product = products.find(p => p.code === code);
-            cart.push(product);
-            document.getElementById('cartCount').innerText = cart.length;
-            openCartModal();
-        }
-
-        function openCartModal() {
-            const list = document.getElementById('cartItemsList');
-            if (cart.length === 0) {
-                list.innerHTML = '<p style="color:#718096; text-align:center;">السلة فارغة حالياً</p>';
-            } else {
-                list.innerHTML = cart.map((item, index) => `
-                    <div style="display:flex; justify-content:space-between; margin-bottom:8px; border-bottom:1px solid #eee; padding-bottom:5px;">
-                        <span>${item.name}</span>
-                        <strong>${item.price} ج.م</strong>
-                    </div>
-                `).join('');
+        // تحميل المنتجات عند فتح الصفحة
+        async function loadProducts() {
+            const { data: products, error } = await db.from('products').select('*');
+            const grid = document.getElementById('products-grid');
+            if (error || !products) {
+                grid.innerHTML = `<p class="text-red-500 text-center col-span-full">حدث خطأ أثناء تحميل البيانات أو يُرجى ضبط إعدادات Supabase.</p>`;
+                return;
             }
-            document.getElementById('cartModal').style.display = 'flex';
+
+            grid.innerHTML = products.map(p => `
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between hover:shadow-md transition">
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs bg-teal-50 text-brand-teal font-semibold px-2.5 py-1 rounded-full">${p.category}</span>
+                            <span class="text-xs text-gray-400">كود: ${p.item_code}</span>
+                        </div>
+                        <h3 class="text-lg font-bold brand-blue mb-2">${p.item_name}</h3>
+                        <p class="text-2xl font-extrabold brand-teal mb-4">${p.selling_price} <span class="text-xs font-normal text-gray-500">ج.م / ${p.unit || 'وحدة'}</span></p>
+                    </div>
+                    <div>
+                        <p class="text-xs ${p.current_stock > p.reorder_point ? 'text-green-600' : 'text-red-500'} mb-3">
+                            المتاح بالمخزون: ${p.current_stock}
+                        </p>
+                        <button onclick="openOrderModal('${p.item_code}', '${p.item_name}', ${p.selling_price}, ${p.current_stock})" 
+                            ${p.current_stock <= 0 ? 'disabled' : ''} 
+                            class="w-full bg-brand-blue text-white py-2.5 rounded-xl font-bold hover:bg-brand-teal disabled:bg-gray-300 transition">
+                            ${p.current_stock > 0 ? 'اطلب الآن' : 'غير متوفر'}
+                        </button>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function closeCartModal() {
-            document.getElementById('cartModal').style.display = 'none';
+        function openOrderModal(code, name, price, stock) {
+            document.getElementById('selected-item-code').value = code;
+            document.getElementById('selected-item-price').value = price;
+            document.getElementById('selected-item-name').value = name;
+            document.getElementById('order-qty').max = stock;
+            document.getElementById('order-qty').value = 1;
+            document.getElementById('modal-product-info').innerHTML = `المنتج: <strong>${name}</strong> | السعر: <strong>${price} ج.م</strong>`;
+            calculateTotal();
+            document.getElementById('order-modal').classList.remove('hidden');
         }
 
-        function submitOrderFinal(event) {
-            event.preventDefault();
-            closeCartModal();
-            cart = [];
-            document.getElementById('cartCount').innerText = '0';
-            const alertBox = document.getElementById('successAlert');
-            alertBox.style.display = 'block';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setTimeout(() => { alertBox.style.display = 'none'; }, 6000);
+        function closeModal() {
+            document.getElementById('order-modal').classList.add('hidden');
         }
 
-        // التهيئة الأولية
-        renderProducts(products);
+        function calculateTotal() {
+            const price = parseFloat(document.getElementById('selected-item-price').value) || 0;
+            const qty = parseInt(document.getElementById('order-qty').value) || 1;
+            document.getElementById('total-price-display').innerText = (price * qty).toFixed(2) + ' ج.م';
+        }
+
+        async function submitOrder(e) {
+            e.preventDefault();
+            const code = document.getElementById('selected-item-code').value;
+            const name = document.getElementById('selected-item-name').value;
+            const price = parseFloat(document.getElementById('selected-item-price').value);
+            const qty = parseInt(document.getElementById('order-qty').value);
+            const total = price * qty;
+            const clientName = document.getElementById('client-name').value;
+            const clientPhone = document.getElementById('client-phone').value;
+            const clientAddress = document.getElementById('client-address').value;
+            const clientEmail = document.getElementById('client-email').value;
+
+            // 1. إضافة المعاملة في جدول Transactions
+            const { error: txError } = await db.from('transactions').insert([{
+                transaction_type: 'SALE',
+                item_code: code,
+                item_name: name,
+                quantity: qty,
+                client_supplier_name: `${clientName} (${clientPhone}) - ${clientAddress}`,
+                total_amount: total,
+                date: new Date().toISOString()
+            }]);
+
+            if (txError) { alert('حدث خطأ أثناء تنفيذ الطلب'); return; }
+
+            // 2. تحديث المخزون
+            const { data: prod } = await db.from('products').select('current_stock, reorder_point').eq('item_code', code).single();
+            const newStock = prod.current_stock - qty;
+
+            await db.from('products').update({ current_stock: newStock }).eq('item_code', code);
+
+            // 3. فحص Reorder Point والتنبيه بالإيميل
+            if (newStock <= prod.reorder_point) {
+                sendReorderEmail(code, name, newStock, prod.reorder_point);
+            }
+
+            alert('تم تأكيد طلبك بنجاح! شكراً لثقتكم بـ CureX.');
+            closeModal();
+            loadProducts();
+        }
+
+        function sendReorderEmail(code, name, stock, reorderPoint) {
+            // استخدام EmailJS لإرسال إيميل التنبيه تلقائياً
+            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
+                to_email: 'abdelramanrashad572@gmail.com',
+                product_code: code,
+                product_name: name,
+                current_stock: stock,
+                reorder_point: reorderPoint
+            }, 'YOUR_PUBLIC_KEY');
+        }
+
+        window.onload = loadProducts;
     </script>
 </body>
 </html>
