@@ -128,12 +128,12 @@
         </section>
     </main>
 
-    <!-- Admin Dashboard View (مربوط بشيت Inventory Business) -->
+    <!-- Admin Dashboard View (مربوط بشيت Inventory Balance) -->
     <section id="admin-view" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
         <div class="flex justify-between items-center mb-8 border-b pb-4">
             <div class="text-right">
-                <h1 class="text-2xl font-black text-brand-teal">لوحة تحكم Inventory Business</h1>
-                <p class="text-xs text-brand-textMuted font-bold">متابعة حركة المخزون والنواقص والمبيعات المباشرة من الشيت</p>
+                <h1 class="text-2xl font-black text-brand-teal">لوحة تحكم Inventory Balance</h1>
+                <p class="text-xs text-brand-textMuted font-bold">متابعة النواقص، الرصيد الحالي، وإحصائيات المبيعات من شيت Inventory Balance</p>
             </div>
             <button onclick="closeAdminView()" class="bg-stone-200 hover:bg-stone-300 text-stone-800 font-bold px-4 py-2 rounded-xl text-xs transition">
                 <i class="fa-solid fa-arrow-right ml-1"></i> العودة للمتجر
@@ -185,9 +185,9 @@
             </div>
         </div>
 
-        <!-- Inventory Business Table Section -->
+        <!-- Inventory Balance Table Section -->
         <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm text-right overflow-hidden mb-8">
-            <h2 class="text-base font-extrabold text-brand-teal mb-4">تقرير Inventory Business</h2>
+            <h2 class="text-base font-extrabold text-brand-teal mb-4">تقرير Inventory Balance الكامل</h2>
             <div class="overflow-x-auto">
                 <table class="w-full text-xs text-right border-collapse">
                     <thead>
@@ -201,7 +201,7 @@
                         </tr>
                     </thead>
                     <tbody id="inventory-table-body" class="divide-y divide-stone-100 font-semibold">
-                        <tr><td colspan="6" class="text-center py-6 text-stone-400">جاري تحميل البيانات من Inventory Business...</td></tr>
+                        <tr><td colspan="6" class="text-center py-6 text-stone-400">جاري تحميل البيانات من Inventory Balance...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -210,7 +210,7 @@
         <!-- Quick Stock Update Form -->
         <div class="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm text-right max-w-xl">
             <h2 class="text-base font-extrabold text-brand-teal mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-pen-to-square"></i> تحديث/إضافة رصيد منتج
+                <i class="fa-solid fa-pen-to-square"></i> تحديث/إضافة رصيد منتج في الشيت
             </h2>
             <form onsubmit="handleStockUpdate(event)" class="space-y-3">
                 <input type="text" id="add-code" required placeholder="كود المنتج (مثال: P001)" class="w-full p-2.5 border rounded-lg text-xs font-semibold text-right">
@@ -219,7 +219,7 @@
                 <input type="number" id="add-reorder" required placeholder="حد الطلب (Reorder Point)" class="w-full p-2.5 border rounded-lg text-xs font-semibold text-right">
                 
                 <button type="submit" id="add-btn" class="w-full bg-brand-teal hover:bg-brand-teal/90 text-white font-bold py-2.5 rounded-lg text-xs transition">
-                    حفظ التحديث لشيت Inventory Business
+                    حفظ التحديث لشيت Inventory Balance
                 </button>
             </form>
         </div>
@@ -230,7 +230,7 @@
         <div class="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full text-right relative">
             <button onclick="closeAdminModal()" class="absolute left-4 top-4 text-stone-400 hover:text-stone-600 text-xl font-bold">&times;</button>
             <h3 class="text-lg font-black text-brand-teal mb-1">تسجيل دخول الأدمن</h3>
-            <p class="text-xs text-brand-textMuted mb-4 font-semibold">أدخل كلمة المرور لعرض Inventory Business</p>
+            <p class="text-xs text-brand-textMuted mb-4 font-semibold">أدخل كلمة المرور لعرض Inventory Balance</p>
             <form onsubmit="handleAdminLogin(event)" class="space-y-3">
                 <input type="password" id="admin-pass-input" required placeholder="كلمة المرور" class="w-full p-2.5 border border-stone-200 rounded-xl text-xs font-bold text-right focus:outline-none focus:border-brand-teal">
                 <button type="submit" id="admin-login-btn" class="w-full bg-brand-teal text-white py-2.5 rounded-xl text-xs font-bold hover:bg-brand-tealHover transition">دخول</button>
@@ -414,8 +414,8 @@
             btn.innerText = "جاري التحميل...";
 
             try {
-                // جلب البيانات من شيت Inventory Business المباشر
-                const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getDashboardData&sheet=InventoryBusiness&password=${encodeURIComponent(pass)}`);
+                // جلب البيانات المباشرة من شيت Inventory Balance
+                const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getDashboardData&sheet=InventoryBalance&password=${encodeURIComponent(pass)}`);
                 const data = await res.json();
 
                 if (data.error) {
@@ -478,7 +478,7 @@
                 }).join('');
             }
 
-            // 2. جدول تقرير Inventory Business الكامل
+            // 2. جدول تقرير Inventory Balance الكامل
             const invBody = document.getElementById('inventory-table-body');
             invBody.innerHTML = inventoryList.map(item => {
                 const current = Number(item.currentBalance || 0);
@@ -551,7 +551,7 @@
 
             const payload = {
                 action: "updateInventory",
-                sheetTarget: "InventoryBusiness",
+                sheetTarget: "InventoryBalance",
                 password: savedAdminPassword,
                 item: {
                     code: document.getElementById('add-code').value,
@@ -569,7 +569,7 @@
                     body: JSON.stringify(payload)
                 });
 
-                alert("تم التحديث بنجاح في شيت Inventory Business!");
+                alert("تم التحديث بنجاح في شيت Inventory Balance!");
                 closeAdminView();
             } catch (err) {
                 alert("حدث خطأ أثناء التحديث!");
