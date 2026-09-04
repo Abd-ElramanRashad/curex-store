@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CureX Healthcare Solutions | متجر المستلزمات الطبية الكامل</title>
+    <title>CureX Healthcare Solutions | متجر المستلزمات الطبية</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- مكتبة قراءة ملفات أكسيل SheetJS -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
@@ -18,256 +20,149 @@
                             teal: '#0D9488',
                             darkTeal: '#0F766E',
                             coral: '#F97316',
-                            bgLight: '#FDFBF7',
-                            cardBg: '#FAF7F2'
+                            bgLight: '#FDFBF7'
                         }
                     },
-                    fontFamily: {
-                        sans: ['Tajawal', 'sans-serif'],
-                    }
+                    fontFamily: { sans: ['Tajawal', 'sans-serif'] }
                 }
             }
         }
     </script>
-    <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #FDFBF7; }
-        .grid-pattern {
-            background-image: radial-gradient(#0d9488 0.5px, transparent 0.5px);
-            background-size: 24px 24px;
-            opacity: 0.05;
-        }
-    </style>
+    <style> body { font-family: 'Tajawal', sans-serif; background-color: #FDFBF7; } </style>
 </head>
 <body class="text-slate-800 relative min-h-screen pb-16">
 
-    <!-- Top Bar with Phone Number -->
-    <div class="bg-curex-darkTeal text-white text-center py-2 px-4 text-xs md:text-sm font-medium tracking-wide flex justify-between items-center max-w-7xl mx-auto">
-        <span>توريد موثوق للعيادات والمستشفيات والصيدليات – CureX</span>
+    <!-- Header -->
+    <div class="bg-curex-darkTeal text-white text-center py-2 px-4 text-xs md:text-sm font-medium flex justify-between items-center max-w-7xl mx-auto">
+        <span>CureX Healthcare Solutions – قاعدة بيانات الأكسيل المباشرة</span>
         <a href="tel:01068260189" class="bg-curex-coral hover:bg-orange-600 text-white px-3 py-1 rounded-lg font-bold text-xs transition">
-            📞 اتصل بنا: 01068260189
+            📞 التواصل والإدارة: 01068260189
         </a>
     </div>
 
     <header class="bg-white/80 backdrop-blur-md border-b border-stone-200 sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-3 space-x-reverse">
-                <div class="w-12 h-12 bg-curex-teal text-white font-extrabold text-2xl rounded-2xl flex items-center justify-center shadow-md shadow-teal-900/10">
-                    CX
-                </div>
+                <div class="w-12 h-12 bg-curex-teal text-white font-extrabold text-2xl rounded-2xl flex items-center justify-center">CX</div>
                 <div>
                     <h1 class="font-black text-2xl text-curex-darkTeal leading-none">CureX</h1>
-                    <span class="text-[10px] uppercase tracking-wider font-bold text-slate-400 block mt-0.5">Healthcare Solutions</span>
+                    <span class="text-[10px] uppercase font-bold text-slate-400 block mt-0.5">Database Connected</span>
                 </div>
             </div>
 
-            <nav class="flex items-center space-x-4 space-x-reverse font-bold text-slate-700">
-                <a href="admin.html" class="bg-curex-coral text-white px-4 py-2 rounded-xl text-sm font-bold transition shadow-md shadow-orange-500/20">لوحة الإدارة والتحليلات 📊</a>
-            </nav>
+            <a href="admin.html" class="bg-curex-coral text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md">لوحة التحكم والأكسيل 📊</a>
         </div>
     </header>
 
-    <section class="relative bg-curex-bgLight py-10 px-4 border-b border-stone-200">
-        <div class="max-w-4xl mx-auto text-center">
-            <h1 class="text-3xl md:text-5xl font-black text-curex-teal leading-tight mb-3">
-                كتالوج جميع المنتجات الطبية الكامل
-            </h1>
-            <p class="text-slate-600 text-sm md:text-base font-medium">
-                تم تحميل جميع المنتجات الـ 113 المسجلة في الشيت بنجاح. اختر الفئة واستعرض المخزون.
-            </p>
-        </div>
-    </section>
-
-    <!-- Search & Filter Controls -->
-    <section id="products-section" class="max-w-7xl mx-auto px-4 py-8">
-        <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 border-b border-stone-200 pb-6">
+    <!-- Main Section -->
+    <section class="max-w-7xl mx-auto px-4 py-8">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 border-b pb-6">
             <div class="w-full md:w-1/3">
-                <input type="text" id="search-input" onkeyup="renderProducts()" placeholder="🔍 ابحث عن اسم المنتج..." class="w-full border border-stone-300 rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-curex-teal">
+                <input type="text" id="search-input" onkeyup="renderProducts()" placeholder="🔍 ابحث في داتا أكسيل CureX..." class="w-full border rounded-xl p-3 text-sm outline-none focus:ring-2 focus:ring-curex-teal">
             </div>
 
-            <div class="flex bg-stone-200 p-1.5 rounded-2xl space-x-2 space-x-reverse overflow-x-auto w-full md:w-auto">
-                <button onclick="switchTab('all')" id="tab-all" class="px-4 py-2 rounded-xl text-xs md:text-sm font-bold bg-curex-teal text-white shadow">الكل</button>
-                <button onclick="switchTab('devices')" id="tab-devices" class="px-4 py-2 rounded-xl text-xs md:text-sm font-bold text-slate-700 hover:text-curex-teal">أجهزة طبية 🩺</button>
-                <button onclick="switchTab('consumables')" id="tab-consumables" class="px-4 py-2 rounded-xl text-xs md:text-sm font-bold text-slate-700 hover:text-curex-teal">مستلزمات استهلاكية 📦</button>
+            <div class="flex bg-stone-200 p-1.5 rounded-2xl space-x-2 space-x-reverse">
+                <button onclick="switchTab('all')" id="tab-all" class="px-4 py-2 rounded-xl text-xs md:text-sm font-bold bg-curex-teal text-white">الكل</button>
+                <button onclick="switchTab('devices')" id="tab-devices" class="px-4 py-2 rounded-xl text-xs md:text-sm font-bold text-slate-700">أجهزة طبية 🩺</button>
+                <button onclick="switchTab('consumables')" id="tab-consumables" class="px-4 py-2 rounded-xl text-xs md:text-sm font-bold text-slate-700">مستلزمات استهلاكية 📦</button>
             </div>
         </div>
 
-        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="col-span-full text-center py-12 text-slate-400 font-bold">جاري تحميل داتا أكسيل CureX_Cloud_Database...</div>
+        </div>
     </section>
 
-    <!-- Checkout Modal -->
+    <!-- Modal الشراء والخصم -->
     <div id="checkout-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-stone-200">
-            <h3 class="text-2xl font-black text-curex-teal mb-2">تأكيد الشراء والخصم</h3>
-            <p class="text-slate-500 text-xs mb-4">سيتم الخصم مباشرة من المخزن المحلي للمتجر.</p>
-            
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border">
+            <h3 class="text-2xl font-black text-curex-teal mb-2">تأكيد خصم الشراء من الشيت</h3>
             <form id="checkout-form" onsubmit="processOrder(event)">
                 <input type="hidden" id="selected-product-id">
                 <div class="space-y-3">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">الكمية المطلوبة</label>
-                        <input type="number" id="cust-qty" value="1" min="1" required class="w-full border border-stone-300 rounded-xl p-2.5 text-sm outline-none focus:ring-2 focus:ring-curex-teal">
+                        <input type="number" id="cust-qty" value="1" min="1" required class="w-full border rounded-xl p-2.5 text-sm">
                     </div>
                 </div>
 
                 <div class="flex space-x-3 space-x-reverse mt-6">
-                    <button type="submit" class="flex-1 bg-curex-teal hover:bg-curex-darkTeal text-white font-extrabold py-3 rounded-xl text-sm transition">تأكيد الخصم والشراء</button>
-                    <button type="button" onclick="closeCheckout()" class="px-5 py-3 bg-stone-100 hover:bg-stone-200 text-slate-700 font-bold rounded-xl text-sm">إلغاء</button>
+                    <button type="submit" class="flex-1 bg-curex-teal text-white font-extrabold py-3 rounded-xl text-sm">تأكيد الخصم</button>
+                    <button type="button" onclick="closeCheckout()" class="px-5 py-3 bg-stone-100 font-bold rounded-xl text-sm">إلغاء</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
-        // الـ 113 منتجاً المأخوذة من ملف الشيت الكامل الخاص بك
-        const fullSheetProducts = [
-            { id: 1, name: "سرنجات 3 سم", category: "consumables", price: 2.5, stock: 500, minStock: 50, sold: 120, description: "سرنجات طبية بلاستيكية معقمة استخدام مرة واحدة" },
-            { id: 2, name: "سرنجات 5 سم", category: "consumables", price: 3.0, stock: 450, minStock: 50, sold: 90, description: "سرنجات طبية بلاستيكية معقمة" },
-            { id: 3, name: "سرنجات 10 سم", category: "consumables", price: 4.5, stock: 300, minStock: 30, sold: 40, description: "سرنجات معقمة سعة 10 سم" },
-            { id: 4, name: "سرنجات أطفال / أنسولين 1 سم", category: "consumables", price: 3.5, stock: 600, minStock: 100, sold: 200, description: "تدرج دقيق للجرعات الصغرى والأنسولين" },
-            { id: 5, name: "كانيولا وردية (Size 20)", category: "consumables", price: 12.0, stock: 200, minStock: 40, sold: 85, description: "كانيولا معقمة مقاس 20G" },
-            { id: 6, name: "كانيولا زرقاء (Size 22)", category: "consumables", price: 12.0, stock: 180, minStock: 40, sold: 60, description: "كانيولا معقمة مقاس 22G" },
-            { id: 7, name: "كانيولا صفراء (Size 24)", category: "consumables", price: 12.0, stock: 150, minStock: 30, sold: 40, description: "مناسبة للأوردة الدقيقة والأطفال" },
-            { id: 8, name: "جهاز وريد (Solution Set)", category: "consumables", price: 15.0, stock: 350, minStock: 50, sold: 110, description: "جهاز نقل محاليل معقم مزود بفلتر" },
-            { id: 9, name: "جهاز نقل دم (Blood Transfusion Set)", category: "consumables", price: 22.0, stock: 120, minStock: 25, sold: 30, description: "جهاز نقل دم مزود بمرشح فلترة دقيق" },
-            { id: 10, name: "قفازات طبية لنيتريل (علبة 100 قطعة)", category: "consumables", price: 180.0, stock: 90, minStock: 20, sold: 150, description: "قفازات نيتريل خالية من البودرة" },
-            { id: 11, name: "قفازات لاتكس معقمة مع جراحة (مزدوج)", category: "consumables", price: 25.0, stock: 200, minStock: 50, sold: 80, description: "قفازات جراحية معقمة مقاسات مختلفة" },
-            { id: 12, name: "كمامة طبية 3 طبقات (علبة 50 قطعة)", category: "consumables", price: 55.0, stock: 300, minStock: 50, sold: 410, description: "دعامة أنفية وحماية عالية" },
-            { id: 13, name: "شاش معقم 7.5x7.5 سم (باكت)", category: "consumables", price: 18.0, stock: 400, minStock: 60, sold: 230, description: "شاش طبي قطني معقم بالكامل" },
-            { id: 14, name: "شاش معقم 10x10 سم (باكت)", category: "consumables", price: 24.0, stock: 350, minStock: 50, sold: 190, description: "شاش معقم امتصاص عالي" },
-            { id: 15, name: "رباط ضاغط 5 سم", category: "consumables", price: 15.0, stock: 100, minStock: 20, sold: 45, description: "رباط مرن للالتواءات والكسور" },
-            { id: 16, name: "رباط ضاغط 10 سم", category: "consumables", price: 25.0, stock: 120, minStock: 20, sold: 55, description: "رباط ضاغط مرن متين" },
-            { id: 17, name: "بلاستر طبي بلاستيك شفاف (بكرة)", category: "consumables", price: 35.0, stock: 80, minStock: 15, sold: 30, description: "بلاستر لاصق قوي ومسامي للجلد" },
-            { id: 18, name: "بلاستر قماش ورقي (Silk Tape)", category: "consumables", price: 40.0, stock: 95, minStock: 15, sold: 50, description: "لاصق ورقي طبي لطيف على البشرة" },
-            { id: 19, name: "قطن طبي معقم (كيس 250 جرام)", category: "consumables", price: 45.0, stock: 150, minStock: 30, sold: 80, description: "قطن ماص عالي الجودة" },
-            { id: 20, name: "كحول طبي 70% (زجاجة 1 لتر)", category: "consumables", price: 65.0, stock: 75, minStock: 15, sold: 110, description: "إيثانول 70% للتعقيم والتطهير" },
-            { id: 21, name: "بتادين مطهر جراحي (1 لتر)", category: "consumables", price: 140.0, stock: 40, minStock: 10, sold: 25, description: "بوفيدون أيدين مطهر للجروح والمستشفيات" },
-            { id: 22, name: "قسطرة بولية سيليكون ثنائية (Foley Catheter)", category: "consumables", price: 45.0, stock: 85, minStock: 20, sold: 40, description: "قسطرة Foley معقمة مقاسات متنوعة" },
-            { id: 23, name: "كيس جمع بول معقم 2 لتر", category: "consumables", price: 20.0, stock: 160, minStock: 30, sold: 70, description: "مزود بصمام عدم رجوع ومخرج تصريف" },
-            { id: 24, name: "رايل تغذية معقم (NG Tube)", category: "consumables", price: 25.0, stock: 110, minStock: 20, sold: 35, description: "أنبوب تغذية أنفي معوي مقاسات متفرقة" },
-            { id: 25, name: "قسطرة تشفيط مخاط (Suction Catheter)", category: "consumables", price: 12.0, stock: 220, minStock: 40, sold: 90, description: "أنبوب شفط معقم للبلغم والمخاط" },
-            { id: 26, name: "ماسك أكسجين أطفال / كبار", category: "consumables", price: 30.0, stock: 140, minStock: 30, sold: 65, description: "قناع أكسجين شفاف مع أنبوب توصيل" },
-            { id: 27, name: "ماسك نيبولايزر بالوصلة", category: "consumables", price: 40.0, stock: 110, minStock: 25, sold: 85, description: "قناع جلسات فاركولين وجلسات البخار" },
-            { id: 28, name: "وصلة أكسجين شوكية (Nasal Cannula)", category: "consumables", price: 18.0, stock: 190, minStock: 40, sold: 100, description: "أنفية أكسجين مريحة للأنف" },
-            { id: 29, name: "خيط جراحي حرير مع الإبرة (Silk Suture)", category: "consumables", price: 180.0, stock: 60, minStock: 10, sold: 35, description: "علبة خيوط حريرية معقمة مقاسات مختلفة" },
-            { id: 30, name: "خيط جراحي بولي جلاكتين (Vicryl Suture)", category: "consumables", price: 320.0, stock: 45, minStock: 10, sold: 28, description: "خيط ممتص جراحي عالي المتانة" },
-            { id: 31, name: "مشرط جراحي معقم (علبة 100 قطعة)", category: "consumables", price: 150.0, stock: 35, minStock: 8, sold: 20, description: "شفرات جراحية معقمة مقاس 11/15/22" },
-            { id: 32, name: "جهاز قياس ضغط الدم الرقمي (Omron)", category: "devices", price: 1250.0, stock: 15, minStock: 3, sold: 22, description: "جهاز رقمي ياباني لقياس الضغط بدقة" },
-            { id: 33, name: "جهاز قياس ضغط الدم زئبقي wall/desk", category: "devices", price: 950.0, stock: 8, minStock: 2, sold: 11, description: "جهاز ضغط زئبقي دقيق للعيادات" },
-            { id: 34, name: "سماعة طبية ليتمان (Littmann Classic III)", category: "devices", price: 380.0, stock: 6, minStock: 2, sold: 8, description: "سماعة طبية ممتازة للأطباء والطلاب" },
-            { id: 35, name: "جهاز قياس نسبة الأكسجين بالدم (Pulse Oximeter)", category: "devices", price: 350.0, stock: 40, minStock: 10, sold: 65, description: "قياس نبض القلب ونسبة الأكسجين بالإصبع" },
-            { id: 36, name: "جهاز قياس السكر بالدم (Accu-Chek)", category: "devices", price: 480.0, stock: 25, minStock: 5, sold: 45, description: "شامل القلم والإبر وشريط الاختبار" },
-            { id: 37, name: "شرائط قياس السكر أكوا شيك (علبة 50 شريط)", category: "consumables", price: 280.0, stock: 70, minStock: 15, sold: 130, description: "شرائط اختبار معتمدة لدقة النتيجة" },
-            { id: 38, name: "جهاز جلسات البخار (Nebulizer Compress)", category: "devices", price: 850.0, stock: 18, minStock: 4, sold: 30, description: "مكبس قوي لجلسات التنفيس والاستنشاق" },
-            { id: 39, name: "ترمومتر قياس حرارة بالليزر عن بعد", category: "devices", price: 600.0, stock: 22, minStock: 5, sold: 38, description: "قراءة سريعة للجبهة بدون تلامس" },
-            { id: 40, name: "ترمومتر رقمي إلكتروني عادي", category: "devices", price: 65.0, stock: 90, minStock: 20, sold: 110, description: "قياس الحرارة عن طريق الفول أو الإبط" },
-            { id: 41, name: "مولد أكسجين 5 لتر (Oxygen Concentrator)", category: "devices", price: 16500.0, stock: 4, minStock: 1, sold: 5, description: "جهاز توليد أكسجين منزلي للعيادات والمنازل" },
-            { id: 42, name: "مولد أكسجين 10 لتر مستورد", category: "devices", price: 28000.0, stock: 2, minStock: 1, sold: 3, description: "تضخيم مستمر للأكسجين للحالات الحادّة" },
-            { id: 43, name: "أسطوانة أكسجين طبية 10 لتر مشحونة", category: "devices", price: 3200.0, stock: 7, minStock: 2, sold: 9, description: "أسطوانة حديدية مع المحبس والمنظم" },
-            { id: 44, name: "منظم أكسجين طبي بمرطب المياه", category: "devices", price: 650.0, stock: 15, minStock: 3, sold: 18, description: "قياس التدفق بدقة للأسطوانات" },
-            { id: 45, name: "شفاط مخاط وجراحي (Suction Machine)", category: "devices", price: 3400.0, stock: 5, minStock: 2, sold: 4, description: "جهاز سحب السوائل والبلغم للعمليات والمنزل" },
-            { id: 46, name: "سرير طبي للمريض 2 حركة بالريموت", category: "devices", price: 14500.0, stock: 3, minStock: 1, sold: 2, description: "سرير كهربائي بحواجز جانبية وحامل محاليل" },
-            { id: 47, name: "سرير طبي يدوية 1 حركة بالمانيفل", category: "devices", price: 6800.0, stock: 4, minStock: 1, sold: 3, description: "تحكم يدوية بارتفاع الظهر" },
-            { id: 48, name: "مرتبة هواء طبية لمنع قرح الفراش", category: "devices", price: 850.0, stock: 20, minStock: 5, sold: 32, description: "مرتبة ديناميكية مع كومبريسور هواء" },
-            { id: 49, name: "كرسي متحرك لكبار السن والمرضى", category: "devices", price: 3200.0, stock: 8, minStock: 2, sold: 12, description: "قابل للطي مع فرامل أمان ومسند قدم" },
-            { id: 50, name: "كرسي حمام وقضاء حاجة للمرضى", category: "devices", price: 14500.0, stock: 10, minStock: 2, sold: 15, description: "مستورد ومزود بوعاء قابل للتنظيف" },
-            // تمديد إضافي لجميع باقي الأصناف بالشيت لتصل إلى 113 منتجاً
-            { id: 51, name: "عكاز سنادة إبطية (زوج)", category: "devices", price: 450.0, stock: 15, minStock: 3, sold: 18, description: "ألومنيوم خفيف الوزن قابل لتعديل الطول" },
-            { id: 52, name: "عكاز مرفق (Elbow Crutch)", category: "devices", price: 280.0, stock: 25, minStock: 5, sold: 22, description: "مريح للمرفق ومقاوم للانزلاق" },
-            { id: 53, name: "مشاية ألومنيوم لكبار السن (Walker)", category: "devices", price: 750.0, stock: 12, minStock: 3, sold: 14, description: "مشاية قابلة للطي وخفيفة الحمل" },
-            { id: 54, name: "حفاضات كبار السن مقاس لارج (باكت 10)", category: "consumables", price: 220.0, stock: 80, minStock: 15, sold: 95, description: "امتصاص عالي ومقاومة للتسريب" },
-            { id: 55, name: "حفاضات كبار السن مقاس إكس لارج", category: "consumables", price: 250.0, stock: 70, minStock: 15, sold: 85, description: "راحة تامّة وحماية من التسرب" },
-            { id: 56, name: "مفرش سرير طبي استخدام مرة واحدة (10 قطع)", category: "consumables", price: 85.0, stock: 110, minStock: 20, sold: 140, description: "مفرش عازل للسوائل والافرازات" },
-            { id: 57, name: "فرشاة تنظيف جراحية بالبتادين", category: "consumables", price: 15.0, stock: 300, minStock: 50, sold: 180, description: "معقمة لتطهير أيدي الجراحين" },
-            { id: 58, name: "كيس درنقة جراحية (Drainage Bag)", category: "consumables", price: 35.0, stock: 140, minStock: 25, sold: 60, description: "تجميع السوائل بعد العمليات جراحية" },
-            { id: 59, name: "أنبوبة حنجرية معقمة (Endotracheal Tube)", category: "consumables", price: 45.0, stock: 90, minStock: 20, sold: 35, description: "مقاسات متوفرة من 3.0 إلى 8.5" },
-            { id: 60, name: "قسطرة وريد مركزي (CVP Line)", category: "consumables", price: 650.0, stock: 15, minStock: 3, sold: 8, description: "طقم قسطرة وريدية مركزية ثلاثية التجاويف" },
-            { id: 61, name: "طقم غيار جروحي معقم (Dressing Kit)", category: "consumables", price: 45.0, stock: 130, minStock: 25, sold: 70, description: "يحتوي على جفان ومقس وشاش وبلاستر" },
-            { id: 62, name: "ترمومتر شريطي للجبهة", category: "devices", price: 35.0, stock: 150, minStock: 30, sold: 80, description: "قياس حرارة لاصق سريع للأطفال" },
-            { id: 63, name: "ميزان إلكتروني قياس الوزن والدهون", category: "devices", price: 550.0, stock: 14, minStock: 3, sold: 19, description: "شاشة رقمية وتحليل لنسبة الدهون والماء" },
-            { id: 64, name: "حامل محاليل ستانلس ستيل بجمارك", category: "devices", price: 450.0, stock: 18, minStock: 4, sold: 20, description: "ارتفاع متحرك وقاعدة خماسية بعجل" },
-            { id: 65, name: "سلم سرير كشف طبي درجتين", category: "devices", price: 680.0, stock: 8, minStock: 2, sold: 10, description: "حديد مدهون إلكتروستاتيك قوي" },
-            { id: 66, name: "ترابيزة كشف عيادات جلدية وباطنة", category: "devices", price: 3200.0, stock: 5, minStock: 1, sold: 4, description: "شاسيه قوي مع مفروش جلد ناعم" },
-            { id: 67, name: "كشاف كشف طبي متحرك LED", category: "devices", price: 2100.0, stock: 6, minStock: 1, sold: 5, description: "إضاءة بيضاء باردة بدون حرارة" },
-            { id: 68, name: "جهاز صدمات قلب كهربائي (AED Defibrillator)", category: "devices", price: 4500.0, stock: 2, minStock: 1, sold: 1, description: "جهاز إنعاش حديث للعيادات والطوارئ" },
-            { id: 69, name: "جهاز رسم قلب 3 قناة (ECG Machine)", category: "devices", price: 18500.0, stock: 3, minStock: 1, sold: 2, description: "طابعة حرارية مدمجة وشاشة ملونة" },
-            { id: 70, name: "ورق رسم قلب حراري (بكرة)", category: "consumables", price: 40.0, stock: 120, minStock: 20, sold: 65, description: "ورق حساس عالي الجودة للرسم الطبي" },
-            { id: 71, name: "جل رسم قلب وسونار (جالون 5 لتر)", category: "consumables", price: 120.0, stock: 45, minStock: 10, sold: 30, description: "جل موصل نقّي بدون فقاعات" },
-            { id: 72, name: "خافض لسان خشبي (علبة 100 قطعة)", category: "consumables", price: 25.0, stock: 250, minStock: 40, sold: 180, description: "أخشاب معقمة ومصقولة للعيادات" },
-            { id: 73, name: "ماسك جراحي مع شيلد واقي للوجه", category: "consumables", price: 20.0, stock: 180, minStock: 30, sold: 90, description: "حماية كاملة للعين والوجه أثناء الجراحة" },
-            { id: 74, name: "جوناتي جراحي بدون بودرة معقم", category: "consumables", price: 30.0, stock: 160, minStock: 30, sold: 110, description: "ملمس ناعم وحساسية عالية للأنامل" },
-            { id: 75, name: "حامل أنبوبة أكسجين متحرك", category: "devices", price: 350.0, stock: 12, minStock: 3, sold: 15, description: "عجلات متينة لنقل الأسطوانات بسهولة" },
-            { id: 76, name: "جهاز ضغط هوائي لمنع جلطات الساقين", category: "devices", price: 780.0, stock: 3, minStock: 1, sold: 2, description: "جهاز دلك بالضغط للعمليات الطويلة" },
-            { id: 77, name: "طقم منظار حنجري طبي (Laryngoscope Set)", category: "devices", price: 2800.0, stock: 4, minStock: 1, sold: 3, description: "مقبض مع 4 سلاح أحجام مختلفة" },
-            { id: 78, name: "وسادة طبية لمنع التجلط والقرح", category: "consumables", price: 180.0, stock: 30, minStock: 5, sold: 22, description: "فوم طبي عالي التكيف" },
-            { id: 79, name: "لانست إبر شكال سكر (علبة 100)", category: "consumables", price: 45.0, stock: 220, minStock: 40, sold: 170, description: "إبر شكّال معقمة رفيعة جداً" },
-            { id: 80, name: "شريط اختبار حمل سريع بالبول", category: "consumables", price: 15.0, stock: 350, minStock: 50, sold: 290, description: "نتيجة دقيقة خلال 3 دقائق" },
-            { id: 81, name: "جهاز كشف نبض الجنين (Fetal Doppler)", category: "devices", price: 1450.0, stock: 7, minStock: 2, sold: 9, description: "مكبر صوت إلكتروني لسماع دقات القلب" },
-            { id: 82, name: "قسطرة غسيل كلوي مؤقتة", category: "consumables", price: 420.0, stock: 20, minStock: 5, sold: 12, description: "أنبوب دبل لومين للغسيل الكلوي" },
-            { id: 83, name: "وصلة شريانية وريدية AV Fistula Needle", category: "consumables", price: 25.0, stock: 180, minStock: 30, sold: 110, description: "إبر غسيل كلوي معقمة حادة" },
-            { id: 84, name: "شاش فازلين معقم للجروح والحروق", category: "consumables", price: 15.0, stock: 210, minStock: 40, sold: 140, description: "لا يلتصق بالجرح ويسرع التئامه" },
-            { id: 85, name: "مضخة تسريب محاليل إلكترونية (Infusion Pump)", category: "devices", price: 9200.0, stock: 4, minStock: 1, sold: 3, description: "برمجة دقيقة جداً لنقط المحاليل والأدوية" },
-            { id: 86, name: "مضخة سرنجة إلكترونية (Syringe Pump)", category: "devices", price: 8500.0, stock: 5, minStock: 1, sold: 4, description: "ضخ الدواء بالسرنجة بدقة ميكرونية" },
-            { id: 87, name: "كيس ثلج طبي للالتواءات والتورم", category: "consumables", price: 45.0, stock: 65, minStock: 10, sold: 35, description: "قماش عازل ومقاوم للتسريب" },
-            { id: 88, name: "قربة مياه ساخنة طبية مطاطية", category: "consumables", price: 55.0, stock: 80, minStock: 15, sold: 50, description: "لتسكين ألام المغص والعضلات" },
-            { id: 89, name: "حزام ظهر طبي فقرات قطنية", category: "consumables", price: 220.0, stock: 40, minStock: 8, sold: 30, description: "دعامات صلبة لتقويم وتثبيت الظهر" },
-            { id: 90, name: "رقبة طبية إبليس سفنجية / صلبة", category: "consumables", price: 110.0, stock: 50, minStock: 10, sold: 28, description: "تثبيت الفقرات العنق مع الراحة" },
-            { id: 91, name: "ركبة طبية مفصلية مع دعامات", category: "consumables", price: 280.0, stock: 35, minStock: 8, sold: 21, description: "دعم رباط الخشونة والرباط الصليبي" },
-            { id: 92, name: "حامل ذراع طبي (Arm Sling)", category: "consumables", price: 65.0, stock: 90, minStock: 15, sold: 60, description: "تثبيت الذراع بعد الكسور والعمليات" },
-            { id: 93, name: "جبيرة أنف وأصابع ألومنيوم", category: "consumables", price: 30.0, stock: 120, minStock: 20, sold: 45, description: "تثبيت الكسور الصغرى بالأصابع" },
-            { id: 94, name: "مقس جراحي معقم استانلس (Scissor)", category: "consumables", price: 65.0, stock: 75, minStock: 15, sold: 40, description: "مقس جراحي حاد للغيار والقطع" },
-            { id: 95, name: "جفت جراحي ممسك (Forceps)", category: "consumables", price: 55.0, stock: 85, minStock: 15, sold: 50, description: "ستانلس ستيل طبي ألماني" },
-            { id: 96, name: "وعاء كلوة ستانلس ستيل (Kidney Dish)", category: "devices", price: 120.0, stock: 40, minStock: 8, sold: 25, description: "حوض كلوة أدوات معقمة واستخدامات طبية" },
-            { id: 97, name: "صينية أدوات جراحية بالمغناطيس والغطاء", category: "devices", price: 350.0, stock: 15, minStock: 3, sold: 10, description: "لحفظ الأدوات المعقمة بالعيادة" },
-            { id: 98, name: "جهاز تعقيم أوتوكلاف 18 لتر (Autoclave)", category: "devices", price: 24000.0, stock: 2, minStock: 1, sold: 1, description: "تعقيم بالبخار والضغط للعيادات والجراحة" },
-            { id: 99, name: "جهاز تعقيم حراري جاف (Dry Heat)", category: "devices", price: 6500.0, stock: 3, minStock: 1, sold: 2, description: "فورن تعقيم أدوات العيادات" },
-            { id: 100, name: "كبسولات مؤشر كفاءة التعقيم (100 اختبار)", category: "consumables", price: 250.0, stock: 30, minStock: 5, sold: 18, description: "اختبار اختبار جودة الأوتوكلاف" },
-            { id: 101, name: "رول تعقيم أوتوكلاف مزود ببيان (مقاسات)", category: "consumables", price: 320.0, stock: 25, minStock: 5, sold: 14, description: "أكياس تغليف الأدوات قبل التعقيم" },
-            { id: 102, name: "محلول ملح معقم 0.9% (500 مل)", category: "consumables", price: 18.0, stock: 400, minStock: 50, sold: 280, description: "صوديوم كلورايد للوريد والغسيل الطبي" },
-            { id: 103, name: "محلول رينجر جلوكوز (500 مل)", category: "consumables", price: 20.0, stock: 350, minStock: 50, sold: 210, description: "تعويض السوائل والأملاح بالجسم" },
-            { id: 104, name: "محلول جلوكوز 5% / 10% (500 مل)", category: "consumables", price: 18.0, stock: 300, minStock: 40, sold: 190, description: "تغذية وريدية وسوائل سريعة" },
-            { id: 105, name: "كيس دم فارغ مزدوج مع المانع للتجلط", category: "consumables", price: 65.0, stock: 80, minStock: 15, sold: 35, description: "لتبرع بسحب وحفظ الدم معقم" },
-            { id: 106, name: "شريط كشف المخدرات خماسي بالبول", category: "consumables", price: 85.0, stock: 120, minStock: 20, sold: 90, description: "كشف سريع لـ 5 أنواع من المواد" },
-            { id: 107, name: "مسحة كحولية معقمة (علبة 100 مسحة)", category: "consumables", price: 35.0, stock: 500, minStock: 80, sold: 350, description: "مسحات كحول للحقن وتطوير الجلد" },
-            { id: 108, name: "مريلة طبية بلاستيك عازلة (100 قطعة)", category: "consumables", price: 75.0, stock: 140, minStock: 25, sold: 80, description: "استخدام مرة واحدة للعمليات والتمريض" },
-            { id: 109, name: "غطاء رأس طبي معقم (Nurse Cap 100 قطعة)", category: "consumables", price: 45.0, stock: 180, minStock: 30, sold: 120, description: "غطاء رأس أزرق مطاطي" },
-            { id: 110, name: "غطاء حذاء طبي معقم (Shoe Cover 100 قطعة)", category: "consumables", price: 40.0, stock: 200, minStock: 30, sold: 130, description: "عازل للأتربة والجراثيم بغرف العمليات" },
-            { id: 111, name: "مقياس تدفق الهواء للرئة (Peak Flow Meter)", category: "devices", price: 280.0, stock: 22, minStock: 5, sold: 15, description: "متابعة مرضى الربو والجهاز التنفسي" },
-            { id: 112, name: "وسادة رفع الأقدام الطبية", category: "consumables", price: 150.0, stock: 25, minStock: 5, sold: 12, description: "لتنشيط الدورة الدموية وتقليل التورم" },
-            { id: 113, name: "جهاز كسر وجرش الأقراص والبرشام", category: "consumables", price: 30.0, stock: 90, minStock: 15, sold: 55, description: "لتسهيل بلع الدواء لكبار السن والأطفال" }
-        ];
-
+        const EXCEL_FILE_NAME = 'CureX_Cloud_Database.xlsx';
+        let productsData = [];
         let currentCategory = 'all';
 
-        function getProducts() {
-            const data = localStorage.getItem('curex_inventory');
-            if (!data) {
-                localStorage.setItem('curex_inventory', JSON.stringify(fullSheetProducts));
-                return fullSheetProducts;
+        // 1. القراءة من ذاكرة المتصفح أولاً أو جلب ملف الأكسيل الخارجي مباشرة
+        window.addEventListener('DOMContentLoaded', () => {
+            const localData = localStorage.getItem('curex_excel_data');
+            if (localData) {
+                productsData = JSON.parse(localData);
+                renderProducts();
+            } else {
+                fetchExcelFile();
             }
-            return JSON.parse(data);
+        });
+
+        // 2. قراءة ملف الأكسيل CureX_Cloud_Database
+        function fetchExcelFile() {
+            fetch(EXCEL_FILE_NAME)
+                .then(res => {
+                    if (!res.ok) throw new Error("لم يتم العثور على ملف الأكسيل");
+                    return res.arrayBuffer();
+                })
+                .then(buffer => {
+                    const workbook = XLSX.read(buffer, { type: 'array' });
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+                    // تحويل بيانات الشيت لتناسب الموقع
+                    productsData = jsonData.map((row, idx) => ({
+                        id: row.ID || row.id || (idx + 1),
+                        name: row.Name || row.name || row['اسم المنتج'] || 'منتج طبي',
+                        category: (row.Category || row.category || row['التصنيف'] || '').toString().toLowerCase().includes('device') ? 'devices' : 'consumables',
+                        price: parseFloat(row.Price || row.price || row['السعر'] || 0),
+                        stock: parseInt(row.Stock || row.stock || row['المخزون'] || 0),
+                        minStock: parseInt(row.MinStock || row.minStock || 5),
+                        sold: parseInt(row.Sold || row.sold || 0),
+                        description: row.Description || row.description || row['الوصف'] || 'مستلزمات طبية معتمدة'
+                    }));
+
+                    saveData();
+                    renderProducts();
+                })
+                .catch(err => {
+                    console.error(err);
+                    document.getElementById('products-grid').innerHTML = `
+                        <div class="col-span-full text-center py-12 text-red-500 font-bold">
+                            ⚠️ لم يتم العثور على ملف Excel باسم (${EXCEL_FILE_NAME}). يمكنك رفعه يدوياً من لوحة التحكم.
+                        </div>`;
+                });
         }
 
-        function saveProducts(products) {
-            localStorage.setItem('curex_inventory', JSON.stringify(products));
+        function saveData() {
+            localStorage.setItem('curex_excel_data', JSON.stringify(productsData));
         }
-
-        window.addEventListener('DOMContentLoaded', renderProducts);
 
         function switchTab(cat) {
             currentCategory = cat;
-            document.querySelectorAll('[id^="tab-"]').forEach(btn => {
-                btn.className = 'px-4 py-2 rounded-xl text-xs md:text-sm font-bold text-slate-700 hover:text-curex-teal';
-            });
-            document.getElementById(`tab-${cat}`).className = 'px-4 py-2 rounded-xl text-xs md:text-sm font-bold bg-curex-teal text-white shadow';
+            document.querySelectorAll('[id^="tab-"]').forEach(btn => btn.className = 'px-4 py-2 rounded-xl text-xs md:text-sm font-bold text-slate-700');
+            document.getElementById(`tab-${cat}`).className = 'px-4 py-2 rounded-xl text-xs md:text-sm font-bold bg-curex-teal text-white';
             renderProducts();
         }
 
         function renderProducts() {
-            const products = getProducts();
             const grid = document.getElementById('products-grid');
             const searchVal = document.getElementById('search-input').value.toLowerCase();
 
-            const filtered = products.filter(p => {
+            const filtered = productsData.filter(p => {
                 const matchesCat = currentCategory === 'all' || p.category === currentCategory;
                 const matchesSearch = p.name.toLowerCase().includes(searchVal);
                 return matchesCat && matchesSearch;
@@ -279,7 +174,7 @@
             }
 
             grid.innerHTML = filtered.map(item => `
-                <div class="bg-white rounded-3xl p-5 border border-stone-200 shadow-sm flex flex-col justify-between hover:shadow-xl hover:border-curex-teal/30 transition duration-300">
+                <div class="bg-white rounded-3xl p-5 border shadow-sm flex flex-col justify-between hover:shadow-md transition">
                     <div>
                         <div class="flex justify-between items-center mb-2">
                             <span class="text-[10px] font-black px-2.5 py-1 rounded-full ${item.category === 'devices' ? 'bg-teal-50 text-curex-teal' : 'bg-orange-50 text-curex-coral'}">
@@ -290,15 +185,15 @@
                             </span>
                         </div>
                         <h3 class="font-extrabold text-base text-slate-900 mb-1 leading-snug">${item.name}</h3>
-                        <p class="text-slate-500 text-xs leading-relaxed mb-3 line-clamp-2">${item.description}</p>
+                        <p class="text-slate-500 text-xs mb-3 line-clamp-2">${item.description}</p>
                     </div>
 
-                    <div class="pt-3 border-t border-stone-100 flex items-center justify-between">
+                    <div class="pt-3 border-t flex items-center justify-between">
                         <div>
                             <span class="text-[10px] text-slate-400 block font-bold">السعر</span>
                             <span class="font-black text-xl text-curex-coral">${item.price} <span class="text-xs font-bold">ج.م</span></span>
                         </div>
-                        <button onclick="openCheckout(${item.id})" ${item.stock === 0 ? 'disabled' : ''} class="${item.stock === 0 ? 'bg-slate-300 cursor-not-allowed' : 'bg-curex-teal hover:bg-curex-darkTeal'} text-white font-extrabold px-3 py-2 rounded-xl text-xs transition">
+                        <button onclick="openCheckout(${item.id})" ${item.stock === 0 ? 'disabled' : ''} class="${item.stock === 0 ? 'bg-slate-300' : 'bg-curex-teal hover:bg-curex-darkTeal'} text-white font-extrabold px-3 py-2 rounded-xl text-xs transition">
                             ${item.stock === 0 ? 'نفذت' : 'خصم / شراء'}
                         </button>
                     </div>
@@ -319,21 +214,17 @@
             e.preventDefault();
             const id = parseInt(document.getElementById('selected-product-id').value);
             const qty = parseInt(document.getElementById('cust-qty').value);
-            let products = getProducts();
             
-            const productIndex = products.findIndex(p => p.id === id);
-
-            if (productIndex !== -1) {
-                if (products[productIndex].stock < qty) {
-                    alert('عذراً، الكمية المطلوبة غير متوفرة في المخزن!');
+            const index = productsData.findIndex(p => p.id == id);
+            if (index !== -1) {
+                if (productsData[index].stock < qty) {
+                    alert('عذراً، الكمية غير متوفرة!');
                     return;
                 }
-
-                products[productIndex].stock -= qty;
-                products[productIndex].sold = (products[productIndex].sold || 0) + qty;
-
-                saveProducts(products);
-                alert(`تم الخصم بنجاح! تم خصم ${qty} قطعة من ${products[productIndex].name}.`);
+                productsData[index].stock -= qty;
+                productsData[index].sold = (productsData[index].sold || 0) + qty;
+                saveData();
+                alert(`تم الخصم بنجاح! المتبقي الان: ${productsData[index].stock}`);
                 closeCheckout();
                 renderProducts();
             }
