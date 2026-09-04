@@ -122,7 +122,7 @@
 
             <div id="loading" class="text-center py-16">
                 <i class="fa-solid fa-spinner fa-spin text-4xl text-brand-teal"></i>
-                <p class="mt-3 text-sm text-brand-textMuted font-bold">جاري تحميل المنتجات من الشيت...</p>
+                <p class="mt-3 text-sm text-brand-textMuted font-bold">جاري تحميل المنتجات والأسعار من Selling Price...</p>
             </div>
 
             <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 hidden"></div>
@@ -239,7 +239,7 @@
         </div>
     </div>
 
-    <!-- Restored Layout Footer with RTL Icon Order -->
+    <!-- Restored Layout Footer -->
     <footer id="footer-section" class="bg-brand-bg border-t border-stone-200/80 pt-16 pb-8 mt-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12 text-right">
@@ -326,18 +326,27 @@
             }
         }
 
-        // دالة قراءة السعر من أي عمود في الشيت
+        // استخراج السعر من عمود Selling Price
         function getPriceVal(product) {
             if (!product) return 0;
 
-            for (let key in product) {
-                const val = product[key];
-                if (val !== null && val !== undefined && val !== '') {
-                    const cleaned = String(val).replace(/[^\d.]/g, '');
+            // استهداف أسماء حقول Selling Price بالتحديد مع باقي الصيغ المرجعية
+            const targetKeys = ['Selling Price', 'SellingPrice', 'selling_price', 'sellingPrice', 'PRICE', 'Price', 'سعر_البيع', 'سعر البيع'];
+
+            for (let key of targetKeys) {
+                if (product[key] !== undefined && product[key] !== null && product[key] !== '') {
+                    const cleaned = String(product[key]).replace(/[^\d.]/g, '');
                     const parsed = parseFloat(cleaned);
-                    if (!isNaN(parsed) && parsed > 0) {
-                        return parsed;
-                    }
+                    if (!isNaN(parsed)) return parsed;
+                }
+            }
+
+            // فحص عام لمفاتيح الكائن كإجراء احتياطي
+            for (let k in product) {
+                if (k.toLowerCase().includes('selling') || k.toLowerCase().includes('price')) {
+                    const cleaned = String(product[k]).replace(/[^\d.]/g, '');
+                    const parsed = parseFloat(cleaned);
+                    if (!isNaN(parsed)) return parsed;
                 }
             }
             return 0;
