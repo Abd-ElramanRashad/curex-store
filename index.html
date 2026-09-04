@@ -71,7 +71,7 @@
         </div>
     </header>
 
-    <!-- Store View Section -->
+    <!-- Store View Section (رجعت زي ما كانت بالظبط) -->
     <main id="store-view">
         <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-6">
@@ -95,7 +95,7 @@
         </section>
     </main>
 
-    <!-- Admin & Inventory Dashboard View -->
+    <!-- Admin & Inventory Dashboard View (التعديلات هنا فقط) -->
     <section id="admin-view" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
         <div class="flex justify-between items-center mb-8 border-b pb-4">
             <div class="text-right">
@@ -207,7 +207,6 @@
             }
         }
 
-        // قراءة قيمة الحقل بدقة بحسب مسميات الشيت المحددة
         function getItemVal(item, keys, fallback = '') {
             if (!item) return fallback;
             for (let k of keys) {
@@ -218,6 +217,7 @@
             return fallback;
         }
 
+        // إرجاع دالة العرض الأصلية للكتالوج بدون أي تغيير
         function renderProducts(products) {
             const grid = document.getElementById('products-grid');
             
@@ -270,7 +270,6 @@
         }
 
         function renderDashboard(inventoryList) {
-            // 1. حساب إجمالي المباع الإجمالي
             let grandTotalSold = 0;
             inventoryList.forEach(item => {
                 const sold = Number(getItemVal(item, ['Total Sold'], 0));
@@ -278,7 +277,6 @@
             });
             document.getElementById('stat-total-sold').innerText = grandTotalSold.toLocaleString('ar-EG');
 
-            // 2. فلترة المنتجات التي تحتاج إعادة طلب (Reorder Point)
             const reorderAlerts = inventoryList.filter(item => {
                 const status = String(getItemVal(item, ['Reorder Point'], '')).toLowerCase();
                 const balance = Number(getItemVal(item, ['Current Balance'], 0));
@@ -286,7 +284,6 @@
             });
             document.getElementById('stat-reorder-count').innerText = reorderAlerts.length;
 
-            // 3. عرض جدول التنبيهات
             const reorderBody = document.getElementById('reorder-table-body');
             if (reorderAlerts.length === 0) {
                 reorderBody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-emerald-600 font-bold">جميع المنتجات في حالة آمنة (Safe ✅)</td></tr>`;
@@ -301,7 +298,6 @@
                 `).join('');
             }
 
-            // 4. بناء الجدول الكامل للمخزن
             const invBody = document.getElementById('inventory-table-body');
             invBody.innerHTML = inventoryList.map(item => {
                 const code = getItemVal(item, ['Item Code'], '-');
@@ -364,7 +360,6 @@
             });
         }
 
-        // تشغيل الجلب فور فتح الصفحة
         fetchProducts();
     </script>
 </body>
