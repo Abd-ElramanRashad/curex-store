@@ -34,12 +34,10 @@
       overflow-x: hidden;
     }
 
-    /* Force all text alignment right */
     *, ::after, ::before {
       text-align: right;
     }
 
-    /* Top Banner Bar */
     .top-bar {
       background-color: var(--curex-green);
       color: #ffffff;
@@ -49,7 +47,6 @@
       font-weight: 700;
     }
 
-    /* Main Navbar */
     .navbar-curex {
       padding: 20px 0;
       background-color: transparent;
@@ -97,7 +94,6 @@
       margin-top: 3px;
     }
 
-    /* Cart & Admin Pill */
     .cart-btn-pill {
       background-color: #ffffff;
       border: 1px solid #efeae4;
@@ -127,7 +123,6 @@
       font-weight: 800;
     }
 
-    /* Hero Section Forced Right */
     .hero-section {
       padding: 40px 0 60px 0;
       text-align: right !important;
@@ -150,7 +145,7 @@
       align-items: center;
       gap: 8px;
       margin-bottom: 25px;
-      user-select: none; /* حظر تحديد/نسخ الأيقونة والتاج */
+      user-select: none;
       -webkit-user-select: none;
       -ms-user-select: none;
     }
@@ -204,7 +199,6 @@
       transform: translateY(-2px);
     }
 
-    /* Section Header */
     .section-meta-subtitle {
       color: var(--curex-orange);
       font-size: 0.72rem;
@@ -238,7 +232,6 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.02);
     }
 
-    /* Product Cards */
     .product-card {
       background: #ffffff;
       border: 1px solid #f0ebe3;
@@ -282,7 +275,6 @@
       color: white;
     }
 
-    /* Footer Custom Layout Right Aligned */
     .footer-custom {
       background-color: var(--curex-bg);
       border-top: 1px solid var(--footer-border);
@@ -339,16 +331,15 @@
 </head>
 <body>
 
-  <!-- 1. Top Announcement Bar -->
+  <!-- Top Announcement Bar -->
   <div class="top-bar">
     توريد موثوق للعيادات والصيدليات – نصل إليك في الوقت المناسب
   </div>
 
-  <!-- 2. Navbar Header -->
+  <!-- Navbar Header -->
   <nav class="navbar-curex">
     <div class="container d-flex justify-content-between align-items-center">
       
-      <!-- CureX Brand Logo (أقصى اليمين) -->
       <a href="#" class="brand-container">
         <div class="brand-badge-icon">CX</div>
         <div class="brand-text-box">
@@ -357,7 +348,6 @@
         </div>
       </a>
 
-      <!-- Cart & Admin Buttons (أقصى اليسار) -->
       <div class="d-flex align-items-center gap-3">
         <div class="cart-btn-pill">
           <span>السلة</span>
@@ -369,7 +359,7 @@
     </div>
   </nav>
 
-  <!-- 3. Hero Section -->
+  <!-- Hero Section -->
   <section class="hero-section">
     <div class="container">
       <div class="hero-content-wrapper">
@@ -397,7 +387,7 @@
     </div>
   </section>
 
-  <!-- 4. Products Section Header -->
+  <!-- Products Section Header -->
   <section class="container my-5" id="products-section">
     <div class="row align-items-end mb-4">
       <div class="col-md-7 text-end">
@@ -423,7 +413,7 @@
     <div class="row g-4" id="products-container"></div>
   </section>
 
-  <!-- 5. Modal الطلب -->
+  <!-- Modal الطلب -->
   <div class="modal fade" id="orderModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; background-color: #fdfbf7;">
@@ -475,12 +465,11 @@
     </div>
   </div>
 
-  <!-- 6. Footer -->
+  <!-- Footer -->
   <footer class="footer-custom">
     <div class="container">
       <div class="row gy-4 justify-content-between">
         
-        <!-- Right Side Column: Brand Logo & Mission -->
         <div class="col-lg-5 col-md-12 text-end mb-4 mb-lg-0">
           <a href="#" class="brand-container mb-3">
             <div class="brand-badge-icon">CX</div>
@@ -494,7 +483,6 @@
           </p>
         </div>
 
-        <!-- Middle Column: Contact Info -->
         <div class="col-lg-3 col-md-6 text-end">
           <h5 class="footer-title">نحن هنا للمساعدة</h5>
           <div class="footer-info-item">
@@ -511,7 +499,6 @@
           </div>
         </div>
 
-        <!-- Left Column: Commitments -->
         <div class="col-lg-3 col-md-6 text-end">
           <h5 class="footer-title">التزامنا</h5>
           <div class="footer-info-item">
@@ -530,7 +517,6 @@
 
       </div>
 
-      <!-- Copyright Bottom Bar -->
       <div class="copyright-text">
         &copy; 2026 CureX Healthcare Solutions. جميع الحقوق محفوظة.
       </div>
@@ -541,13 +527,13 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzoZurpyYs-2BJgbHS2hsxB7PhUBa-SvL8XUarDh4LeZ460lsfg5TcDcBxhkK5y2n0/exec";
+    // تم تحديث الرابط الجديد هنا
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyYrWD0D88dcgE6WQIhHH-ub1T1FVSK-Vh4ozONlSZs82qfV2geaJU2RLOaHM7ejp4z/exec";
 
     let allProducts = [];
 
     document.addEventListener("DOMContentLoaded", fetchProducts);
 
-    // استخدام تقنية JSONP لتعامل آمن مع Google Script وتخطي قيود CORS
     function fetchProducts() {
       const script = document.createElement('script');
       script.src = `${SCRIPT_URL}?action=getProducts&callback=handleProductsResponse`;
