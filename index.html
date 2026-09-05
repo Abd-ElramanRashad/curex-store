@@ -3,480 +3,56 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CureX - توريد موثوق للعيادات والصيدليات</title>
-  <!-- Bootstrap 5 RTL -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
-  <!-- FontAwesome Icons -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  <!-- Google Font (Cairo) -->
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <title>المتجر الإلكتروني</title>
   <style>
-    :root {
-      --curex-green: #0c7a5c;
-      --curex-green-hover: #096149;
-      --curex-orange: #e07a5f;
-      --curex-orange-bg: #fdf2ed;
-      --curex-bg: #fdfbf7;
-      --text-dark: #2c302e;
-      --text-muted: #82807c;
-      --footer-border: #eee8e0;
-    }
-    body {
-      font-family: 'Cairo', sans-serif;
-      background-color: var(--curex-bg);
-      color: var(--text-dark);
-      margin: 0;
-      padding: 0;
-      direction: rtl;
-      text-align: right !important;
-      overflow-x: hidden;
-    }
-    *, ::after, ::before { text-align: right; }
-    .top-bar {
-      background-color: var(--curex-green);
-      color: #ffffff;
-      text-align: center !important;
-      padding: 8px 15px;
-      font-size: 0.88rem;
-      font-weight: 700;
-    }
-    .navbar-curex { padding: 20px 0; background-color: transparent; }
-    .brand-container { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-    .brand-badge-icon {
-      background-color: var(--curex-green);
-      color: white;
-      font-weight: 800;
-      font-size: 1.25rem;
-      width: 46px;
-      height: 46px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 10px rgba(12, 122, 92, 0.15);
-    }
-    .brand-text-box { display: flex; flex-direction: column; text-align: right !important; }
-    .brand-name { color: var(--curex-green); font-weight: 800; font-size: 1.55rem; line-height: 1; }
-    .brand-subtext { color: var(--curex-orange); font-size: 0.62rem; font-weight: 800; letter-spacing: 1.2px; margin-top: 3px; }
-    
-    .cart-btn-pill {
-      background-color: #ffffff;
-      border: 1px solid #efeae4;
-      border-radius: 50rem;
-      padding: 6px 18px 6px 12px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-      cursor: pointer;
-      color: var(--curex-green);
-      font-weight: 700;
-      font-size: 0.95rem;
-    }
-    .cart-badge-circle {
-      background-color: var(--curex-orange);
-      color: white;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.8rem;
-      font-weight: 800;
-    }
-    .hero-section { padding: 40px 0 60px 0; text-align: right !important; }
-    .hero-content-wrapper { max-width: 650px; margin-right: 0; margin-left: auto; }
-    .pill-tag {
-      background-color: var(--curex-orange-bg);
-      color: var(--curex-orange);
-      padding: 6px 16px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 25px;
-    }
-    .hero-main-heading { font-weight: 900; font-size: 3.8rem; line-height: 1.15; margin-bottom: 20px; }
-    .heading-green { color: var(--curex-green); }
-    .heading-orange { color: var(--curex-orange); }
-    .hero-sub-text { color: var(--text-muted); font-size: 1.15rem; font-weight: 600; line-height: 1.6; margin-bottom: 35px; }
-    .btn-curex-main {
-      background-color: var(--curex-green);
-      color: white;
-      font-weight: 700;
-      font-size: 1.05rem;
-      padding: 12px 32px;
-      border-radius: 12px;
-      border: none;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 15px rgba(12, 122, 92, 0.2);
-    }
-    .btn-curex-main:hover { background-color: var(--curex-green-hover); color: white; }
-    
-    .section-meta-subtitle { color: var(--curex-orange); font-size: 0.72rem; font-weight: 800; letter-spacing: 1.5px; margin-bottom: 4px; display: block; }
-    .section-main-title { color: var(--curex-green); font-weight: 900; font-size: 2.2rem; margin-bottom: 6px; }
-    .section-desc-text { color: var(--text-muted); font-size: 0.95rem; font-weight: 600; }
-    .search-input-pill { background-color: #ffffff; border: 1px solid #e8e3dc; border-radius: 12px; padding: 10px 18px; }
-    
-    .product-card { background: #ffffff; border: 1px solid #f0ebe3; border-radius: 16px; transition: all 0.25s ease; }
-    .product-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.06); }
-    .category-badge { background-color: #f0f7f4; color: var(--curex-green); font-weight: 700; font-size: 0.78rem; padding: 4px 12px; border-radius: 8px; }
-    .price-value { color: var(--curex-green); font-size: 1.35rem; font-weight: 800; }
-    .btn-card-buy { background-color: var(--curex-green); color: white; border-radius: 8px; font-weight: 700; font-size: 0.9rem; padding: 8px 18px; border: none; }
-    .btn-card-buy:hover { background-color: var(--curex-green-hover); color: white; }
-    .badge-out-of-stock { background-color: #f8d7da; color: #842029; font-weight: 700; padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; }
-    
-    .footer-custom { background-color: var(--curex-bg); border-top: 1px solid var(--footer-border); padding: 60px 0 30px 0; margin-top: 90px; }
-    .footer-title { color: var(--curex-green); font-weight: 800; font-size: 1.25rem; margin-bottom: 20px; }
-    .footer-info-item { display: flex; align-items: center; justify-content: flex-start; gap: 10px; color: var(--text-muted); font-weight: 600; font-size: 0.95rem; margin-bottom: 12px; }
-    .footer-info-item i { color: var(--curex-orange); font-size: 1.1rem; }
-    .footer-brand-desc { color: var(--text-muted); font-weight: 600; font-size: 0.98rem; line-height: 1.7; max-width: 420px; margin-top: 20px; }
-    .copyright-text { color: var(--text-muted); font-size: 0.85rem; font-weight: 600; text-align: center !important; padding-top: 30px; border-top: 1px solid var(--footer-border); margin-top: 40px; }
+    body { font-family: system-ui, sans-serif; margin: 20px; padding: 0; background-color: #f9f9f9; text-align: center; }
+    h1 { color: #333; }
+    .products-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-top: 20px; }
+    .product-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 15px; width: 220px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .product-card img { max-width: 100%; height: 150px; object-fit: cover; border-radius: 5px; }
+    .product-title { font-weight: bold; margin: 10px 0 5px; }
+    .product-price { color: #27ae60; font-size: 1.1em; }
+    #loading { font-size: 1.2em; color: #666; margin-top: 30px; }
   </style>
 </head>
 <body>
 
-  <!-- 1. Top Announcement Bar -->
-  <div class="top-bar">
-    توريد موثوق للعيادات والصيدليات – نصل إليك في الوقت المناسب
-  </div>
+  <h1>المنتجات المتاحة</h1>
+  <div id="loading">جاري تحميل المنتجات...</div>
+  <div id="products-list" class="products-container"></div>
 
-  <!-- 2. Navbar Header -->
-  <nav class="navbar-curex">
-    <div class="container d-flex justify-content-between align-items-center">
-      <a href="#" class="brand-container">
-        <div class="brand-badge-icon">CX</div>
-        <div class="brand-text-box">
-          <span class="brand-name">CureX</span>
-          <span class="brand-subtext">HEALTHCARE SOLUTIONS</span>
-        </div>
-      </a>
-      <div class="d-flex align-items-center gap-3">
-        <div class="cart-btn-pill">
-          <span>السلة</span>
-          <span class="cart-badge-circle" id="cartCount">0</span>
-        </div>
-        <a href="admin.html" class="text-muted fs-5 ms-1" title="لوحة التحكم"><i class="fa-solid fa-user-gear"></i></a>
-      </div>
-    </div>
-  </nav>
-
-  <!-- 3. Hero Section -->
-  <section class="hero-section">
-    <div class="container">
-      <div class="hero-content-wrapper">
-        <div class="pill-tag">
-          <i class="fa-solid fa-star"></i>
-          <span>رعاية تبدأ من الاختيار الصحيح</span>
-        </div>
-        <h1 class="hero-main-heading">
-          <div class="heading-green">كل ما تحتاجه</div>
-          <div class="heading-orange">لرعاية أفضل.</div>
-        </h1>
-        <p class="hero-sub-text">
-          مستلزمات صحية موثوقة، جاهزة لعيادتك أو منزلك. اكتشفها بأسلوب عصري وسهل واطلبها بثقة.
-        </p>
-        <a href="#products-section" class="btn-curex-main">
-          <span>تصفح المنتجات</span>
-          <i class="fa-solid fa-arrow-left"></i>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4. Products Section -->
-  <section class="container my-5" id="products-section">
-    <div class="row align-items-end mb-4">
-      <div class="col-md-7 text-end">
-        <span class="section-meta-subtitle">THE ESSENTIALS, CURATED</span>
-        <h2 class="section-main-title">اختياراتنا لك</h2>
-        <p class="section-desc-text">ابحث بالاسم أو الكود، واختر ما يناسب احتياجك.</p>
-      </div>
-      <div class="col-md-5 mt-3 mt-md-0">
-        <div class="input-group search-input-pill">
-          <span class="input-group-text bg-transparent border-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
-          <input type="text" id="searchInput" class="form-control border-0 shadow-none text-end" placeholder="ابحث عن منتج..." onkeyup="filterProducts()">
-        </div>
-      </div>
-    </div>
-
-    <div id="loading" class="text-center my-5 py-4">
-      <div class="spinner-border text-success" role="status"></div>
-      <p class="mt-3 fw-bold text-muted">جاري تحميل البيانات من Google Sheets...</p>
-    </div>
-
-    <div class="row g-4" id="products-container"></div>
-  </section>
-
-  <!-- 5. Order Modal -->
-  <div class="modal fade" id="orderModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; background-color: #fdfbf7;">
-        <div class="modal-header border-0 pb-0">
-          <h5 class="modal-title fw-bold" style="color: var(--curex-green);">تأكيد طلب المنتج</h5>
-          <button type="button" class="btn-close ms-0 me-auto" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body p-4 text-end">
-          <form id="orderForm">
-            <input type="hidden" id="modalItemCode">
-            <input type="hidden" id="modalItemName">
-            <input type="hidden" id="modalUnitPrice">
-            <input type="hidden" id="modalMaxStock">
-
-            <div class="mb-3">
-              <label class="form-label fw-bold">اسم المنتج</label>
-              <input type="text" id="displayItemName" class="form-control bg-white" readonly>
-            </div>
-            
-            <div class="mb-3">
-              <div class="d-flex justify-content-between align-items-center mb-1">
-                <label class="form-label fw-bold m-0">الكمية المطلوبة *</label>
-                <small class="text-muted" id="stockAvailableText"></small>
-              </div>
-              <input type="number" id="orderQty" class="form-control" value="1" min="1" required onchange="calcTotal()" onkeyup="calcTotal()">
-              <div id="qtyError" class="text-danger small mt-1 d-none fw-bold">الكمية المطلوبة غير متوفرة حالياً.</div>
-            </div>
-
-            <div class="p-3 mb-3 bg-white rounded-3 d-flex justify-content-between align-items-center border">
-              <span class="fw-bold">الإجمالي الكلي:</span>
-              <span class="price-value" id="totalDisplay">0</span> <small class="fw-bold text-success">ج.م</small>
-            </div>
-            <hr>
-
-            <div class="mb-3">
-              <label class="form-label fw-bold">الاسم بالكامل *</label>
-              <input type="text" id="clientName" class="form-control" placeholder="أدخل اسمك" required>
-            </div>
-            <div class="mb-3">
-              <label class="form-label fw-bold">رقم الهاتف *</label>
-              <input type="tel" id="clientPhone" class="form-control" placeholder="010XXXXXXXX" required pattern="^01[0125][0-9]{8}$" title="يرجى إدخال رقم هاتف مصري صالح (11 رقم)">
-            </div>
-            <div class="mb-3">
-              <label class="form-label fw-bold">العنوان التفصيلي *</label>
-              <textarea id="clientAddress" class="form-control" rows="2" placeholder="المحافظة - المدينة - الشارع" required></textarea>
-            </div>
-            <div class="mb-3">
-              <label class="form-label fw-bold">البريد الإلكتروني (اختياري)</label>
-              <input type="email" id="clientEmail" class="form-control" placeholder="example@mail.com">
-            </div>
-
-            <div id="orderError" class="alert alert-danger small d-none"></div>
-
-            <button type="submit" class="btn btn-card-buy w-100 py-2.5 mt-2 fs-6" id="submitBtn">
-              تأكيد وإرسال الطلب
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 6. Confirmation Modal -->
-  <div class="modal fade" id="successModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-0 shadow-lg text-center p-4" style="border-radius: 20px; background-color: #fdfbf7;">
-        <div class="text-success fs-1 mb-2"><i class="fa-solid fa-circle-check"></i></div>
-        <h4 class="fw-bold text-success mb-2">تم استلام طلبك بنجاح!</h4>
-        <p class="text-muted small">رقم الطلب الخاص بك هو:</p>
-        <div class="badge bg-light text-dark fs-6 border p-2 mb-3" id="confirmedOrderId"></div>
-        <p class="text-secondary small">سنتواصل معك في أقرب وقت لتأكيد الشحن.</p>
-        <button class="btn btn-curex-main mx-auto px-4" data-bs-dismiss="modal" onclick="location.reload()">موافق</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 7. Footer -->
-  <footer class="footer-custom">
-    <div class="container">
-      <div class="row gy-4 justify-content-between">
-        <div class="col-lg-5 col-md-12 text-end mb-4 mb-lg-0">
-          <a href="#" class="brand-container mb-3">
-            <div class="brand-badge-icon">CX</div>
-            <div class="brand-text-box">
-              <span class="brand-name">CureX</span>
-              <span class="brand-subtext">HEALTHCARE SOLUTIONS</span>
-            </div>
-          </a>
-          <p class="footer-brand-desc">
-            نختار مستلزمات الرعاية الصحية بعناية، ونوصلها بوضوح وسرعة إلى من يعتمد عليها كل يوم.
-          </p>
-        </div>
-
-        <div class="col-lg-3 col-md-6 text-end">
-          <h5 class="footer-title">نحن هنا للمساعدة</h5>
-          <div class="footer-info-item"><i class="fa-solid fa-phone"></i><span>01068260189</span></div>
-          <div class="footer-info-item"><i class="fa-solid fa-location-dot"></i><span>البحيرة، دمنهور، العمرية</span></div>
-          <div class="footer-info-item"><i class="fa-solid fa-envelope"></i><span>info@curex-health.com</span></div>
-        </div>
-
-        <div class="col-lg-3 col-md-6 text-end">
-          <h5 class="footer-title">التزامنا</h5>
-          <div class="footer-info-item"><i class="fa-solid fa-shield-halved"></i><span>منتجات موثوقة</span></div>
-          <div class="footer-info-item"><i class="fa-solid fa-truck-fast"></i><span>توصيل منظم</span></div>
-          <div class="footer-info-item"><i class="fa-solid fa-heart-pulse"></i><span>عناية مستمرة</span></div>
-        </div>
-      </div>
-      <div class="copyright-text">
-        &copy; 2026 CureX Healthcare Solutions. جميع الحقوق محفوظة.
-      </div>
-    </div>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // ضع هنا رابط Web App الذي تحصل عليه من Google Apps Script
-    const SCRIPT_URL = "const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxI2XOtqlvZoElz6hQiPdY90oYVYCCelIcFN8Jpp8pk6F6Gp-dlZFj-JHoEK2y67zY/exec";
-    
-    let allProducts = [];
-
-    document.addEventListener("DOMContentLoaded", fetchProducts);
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyaEFNQy72e95ikEhqWaYsWIZb-eQstLMdKeH0j3E9edL5uRXGmzlXxsIa_0nPESW_6/exec";
 
     async function fetchProducts() {
-      try {
-        const res = await fetch(`${SCRIPT_URL}?action=getProducts`);
-        const data = await res.json();
-        document.getElementById('loading').style.display = 'none';
-        
-        if (data.success) {
-          allProducts = data.products;
-          renderProducts(allProducts);
-        } else {
-          document.getElementById('loading').innerHTML = `<p class="text-danger fw-bold">${data.message}</p>`;
-        }
-      } catch (e) {
-        document.getElementById('loading').innerHTML = '<p class="text-danger fw-bold">حدث خطأ أثناء الاتصال بالنظام.</p>';
-      }
-    }
+      const loading = document.getElementById('loading');
+      const container = document.getElementById('products-list');
 
-    function renderProducts(products) {
-      const container = document.getElementById('products-container');
-      container.innerHTML = '';
-      if (products.length === 0) {
-        container.innerHTML = '<div class="col-12 text-center py-4"><p class="text-muted">لا توجد منتجات متطابقة.</p></div>';
-        return;
-      }
-      products.forEach(p => {
-        const isOutOfStock = p.currentBalance <= 0;
-        container.innerHTML += `
-          <div class="col-md-4 col-sm-6 text-end">
-            <div class="card product-card h-100 p-3">
-              <div class="card-body d-flex flex-column text-end">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                  <span class="category-badge">${p.category || 'عام'}</span>
-                  ${isOutOfStock ? '<span class="badge-out-of-stock">نفذت الكمية</span>' : `<small class="text-muted fw-bold">المتاح: ${p.currentBalance}</small>`}
-                </div>
-                <h5 class="card-title fw-bold my-2" style="color: var(--curex-green);">${p.itemName}</h5>
-                <p class="text-muted small mb-3">كود: ${p.itemCode} | الوحدة: ${p.unit || 'قطعة'}</p>
-                <div class="mt-auto d-flex justify-content-between align-items-center pt-3 border-top">
-                  <span class="price-value">${p.sellingPrice} <small class="fs-6">ج.م</small></span>
-                  <button class="btn btn-card-buy" ${isOutOfStock ? 'disabled' : ''} onclick="openOrderModal('${p.itemCode}', '${p.itemName}', ${p.sellingPrice}, ${p.currentBalance})">
-                    ${isOutOfStock ? 'غير متوفر' : 'اطلب الآن'}
-                  </button>
-                </div>
-              </div>
+      try {
+        const response = await fetch(`${SCRIPT_URL}?action=getProducts`);
+        const data = await response.json();
+
+        loading.style.display = 'none';
+
+        if (data.status === "success" && data.products && data.products.length > 0) {
+          container.innerHTML = data.products.map(product => `
+            <div class="product-card">
+              <img src="${product.Image || product.image || 'https://via.placeholder.com/150'}" alt="${product.Name || product.title || 'منتج'}">
+              <div class="product-title">${product.Name || product.title || 'بدون عنوان'}</div>
+              <div class="product-price">${product.Price || product.price || '0'} جنيه</div>
             </div>
-          </div>
-        `;
-      });
-    }
-
-    function filterProducts() {
-      const query = document.getElementById('searchInput').value.toLowerCase();
-      const filtered = allProducts.filter(p => 
-        p.itemName.toLowerCase().includes(query) || 
-        p.itemCode.toLowerCase().includes(query) ||
-        (p.category && p.category.toLowerCase().includes(query))
-      );
-      renderProducts(filtered);
-    }
-
-    function openOrderModal(code, name, price, stock) {
-      document.getElementById('modalItemCode').value = code;
-      document.getElementById('modalItemName').value = name;
-      document.getElementById('displayItemName').value = name;
-      document.getElementById('modalUnitPrice').value = price;
-      document.getElementById('modalMaxStock').value = stock;
-      document.getElementById('stockAvailableText').innerText = `الكمية المتاحة: ${stock}`;
-      document.getElementById('orderQty').value = 1;
-      document.getElementById('orderQty').max = stock;
-      document.getElementById('qtyError').classList.add('d-none');
-      document.getElementById('orderError').classList.add('d-none');
-      calcTotal();
-      new bootstrap.Modal(document.getElementById('orderModal')).show();
-    }
-
-    function calcTotal() {
-      const price = parseFloat(document.getElementById('modalUnitPrice').value) || 0;
-      const qty = parseInt(document.getElementById('orderQty').value) || 1;
-      const maxStock = parseInt(document.getElementById('modalMaxStock').value) || 0;
-      const qtyError = document.getElementById('qtyError');
-      const submitBtn = document.getElementById('submitBtn');
-
-      if (qty > maxStock) {
-        qtyError.innerText = `الكمية المطلوبة غير متوفرة حالياً. (المتاح ${maxStock} فقط)`;
-        qtyError.classList.remove('d-none');
-        submitBtn.disabled = true;
-      } else {
-        qtyError.classList.add('d-none');
-        submitBtn.disabled = false;
-      }
-
-      document.getElementById('totalDisplay').innerText = (price * qty).toLocaleString();
-    }
-
-    document.getElementById('orderForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const submitBtn = document.getElementById('submitBtn');
-      const orderError = document.getElementById('orderError');
-      
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> جاري تأكيد الطلب...';
-      orderError.classList.add('d-none');
-
-      const payload = {
-        action: "createOrder",
-        itemCode: document.getElementById('modalItemCode').value,
-        itemName: document.getElementById('modalItemName').value,
-        quantity: document.getElementById('orderQty').value,
-        totalAmount: parseFloat(document.getElementById('modalUnitPrice').value) * parseInt(document.getElementById('orderQty').value),
-        clientName: document.getElementById('clientName').value,
-        phone: document.getElementById('clientPhone').value,
-        address: document.getElementById('clientAddress').value,
-        email: document.getElementById('clientEmail').value
-      };
-
-      try {
-        const res = await fetch(SCRIPT_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify(payload)
-        });
-        const data = await res.json();
-
-        if (data.success) {
-          bootstrap.Modal.getInstance(document.getElementById('orderModal')).hide();
-          document.getElementById('confirmedOrderId').innerText = data.orderId;
-          new bootstrap.Modal(document.getElementById('successModal')).show();
+          `).join('');
         } else {
-          orderError.innerText = data.message;
-          orderError.classList.remove('d-none');
-          submitBtn.disabled = false;
-          submitBtn.innerText = 'تأكيد وإرسال الطلب';
+          container.innerHTML = '<p>لا توجد منتجات معروضة حالياً.</p>';
         }
       } catch (err) {
-        orderError.innerText = "حدث خطأ في الاتصال بالشبكة، يرجى إعادة المحاولة.";
-        orderError.classList.remove('d-none');
-        submitBtn.disabled = false;
-        submitBtn.innerText = 'تأكيد وإرسال الطلب';
+        loading.innerText = "حدث خطأ أثناء تحميل البيانات. يرجى المحاولة لاحقاً.";
+        console.error(err);
       }
-    });
+    }
+
+    fetchProducts();
   </script>
+
 </body>
 </html>
