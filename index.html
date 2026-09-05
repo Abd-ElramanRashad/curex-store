@@ -20,6 +20,7 @@
       --curex-bg: #fdfbf7;
       --text-dark: #2c302e;
       --text-muted: #82807c;
+      --footer-border: #eee8e0;
     }
 
     body {
@@ -28,6 +29,8 @@
       color: var(--text-dark);
       margin: 0;
       padding: 0;
+      direction: rtl;
+      text-align: right;
       overflow-x: hidden;
     }
 
@@ -36,10 +39,9 @@
       background-color: var(--curex-green);
       color: #ffffff;
       text-align: center;
-      padding: 7px 15px;
+      padding: 8px 15px;
       font-size: 0.88rem;
       font-weight: 700;
-      letter-spacing: 0.2px;
     }
 
     /* Main Navbar */
@@ -55,28 +57,6 @@
       text-decoration: none;
     }
 
-    .brand-text-box {
-      display: flex;
-      flex-direction: column;
-      text-align: right;
-    }
-
-    .brand-name {
-      color: var(--curex-green);
-      font-weight: 800;
-      font-size: 1.55rem;
-      line-height: 1;
-      letter-spacing: -0.5px;
-    }
-
-    .brand-subtext {
-      color: var(--curex-orange);
-      font-size: 0.62rem;
-      font-weight: 800;
-      letter-spacing: 1.2px;
-      margin-top: 3px;
-    }
-
     .brand-badge-icon {
       background-color: var(--curex-green);
       color: white;
@@ -89,6 +69,27 @@
       align-items: center;
       justify-content: center;
       box-shadow: 0 4px 10px rgba(12, 122, 92, 0.15);
+    }
+
+    .brand-text-box {
+      display: flex;
+      flex-direction: column;
+      text-align: right;
+    }
+
+    .brand-name {
+      color: var(--curex-green);
+      font-weight: 800;
+      font-size: 1.55rem;
+      line-height: 1;
+    }
+
+    .brand-subtext {
+      color: var(--curex-orange);
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      margin-top: 3px;
     }
 
     /* Cart & Admin Pill */
@@ -180,7 +181,7 @@
       transform: translateY(-2px);
     }
 
-    /* Section Header Exact Layout */
+    /* Section Header */
     .section-meta-subtitle {
       color: var(--curex-orange);
       font-size: 0.72rem;
@@ -254,12 +255,54 @@
       color: white;
     }
 
-    /* Footer Design */
-    .footer-curex {
-      background-color: #07382a;
-      color: #dbe5e1;
-      padding: 50px 0 25px 0;
-      margin-top: 80px;
+    /* New Custom Footer Layout matching user uploaded image */
+    .footer-custom {
+      background-color: var(--curex-bg);
+      border-top: 1px solid var(--footer-border);
+      padding: 60px 0 30px 0;
+      margin-top: 90px;
+    }
+
+    .footer-title {
+      color: var(--curex-green);
+      font-weight: 800;
+      font-size: 1.25rem;
+      margin-bottom: 20px;
+    }
+
+    .footer-info-item {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+    }
+
+    .footer-info-item i {
+      color: var(--curex-orange);
+      font-size: 1.1rem;
+    }
+
+    .footer-brand-desc {
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.98rem;
+      line-height: 1.7;
+      max-width: 420px;
+      margin-top: 20px;
+    }
+
+    .copyright-text {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-align: center;
+      padding-top: 30px;
+      border-top: 1px solid var(--footer-border);
+      margin-top: 40px;
     }
   </style>
 </head>
@@ -270,36 +313,36 @@
     توريد موثوق للعيادات والصيدليات – نصل إليك في الوقت المناسب
   </div>
 
-  <!-- 2. Navbar Header -->
+  <!-- 2. Navbar Header (RTL Layout) -->
   <nav class="navbar-curex">
     <div class="container d-flex justify-content-between align-items-center">
       
-      <!-- Cart and Admin Buttons (Left Side) -->
-      <div class="d-flex align-items-center gap-3">
-        <a href="admin.html" class="text-muted fs-5 me-1" title="لوحة التحكم"><i class="fa-solid fa-user-gear"></i></a>
-        <div class="cart-btn-pill">
-          <span class="cart-badge-circle" id="cartCount">0</span>
-          <span>السلة</span>
-        </div>
-      </div>
-
-      <!-- CureX Brand Logo (Right Side) -->
+      <!-- Right Side: Logo -->
       <a href="#" class="brand-container">
+        <div class="brand-badge-icon">CX</div>
         <div class="brand-text-box">
           <span class="brand-name">CureX</span>
           <span class="brand-subtext">HEALTHCARE SOLUTIONS</span>
         </div>
-        <div class="brand-badge-icon">CX</div>
       </a>
+
+      <!-- Left Side: Cart & Admin Buttons -->
+      <div class="d-flex align-items-center gap-3">
+        <div class="cart-btn-pill">
+          <span class="cart-badge-circle" id="cartCount">0</span>
+          <span>السلة</span>
+        </div>
+        <a href="admin.html" class="text-muted fs-5 ms-1" title="لوحة التحكم"><i class="fa-solid fa-user-gear"></i></a>
+      </div>
 
     </div>
   </nav>
 
-  <!-- 3. Hero Section (Matching Image Design) -->
+  <!-- 3. Hero Section (RTL Layout) -->
   <section class="hero-section">
     <div class="container">
       <div class="row">
-        <div class="col-lg-8 ms-auto text-end">
+        <div class="col-lg-8 text-start text-md-end">
           
           <div class="pill-tag">
             <span>٪</span>
@@ -325,10 +368,10 @@
     </div>
   </section>
 
-  <!-- 4. Products Section Header -->
+  <!-- 4. Products Section Header (RTL Layout) -->
   <section class="container my-5" id="products-section">
     <div class="row align-items-end mb-4">
-      <div class="col-md-7 text-end">
+      <div class="col-md-7 text-start text-md-end">
         <span class="section-meta-subtitle">THE ESSENTIALS, CURATED</span>
         <h2 class="section-main-title">اختياراتنا لك</h2>
         <p class="section-desc-text">ابحث بالاسم أو الكود، واختر ما يناسب احتياجك.</p>
@@ -344,10 +387,10 @@
     <!-- Loading Spinner -->
     <div id="loading" class="text-center my-5 py-4">
       <div class="spinner-border text-success" role="status"></div>
-      <p class="mt-3 fw-bold text-muted">جاري تحميل البيانات من شيت الجوجل...</p>
+      <p class="mt-3 fw-bold text-muted">جاري تحميل البيانات...</p>
     </div>
 
-    <!-- Products Cards Grid -->
+    <!-- Products Grid -->
     <div class="row g-4" id="products-container"></div>
   </section>
 
@@ -403,18 +446,63 @@
     </div>
   </div>
 
-  <!-- 6. Footer Section (مع بيانات الشركة المطلوبة) -->
-  <footer class="footer-curex">
-    <div class="container text-end">
+  <!-- 6. Footer Matching the User's Provided Image Layout -->
+  <footer class="footer-custom">
+    <div class="container">
       <div class="row gy-4">
-        <div class="col-md-6">
-          <h4 class="fw-bold text-white mb-3">نحن هنا للمساعدة</h4>
-          <p class="mb-2"><i class="fa-solid fa-phone me-2" style="color: var(--curex-orange);"></i> <strong>الرقم:</strong> 01068260189</p>
-          <p class="mb-0"><i class="fa-solid fa-location-dot me-2" style="color: var(--curex-orange);"></i> <strong>العنوان:</strong> البحيرة، دمنهور ،العمرية</p>
+        
+        <!-- Left Side: Brand Logo & Mission Description -->
+        <div class="col-lg-6 col-md-12 text-start text-md-end mb-4 mb-lg-0">
+          <a href="#" class="brand-container mb-3">
+            <div class="brand-badge-icon">CX</div>
+            <div class="brand-text-box">
+              <span class="brand-name">CureX</span>
+              <span class="brand-subtext">HEALTHCARE SOLUTIONS</span>
+            </div>
+          </a>
+          <p class="footer-brand-desc">
+            نختار مستلزمات الرعاية الصحية بعناية، ونوصلها بوضوح وسرعة إلى من يعتمد عليها كل يوم.
+          </p>
         </div>
-        <div class="col-md-6 text-md-start align-self-end">
-          <p class="mb-0 small opacity-75">&copy; 2026 جميع الحقوق محفوظة لشركة CureX Healthcare Solutions</p>
+
+        <!-- Right Side: Contact & Commitments -->
+        <div class="col-lg-3 col-md-6 text-start text-md-end">
+          <h5 class="footer-title">نحن هنا للمساعدة</h5>
+          <div class="footer-info-item">
+            <i class="fa-solid fa-phone"></i>
+            <span>01068260189</span>
+          </div>
+          <div class="footer-info-item">
+            <i class="fa-solid fa-location-dot"></i>
+            <span>البحيرة، دمنهور، العمرية</span>
+          </div>
+          <div class="footer-info-item">
+            <i class="fa-solid fa-envelope"></i>
+            <span>info@curex-health.com</span>
+          </div>
         </div>
+
+        <div class="col-lg-3 col-md-6 text-start text-md-end">
+          <h5 class="footer-title">التزامنا</h5>
+          <div class="footer-info-item">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>منتجات موثوقة</span>
+          </div>
+          <div class="footer-info-item">
+            <i class="fa-solid fa-truck-fast"></i>
+            <span>توصيل منظم</span>
+          </div>
+          <div class="footer-info-item">
+            <i class="fa-solid fa-heart-pulse"></i>
+            <span>عناية مستمرة</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Copyright Bottom Bar -->
+      <div class="copyright-text">
+        &copy; 2026 CureX Healthcare Solutions. جميع الحقوق محفوظة.
       </div>
     </div>
   </footer>
@@ -457,7 +545,7 @@
         container.innerHTML += `
           <div class="col-md-4 col-sm-6 text-end">
             <div class="card product-card h-100 p-3">
-              <div class="card-body d-flex flex-column">
+              <div class="card-body d-flex flex-column text-end">
                 <span class="category-badge align-self-start mb-2">${p.category || 'عام'}</span>
                 <h5 class="card-title fw-bold my-2" style="color: var(--curex-green);">${p.itemName}</h5>
                 <p class="text-muted small mb-3">كود: ${p.itemCode} | الوحدة: ${p.unit || 'قطعة'}</p>
