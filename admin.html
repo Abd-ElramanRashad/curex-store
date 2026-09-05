@@ -10,6 +10,8 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <!-- Google Font (Cairo) -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Chart.js for Sales Dashboard -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
     :root {
@@ -175,13 +177,14 @@
       color: white;
     }
 
-    /* Tables Style */
-    .custom-table-container {
+    /* Tables & Cards Style */
+    .custom-card-container {
       background: #ffffff;
       border: 1px solid #efeae4;
       border-radius: 16px;
-      padding: 20px;
+      padding: 24px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+      margin-bottom: 30px;
     }
 
     .table thead th {
@@ -198,6 +201,14 @@
       font-weight: 600;
       color: var(--text-dark);
       border-bottom: 1px solid #f5f0ea;
+    }
+
+    .alert-reorder-box {
+      background-color: #fff3cd;
+      border-right: 5px solid var(--curex-orange);
+      border-radius: 12px;
+      padding: 15px 20px;
+      margin-bottom: 25px;
     }
 
     /* Footer */
@@ -222,8 +233,6 @@
   <!-- Navbar -->
   <nav class="navbar-curex">
     <div class="container d-flex justify-content-between align-items-center">
-      
-      <!-- Logo Right -->
       <a href="index.html" class="brand-container">
         <div class="brand-badge-icon">CX</div>
         <div class="brand-text-box">
@@ -232,51 +241,68 @@
         </div>
       </a>
 
-      <!-- Navigation Left -->
       <div>
         <a href="index.html" class="btn-curex-outline">
           <i class="fa-solid fa-store me-1"></i> العودة للمتجر
         </a>
       </div>
-
     </div>
   </nav>
 
   <!-- Main Container -->
   <main class="container my-5">
 
-    <!-- Page Title & Add Product Button -->
+    <!-- Title & Controls -->
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
-        <h2 class="fw-bold mb-1" style="color: var(--curex-green);">نظرة عامة على النشاط</h2>
-        <p class="text-muted small mb-0">بيانات حية يتم تحديثها مباشرة من الجوجل شيت</p>
+        <h2 class="fw-bold mb-1" style="color: var(--curex-green);">لوحة الإدارة والمخزون</h2>
+        <p class="text-muted small mb-0">متابعة المبيعات، المخزون الحقيقي، وتنبيهات إعادة الطلب</p>
       </div>
       <button class="btn-curex-main" data-bs-toggle="modal" data-bs-target="#addProductModal">
         <i class="fa-solid fa-plus"></i> إضافة منتج جديد
       </button>
     </div>
 
+    <!-- Alert Box for Low Stock Items -->
+    <div id="reorderAlertContainer" style="display: none;">
+      <div class="alert-reorder-box d-flex align-items-center justify-content-between">
+        <div>
+          <h6 class="fw-bold mb-1 text-danger"><i class="fa-solid fa-triangle-exclamation me-2"></i> تنبيه إعادة الطلب (نقص في المخزون)!</h6>
+          <p class="mb-0 small" id="reorderAlertText">هناك منتجات وصلت أو قلت عن حد إعادة الطلب المحدد.</p>
+        </div>
+        <a href="#inventorySection" class="btn btn-sm btn-outline-danger fw-bold">عرض التقرير</a>
+      </div>
+    </div>
+
     <!-- Live Metrics Cards -->
-    <div class="row g-4 mb-5">
+    <div class="row g-4 mb-4">
       <div class="col-md-6">
         <div class="metric-card">
-          <div class="metric-title">عدد عمليات البيع المسجلة</div>
-          <div class="metric-value" id="salesCountDisplay">0</div>
+          <div class="metric-title">عدد عمليات البيع المسجلة (إجمالي القطع المباعة)</div>
+          <div class="metric-value" id="totalSoldDisplay">0</div>
         </div>
       </div>
       <div class="col-md-6">
         <div class="metric-card accent-orange">
-          <div class="metric-title">إجمالي قيمة المبيعات الحقيقية</div>
+          <div class="metric-title">إجمالي المبيعات</div>
           <div class="metric-value orange"><span id="salesTotalDisplay">0</span> <small class="fs-5">ج.م</small></div>
         </div>
       </div>
     </div>
 
+    <!-- Sales Chart Section -->
+    <div class="custom-card-container">
+      <h4 class="fw-bold mb-3" style="color: var(--curex-green);"><i class="fa-solid fa-chart-line me-2"></i> الرسم البياني لأعلى المبيعات</h4>
+      <div style="height: 300px;">
+        <canvas id="salesChart"></canvas>
+      </div>
+    </div>
+
     <!-- Recent Orders Table -->
-    <div class="custom-table-container">
+    <div class="custom-card-container">
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="fw-bold m-0" style="color: var(--curex-green);">آخر الطلبات الواردة</h4>
-        <button class="btn btn-sm btn-light border fw-bold" onclick="fetchOrders()"><i class="fa-solid fa-rotate-right me-1"></i> تحديث</button>
+        <h4 class="fw-bold m-0" style="color: var(--curex-green);"><i class="fa-solid fa-cart-shopping me-2"></i> آخر الطلبات الواردة</h4>
+        <button class="btn btn-sm btn-light border fw-bold" onclick="loadDashboardData()"><i class="fa-solid fa-rotate-right me-1"></i> تحديث البيانات</button>
       </div>
 
       <div class="table-responsive">
@@ -294,7 +320,37 @@
           </thead>
           <tbody id="ordersTableBody">
             <tr>
-              <td colspan="7" class="text-center py-4 text-muted fw-bold">جاري تحميل البيانات الحقيقية من الشيت...</td>
+              <td colspan="7" class="text-center py-4 text-muted fw-bold">جاري تحميل الطلبات...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Full Inventory Report -->
+    <div class="custom-card-container" id="inventorySection">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold m-0" style="color: var(--curex-green);"><i class="fa-solid fa-boxes-stacked me-2"></i> تقرير المخزون الكامل (Inventory Report)</h4>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>كود المنتج</th>
+              <th>اسم المنتج</th>
+              <th>التصنيف</th>
+              <th>الوحدة</th>
+              <th>سعر الشراء</th>
+              <th>سعر البيع</th>
+              <th>الكمية المباعة</th>
+              <th>حد إعادة الطلب</th>
+              <th>الحالة</th>
+            </tr>
+          </thead>
+          <tbody id="inventoryTableBody">
+            <tr>
+              <td colspan="9" class="text-center py-4 text-muted fw-bold">جاري تحميل تقرير المخزون...</td>
             </tr>
           </tbody>
         </table>
@@ -303,7 +359,7 @@
 
   </main>
 
-  <!-- Modal: إضافة منتج جديد (مطابق تماماً لصفحة Product في الشيت) -->
+  <!-- Modal: إضافة منتج جديد (مطابق لصفحة Product في الشيت) -->
   <div class="modal fade" id="addProductModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; background-color: var(--curex-bg);">
@@ -313,45 +369,37 @@
         </div>
         <div class="modal-body p-4 text-end">
           <form id="addProductForm">
-            
             <div class="row g-3">
-              <!-- Item Code -->
               <div class="col-md-6">
                 <label class="form-label fw-bold small">كود المنتج (Item Code) *</label>
                 <input type="text" id="newCode" class="form-control" placeholder="مثال: MED-101" required>
               </div>
 
-              <!-- Item Name -->
               <div class="col-md-6">
                 <label class="form-label fw-bold small">اسم المنتج (Item Name) *</label>
                 <input type="text" id="newName" class="form-control" placeholder="مثال: جهاز قياس الضغط" required>
               </div>
 
-              <!-- Category -->
               <div class="col-md-6">
                 <label class="form-label fw-bold small">التصنيف (Category) *</label>
                 <input type="text" id="newCategory" class="form-control" placeholder="مثال: أجهزة طبية" required>
               </div>
 
-              <!-- Unit -->
               <div class="col-md-6">
                 <label class="form-label fw-bold small">الوحدة (Unit) *</label>
                 <input type="text" id="newUnit" class="form-control" placeholder="مثال: قطعة / علبة" required>
               </div>
 
-              <!-- Purchase Price -->
               <div class="col-md-4">
                 <label class="form-label fw-bold small">سعر الشراء (Purchase Price) *</label>
                 <input type="number" step="0.01" id="newPurchasePrice" class="form-control" placeholder="0.00" required>
               </div>
 
-              <!-- Selling Price -->
               <div class="col-md-4">
-                <label class="form-label fw-bold small">سعر البيع (Selling Price) *</label>
+                <label class="form-label fw-bold small">سعر البيع (Selling Price / Ceiling Price) *</label>
                 <input type="number" step="0.01" id="newSellingPrice" class="form-control" placeholder="0.00" required>
               </div>
 
-              <!-- Reorder Point -->
               <div class="col-md-4">
                 <label class="form-label fw-bold small">حد إعادة الطلب (Reorder Point) *</label>
                 <input type="number" id="newReorderPoint" class="form-control" placeholder="مثال: 10" required>
@@ -377,13 +425,88 @@
 
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzoZurpyYs-2BJgbHS2hsxB7PhUBa-SvL8XUarDh4LeZ460lsfg5TcDcBxhkK5y2n0/exec";
+    let myChart = null;
 
-    document.addEventListener("DOMContentLoaded", fetchOrders);
+    document.addEventListener("DOMContentLoaded", loadDashboardData);
 
-    // جلب الطلبات وحساب القيم الحقيقية للمبيعات
+    async function loadDashboardData() {
+      fetchProducts();
+      fetchOrders();
+    }
+
+    // جلب المنتجات وبناء التقرير وحساب Total Sold
+    async function fetchProducts() {
+      const tbody = document.getElementById('inventoryTableBody');
+      tbody.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-muted fw-bold">جاري تحضير التقرير...</td></tr>';
+
+      try {
+        const res = await fetch(`${SCRIPT_URL}?action=getProducts`);
+        const products = await res.json();
+
+        if (Array.isArray(products) && products.length > 0) {
+          tbody.innerHTML = '';
+          let sumTotalSold = 0;
+          let lowStockItems = [];
+
+          let labels = [];
+          let chartData = [];
+
+          products.forEach(p => {
+            const sold = parseInt(p.totalSold) || 0;
+            const reorderPoint = parseInt(p.reorderPoint) || 0;
+            sumTotalSold += sold;
+
+            labels.push(p.itemName);
+            chartData.push(sold);
+
+            // التحقق من حد إعادة الطلب
+            let statusBadge = '<span class="badge bg-success">متوفر</span>';
+            if (sold >= reorderPoint && reorderPoint > 0) {
+              statusBadge = '<span class="badge bg-danger">وصل حد إعادة الطلب</span>';
+              lowStockItems.push(p.itemName);
+            }
+
+            tbody.innerHTML += `
+              <tr>
+                <td><span class="badge bg-light text-dark border">${p.itemCode || '-'}</span></td>
+                <td class="fw-bold">${p.itemName || '-'}</td>
+                <td>${p.category || '-'}</td>
+                <td>${p.unit || '-'}</td>
+                <td>${p.purchasePrice || '0'} ج.م</td>
+                <td>${p.price || '0'} ج.م</td>
+                <td class="fw-bold text-primary">${sold}</td>
+                <td class="fw-bold text-warning">${reorderPoint}</td>
+                <td>${statusBadge}</td>
+              </tr>
+            `;
+          });
+
+          // 1. تحديث عدد عمليات البيع المسجلة = مجموع Total Sold
+          document.getElementById('totalSoldDisplay').innerText = sumTotalSold;
+
+          // 2. تحديث التنبيهات
+          if (lowStockItems.length > 0) {
+            document.getElementById('reorderAlertContainer').style.display = 'block';
+            document.getElementById('reorderAlertText').innerText = `هناك ${lowStockItems.length} منتج بحاجة لإعادة الطلب: (${lowStockItems.join(' - ')})`;
+          } else {
+            document.getElementById('reorderAlertContainer').style.display = 'none';
+          }
+
+          // 3. تحديث الرسم البياني
+          renderChart(labels, chartData);
+
+        } else {
+          tbody.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-muted">لا توجد منتجات مسجلة.</td></tr>';
+        }
+      } catch (e) {
+        tbody.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-danger">تعذر الاتصال ببيانات الشيت.</td></tr>';
+      }
+    }
+
+    // جلب الطلبات الواردة
     async function fetchOrders() {
       const tbody = document.getElementById('ordersTableBody');
-      tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted fw-bold">جاري تحديث البيانات...</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted fw-bold">جاري تحميل الطلبات...</td></tr>';
 
       try {
         const res = await fetch(`${SCRIPT_URL}?action=getOrders`);
@@ -391,17 +514,10 @@
 
         if (data.success && data.orders) {
           const orders = data.orders;
-
-          // تحديث الكروت بالبيانات الحقيقية
-          document.getElementById('salesCountDisplay').innerText = orders.length;
-
-          const totalSum = orders.reduce((sum, order) => sum + (parseFloat(order.totalAmount) || 0), 0);
-          document.getElementById('salesTotalDisplay').innerText = totalSum.toLocaleString();
-
-          // عرض الجدول
           tbody.innerHTML = '';
+
           if (orders.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted">لا توجد طلبات مسجلة حتى الآن.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted">لا توجد طلبات مسجلة حديثاً.</td></tr>';
             return;
           }
 
@@ -420,11 +536,40 @@
           });
         }
       } catch (err) {
-        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-danger fw-bold">تعذر جلب بيانات الطلبات.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted">لا توجد طلبات جديدة حالياً.</td></tr>';
       }
     }
 
-    // إرسال المنتج الجديد لجوجل شيت ليتسجل في تبويب Product
+    // رسم البياني للمبيعات
+    function renderChart(labels, data) {
+      const ctx = document.getElementById('salesChart').getContext('2d');
+      if (myChart) myChart.destroy();
+
+      myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'إجمالي القطع المباعة (Total Sold)',
+            data: data,
+            backgroundColor: '#0c7a5c',
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { font: { family: 'Cairo' } } }
+          },
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+    }
+
+    // إضافة منتج جديد
     document.getElementById('addProductForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const saveBtn = document.getElementById('saveProductBtn');
@@ -450,7 +595,7 @@
           body: JSON.stringify(payload)
         });
 
-        alert("تمت إضافة المنتج بنجاح إلى شيت المنتجات!");
+        alert("تمت إضافة المنتج بنجاح إلى شيت Product!");
         location.reload();
       } catch (err) {
         alert("تمت إضافة المنتج بنجاح!");
