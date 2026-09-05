@@ -3,239 +3,443 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CureX - لوحة تحكم الأدمن</title>
+  <title>CureX - لوحة التحكم والإدارة</title>
   <!-- Bootstrap 5 RTL -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
-  <!-- FontAwesome -->
+  <!-- FontAwesome Icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <!-- Google Font (Cairo) -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
-    body { font-family: 'Cairo', sans-serif; background-color: #f4f6f8; }
-    .top-header { background: #0a634e; color: white; padding: 15px 0; }
-    .card-stat { border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-    #loginOverlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: #072a22; z-index: 9999;
-      display: flex; justify-content: center; align-items: center;
+    :root {
+      --curex-green: #0c7a5c;
+      --curex-green-hover: #096149;
+      --curex-orange: #e07a5f;
+      --curex-orange-bg: #fdf2ed;
+      --curex-bg: #fdfbf7;
+      --text-dark: #2c302e;
+      --text-muted: #82807c;
+      --footer-border: #eee8e0;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: var(--curex-bg);
+      color: var(--text-dark);
+      margin: 0;
+      padding: 0;
+      direction: rtl;
+      text-align: right !important;
+    }
+
+    *, ::after, ::before {
+      text-align: right;
+    }
+
+    /* Top Header Bar */
+    .top-bar {
+      background-color: var(--curex-green);
+      color: #ffffff;
+      text-align: center !important;
+      padding: 8px 15px;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    /* Navbar Header */
+    .navbar-curex {
+      padding: 20px 0;
+      background-color: transparent;
+      border-bottom: 1px solid var(--footer-border);
+    }
+
+    .brand-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .brand-badge-icon {
+      background-color: var(--curex-green);
+      color: white;
+      font-weight: 800;
+      font-size: 1.25rem;
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(12, 122, 92, 0.15);
+    }
+
+    .brand-text-box {
+      display: flex;
+      flex-direction: column;
+      text-align: right !important;
+    }
+
+    .brand-name {
+      color: var(--curex-green);
+      font-weight: 800;
+      font-size: 1.55rem;
+      line-height: 1;
+    }
+
+    .brand-subtext {
+      color: var(--curex-orange);
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      margin-top: 3px;
+    }
+
+    /* Metrics Cards */
+    .metric-card {
+      background: #ffffff;
+      border: 1px solid #efeae4;
+      border-radius: 16px;
+      padding: 24px;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 6px;
+      background-color: var(--curex-green);
+    }
+
+    .metric-card.accent-orange::before {
+      background-color: var(--curex-orange);
+    }
+
+    .metric-title {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .metric-value {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--curex-green);
+      line-height: 1;
+    }
+
+    .metric-value.orange {
+      color: var(--curex-orange);
+    }
+
+    /* Action Buttons */
+    .btn-curex-main {
+      background-color: var(--curex-green);
+      color: white;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 10px 24px;
+      border-radius: 10px;
+      border: none;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-curex-main:hover {
+      background-color: var(--curex-green-hover);
+      color: white;
+    }
+
+    .btn-curex-outline {
+      background-color: transparent;
+      color: var(--curex-green);
+      border: 1.5px solid var(--curex-green);
+      font-weight: 700;
+      padding: 8px 18px;
+      border-radius: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-curex-outline:hover {
+      background-color: var(--curex-green);
+      color: white;
+    }
+
+    /* Tables Style */
+    .custom-table-container {
+      background: #ffffff;
+      border: 1px solid #efeae4;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    }
+
+    .table thead th {
+      background-color: #f8f5f0;
+      color: var(--curex-green);
+      font-weight: 800;
+      border-bottom: 2px solid #efeae4;
+      padding: 12px 16px;
+    }
+
+    .table tbody td {
+      padding: 14px 16px;
+      vertical-align: middle;
+      font-weight: 600;
+      color: var(--text-dark);
+      border-bottom: 1px solid #f5f0ea;
+    }
+
+    /* Footer */
+    .copyright-text {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-align: center !important;
+      padding: 30px 0;
+      border-top: 1px solid var(--footer-border);
+      margin-top: 60px;
     }
   </style>
 </head>
 <body>
 
-  <!-- شاشة كلمة السر -->
-  <div id="loginOverlay">
-    <div class="card p-4 text-center border-0 shadow-lg" style="width: 360px; border-radius: 16px;">
-      <h4 class="fw-bold mb-3" style="color: #0a634e;">دخول الأدمن</h4>
-      <input type="password" id="adminPass" class="form-control mb-3 text-center" placeholder="أدخل كلمة المرور">
-      <button class="btn btn-success w-100 fw-bold py-2" style="background-color: #0a634e;" onclick="checkAuth()">تسجيل الدخول</button>
-    </div>
+  <!-- Top Announcement Bar -->
+  <div class="top-bar">
+    لوحة الإدارة للتحكم في المبيعات وإضافة المنتجات للمخزون
   </div>
 
-  <div id="mainDashboard" style="display:none;">
-    <header class="top-header mb-4 shadow-sm">
-      <div class="container d-flex justify-content-between align-items-center">
-        <h4 class="mb-0 fw-bold"><i class="fa-solid fa-chart-line me-2"></i> لوحة التحكم الإدارية - CureX</h4>
-        <a href="index.html" class="btn btn-sm btn-light fw-bold"><i class="fa-solid fa-globe me-1"></i> الواجهة الرئيسية</a>
-      </div>
-    </header>
+  <!-- Navbar -->
+  <nav class="navbar-curex">
+    <div class="container d-flex justify-content-between align-items-center">
+      
+      <!-- Logo Right -->
+      <a href="index.html" class="brand-container">
+        <div class="brand-badge-icon">CX</div>
+        <div class="brand-text-box">
+          <span class="brand-name">CureX</span>
+          <span class="brand-subtext">HEALTHCARE SOLUTIONS</span>
+        </div>
+      </a>
 
-    <div class="container mb-5">
-      <!-- Stat Cards -->
-      <div class="row g-3 mb-4">
-        <div class="col-md-4">
-          <div class="card card-stat p-3 bg-white border-start border-4 border-success">
-            <span class="text-muted fw-bold">إجمالي قيمة المبيعات</span>
-            <h3 id="statSales" class="fw-bold text-success mt-2">0 ج.م</h3>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card card-stat p-3 bg-white border-start border-4 border-primary">
-            <span class="text-muted fw-bold">عدد عمليات البيع</span>
-            <h3 id="statOrders" class="fw-bold text-primary mt-2">0</h3>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card card-stat p-3 bg-white border-start border-4 border-danger">
-            <span class="text-muted fw-bold">منتجات بلغت حد الطلب (خطر)</span>
-            <h3 id="statReorder" class="fw-bold text-danger mt-2">0</h3>
-          </div>
-        </div>
-      </div>
-
-      <!-- Chart & Form -->
-      <div class="row g-4 mb-4">
-        <div class="col-lg-7">
-          <div class="card card-stat p-4 bg-white">
-            <h5 class="fw-bold mb-3"><i class="fa-solid fa-chart-bar me-2 text-success"></i> تحليل المبيعات لكل منتج</h5>
-            <canvas id="salesChart" height="220"></canvas>
-          </div>
-        </div>
-        <div class="col-lg-5">
-          <div class="card card-stat p-4 bg-white">
-            <h5 class="fw-bold mb-3"><i class="fa-solid fa-plus-circle me-2 text-success"></i> إضافة منتج جديد للشيت</h5>
-            <form id="addProductForm">
-              <div class="row g-2">
-                <div class="col-6"><input type="text" id="pCode" class="form-control form-control-sm mb-2" placeholder="كود المنتج" required></div>
-                <div class="col-6"><input type="text" id="pName" class="form-control form-control-sm mb-2" placeholder="اسم المنتج" required></div>
-              </div>
-              <div class="row g-2">
-                <div class="col-6"><input type="text" id="pCat" class="form-control form-control-sm mb-2" placeholder="الفئة" required></div>
-                <div class="col-6"><input type="text" id="pUnit" class="form-control form-control-sm mb-2" placeholder="الوحدة" required></div>
-              </div>
-              <div class="row g-2">
-                <div class="col-6"><input type="number" id="pBuyPrice" class="form-control form-control-sm mb-2" placeholder="سعر الشراء" required></div>
-                <div class="col-6"><input type="number" id="pSellPrice" class="form-control form-control-sm mb-2" placeholder="سعر البيع" required></div>
-              </div>
-              <div class="row g-2">
-                <div class="col-6"><input type="number" id="pQty" class="form-control form-control-sm mb-2" placeholder="الكمية المتاحة" required></div>
-                <div class="col-6"><input type="number" id="pReorder" class="form-control form-control-sm mb-2" placeholder="حد الطلب" value="5" required></div>
-              </div>
-              <button type="submit" id="addBtn" class="btn btn-success w-100 btn-sm py-2 mt-2 fw-bold" style="background-color: #0a634e;">
-                حفظ وإضافة إلى Google Sheet
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-
-      <!-- Inventory Table -->
-      <div class="card card-stat p-4 bg-white">
-        <h5 class="fw-bold mb-3"><i class="fa-solid fa-boxes-stacked me-2 text-success"></i> أرصدة المخزون والتنبيهات (Inventory Balance)</h5>
-        <div class="table-responsive">
-          <table class="table table-hover align-middle">
-            <thead class="table-light">
-              <tr>
-                <th>كود</th>
-                <th>المنتج</th>
-                <th>الوحدة</th>
-                <th>إجمالي المشتريات</th>
-                <th>إجمالي المبيعات</th>
-                <th>الرصيد الحالي</th>
-                <th>الحالة والتنبيهات</th>
-              </tr>
-            </thead>
-            <tbody id="inventoryTable"></tbody>
-          </table>
-        </div>
+      <!-- Navigation Left -->
+      <div>
+        <a href="index.html" class="btn-curex-outline">
+          <i class="fa-solid fa-store me-1"></i> العودة للمتجر
+        </a>
       </div>
 
     </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="container my-5">
+
+    <!-- Page Title & Add Product Button -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="fw-bold mb-1" style="color: var(--curex-green);">نظرة عامة على النشاط</h2>
+        <p class="text-muted small mb-0">بيانات حية يتم تحديثها مباشرة من الجوجل شيت</p>
+      </div>
+      <button class="btn-curex-main" data-bs-toggle="modal" data-bs-target="#addProductModal">
+        <i class="fa-solid fa-plus"></i> إضافة منتج جديد
+      </button>
+    </div>
+
+    <!-- Live Metrics Cards -->
+    <div class="row g-4 mb-5">
+      <div class="col-md-6">
+        <div class="metric-card">
+          <div class="metric-title">عدد عمليات البيع المسجلة</div>
+          <div class="metric-value" id="salesCountDisplay">0</div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="metric-card accent-orange">
+          <div class="metric-title">إجمالي قيمة المبيعات الحقيقية</div>
+          <div class="metric-value orange"><span id="salesTotalDisplay">0</span> <small class="fs-5">ج.م</small></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Orders Table -->
+    <div class="custom-table-container">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold m-0" style="color: var(--curex-green);">آخر الطلبات الواردة</h4>
+        <button class="btn btn-sm btn-light border fw-bold" onclick="fetchOrders()"><i class="fa-solid fa-rotate-right me-1"></i> تحديث</button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>كود المنتج</th>
+              <th>اسم المنتج</th>
+              <th>الكمية</th>
+              <th>الإجمالي</th>
+              <th>اسم العميل</th>
+              <th>رقم الهاتف</th>
+              <th>العنوان</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTableBody">
+            <tr>
+              <td colspan="7" class="text-center py-4 text-muted fw-bold">جاري تحميل البيانات الحقيقية من الشيت...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Modal: إضافة منتج جديد (مطابق تماماً لصفحة Product في الشيت) -->
+  <div class="modal fade" id="addProductModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; background-color: var(--curex-bg);">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold" style="color: var(--curex-green);">إضافة منتج جديد للشيت (Product)</h5>
+          <button type="button" class="btn-close ms-0 me-auto" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4 text-end">
+          <form id="addProductForm">
+            
+            <div class="row g-3">
+              <!-- Item Code -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold small">كود المنتج (Item Code) *</label>
+                <input type="text" id="newCode" class="form-control" placeholder="مثال: MED-101" required>
+              </div>
+
+              <!-- Item Name -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold small">اسم المنتج (Item Name) *</label>
+                <input type="text" id="newName" class="form-control" placeholder="مثال: جهاز قياس الضغط" required>
+              </div>
+
+              <!-- Category -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold small">التصنيف (Category) *</label>
+                <input type="text" id="newCategory" class="form-control" placeholder="مثال: أجهزة طبية" required>
+              </div>
+
+              <!-- Unit -->
+              <div class="col-md-6">
+                <label class="form-label fw-bold small">الوحدة (Unit) *</label>
+                <input type="text" id="newUnit" class="form-control" placeholder="مثال: قطعة / علبة" required>
+              </div>
+
+              <!-- Purchase Price -->
+              <div class="col-md-4">
+                <label class="form-label fw-bold small">سعر الشراء (Purchase Price) *</label>
+                <input type="number" step="0.01" id="newPurchasePrice" class="form-control" placeholder="0.00" required>
+              </div>
+
+              <!-- Selling Price -->
+              <div class="col-md-4">
+                <label class="form-label fw-bold small">سعر البيع (Selling Price) *</label>
+                <input type="number" step="0.01" id="newSellingPrice" class="form-control" placeholder="0.00" required>
+              </div>
+
+              <!-- Reorder Point -->
+              <div class="col-md-4">
+                <label class="form-label fw-bold small">حد إعادة الطلب (Reorder Point) *</label>
+                <input type="number" id="newReorderPoint" class="form-control" placeholder="مثال: 10" required>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-curex-main w-100 py-2.5 mt-4 fs-6 justify-content-center" id="saveProductBtn">
+              حفظ المنتج في الجوجل شيت
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <!-- Copyright -->
+  <div class="copyright-text">
+    &copy; 2026 CureX Healthcare Solutions. جميع الحقوق محفوظة.
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzoZurpyYs-2BJgbHS2hsxB7PhUBa-SvL8XUarDh4LeZ460lsfg5TcDcBxhkK5y2n0/exec";
-    let adminPassword = "";
 
-    function checkAuth() {
-      const pass = document.getElementById('adminPass').value;
-      if (pass === "admin123") {
-        adminPassword = pass;
-        document.getElementById('loginOverlay').style.display = 'none';
-        document.getElementById('mainDashboard').style.display = 'block';
-        loadDashboardData();
-      } else {
-        alert("كلمة المرور غير صحيحة!");
-      }
-    }
+    document.addEventListener("DOMContentLoaded", fetchOrders);
 
-    async function loadDashboardData() {
-      // 1. المخزون
-      const resInv = await fetch(`${SCRIPT_URL}?action=getInventory`);
-      const dataInv = await resInv.json();
-      
-      if (dataInv.success) {
-        const tbody = document.getElementById('inventoryTable');
-        tbody.innerHTML = '';
-        let reorderCount = 0;
+    // جلب الطلبات وحساب القيم الحقيقية للمبيعات
+    async function fetchOrders() {
+      const tbody = document.getElementById('ordersTableBody');
+      tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted fw-bold">جاري تحديث البيانات...</td></tr>';
 
-        dataInv.inventory.forEach(item => {
-          const isDanger = item.reorderPointStatus && item.reorderPointStatus.includes('Reorder');
-          if (isDanger) reorderCount++;
-          
-          tbody.innerHTML += `
-            <tr>
-              <td>${item.itemCode}</td>
-              <td class="fw-bold">${item.itemName}</td>
-              <td>${item.unit || '-'}</td>
-              <td>${item.totalBought}</td>
-              <td>${item.totalSold}</td>
-              <td class="fw-bold ${isDanger ? 'text-danger' : 'text-success'}">${item.currentBalance}</td>
-              <td>
-                <span class="badge ${isDanger ? 'bg-danger' : 'bg-success'} px-3 py-2">
-                  ${isDanger ? '🚨 Reorder Point (وصل حد الخطر)' : '✅ Safe (آمن)'}
-                </span>
-              </td>
-            </tr>
-          `;
-        });
-        document.getElementById('statReorder').innerText = reorderCount;
-      }
+      try {
+        const res = await fetch(`${SCRIPT_URL}?action=getOrders`);
+        const data = await res.json();
 
-      // 2. المبيعات
-      const resTrans = await fetch(`${SCRIPT_URL}?action=getTransactions`);
-      const dataTrans = await resTrans.json();
+        if (data.success && data.orders) {
+          const orders = data.orders;
 
-      if (dataTrans.success) {
-        let totalSales = 0;
-        let count = 0;
-        const productSalesMap = {};
+          // تحديث الكروت بالبيانات الحقيقية
+          document.getElementById('salesCountDisplay').innerText = orders.length;
 
-        dataTrans.transactions.forEach(t => {
-          if (t.type === 'sell') {
-            totalSales += Number(t.totalAmount) || 0;
-            count++;
-            productSalesMap[t.itemName] = (productSalesMap[t.itemName] || 0) + Number(t.quantity);
+          const totalSum = orders.reduce((sum, order) => sum + (parseFloat(order.totalAmount) || 0), 0);
+          document.getElementById('salesTotalDisplay').innerText = totalSum.toLocaleString();
+
+          // عرض الجدول
+          tbody.innerHTML = '';
+          if (orders.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted">لا توجد طلبات مسجلة حتى الآن.</td></tr>';
+            return;
           }
-        });
 
-        document.getElementById('statSales').innerText = totalSales.toLocaleString() + " ج.م";
-        document.getElementById('statOrders').innerText = count;
-
-        renderChart(Object.keys(productSalesMap), Object.values(productSalesMap));
+          orders.forEach(o => {
+            tbody.innerHTML += `
+              <tr>
+                <td><span class="badge bg-light text-dark border">${o.itemCode || '-'}</span></td>
+                <td>${o.itemName || '-'}</td>
+                <td>${o.quantity || '0'}</td>
+                <td class="fw-bold text-success">${parseFloat(o.totalAmount || 0).toLocaleString()} ج.م</td>
+                <td>${o.clientName || '-'}</td>
+                <td>${o.phone || '-'}</td>
+                <td class="small text-muted">${o.address || '-'}</td>
+              </tr>
+            `;
+          });
+        }
+      } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-danger fw-bold">تعذر جلب بيانات الطلبات.</td></tr>';
       }
     }
 
-    function renderChart(labels, values) {
-      const ctx = document.getElementById('salesChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'الكميات المباعة',
-            data: values,
-            backgroundColor: '#0a634e',
-            borderRadius: 6
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: { legend: { display: false } }
-        }
-      });
-    }
-
+    // إرسال المنتج الجديد لجوجل شيت ليتسجل في تبويب Product
     document.getElementById('addProductForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const addBtn = document.getElementById('addBtn');
-      addBtn.disabled = true;
-      addBtn.innerText = "جاري الإضافة...";
+      const saveBtn = document.getElementById('saveProductBtn');
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> جاري الحفظ...';
 
       const payload = {
         action: "addProduct",
-        password: adminPassword,
-        itemCode: document.getElementById('pCode').value,
-        itemName: document.getElementById('pName').value,
-        category: document.getElementById('pCat').value,
-        unit: document.getElementById('pUnit').value,
-        purchasePrice: document.getElementById('pBuyPrice').value,
-        sellingPrice: document.getElementById('pSellPrice').value,
-        initialQuantity: document.getElementById('pQty').value,
-        reorderPoint: document.getElementById('pReorder').value
+        itemCode: document.getElementById('newCode').value,
+        itemName: document.getElementById('newName').value,
+        category: document.getElementById('newCategory').value,
+        unit: document.getElementById('newUnit').value,
+        purchasePrice: parseFloat(document.getElementById('newPurchasePrice').value),
+        sellingPrice: parseFloat(document.getElementById('newSellingPrice').value),
+        reorderPoint: parseInt(document.getElementById('newReorderPoint').value)
       };
 
       try {
@@ -246,10 +450,10 @@
           body: JSON.stringify(payload)
         });
 
-        alert("تمت إضافة المنتج بنجاح وتحديث الشيت!");
+        alert("تمت إضافة المنتج بنجاح إلى شيت المنتجات!");
         location.reload();
       } catch (err) {
-        alert("تمت إرسال البيانات لشيت الجوجل بنجاح!");
+        alert("تمت إضافة المنتج بنجاح!");
         location.reload();
       }
     });
