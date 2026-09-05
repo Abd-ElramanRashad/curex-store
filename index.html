@@ -565,24 +565,40 @@
                 }
             };
 
+            btn.innerText = "جاري الحفظ...";
+
             try {
-                await fetch(GOOGLE_SCRIPT_URL, {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: { "Content-Type": "application/json" },
+                const res = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(payload)
                 });
+                
+                const data = await res.json();
 
-                alert("تم التحديث بنجاح في الشيت!");
-                closeAdminView();
+                if (data.error) {
+                    alert("خطأ: " + data.error);
+                } else {
+                    alert("تم حفظ وتحديث البيانات في الشيت بنجاح!");
+                    e.target.reset();
+                    const refreshRes = await fetch(`${GOOGLE_SCRIPT_URL}?action=getDashboardData&sheet=InventoryBalance&password=${encodeURIComponent(savedAdminPassword)}`);
+                    const refreshData = await refreshRes.json();
+                    renderDashboard(refreshData);
+                }
             } catch (err) {
-                alert("حدث خطأ أثناء التحديث!");
+                alert("حدث خطأ أثناء الاتصال بالنظام عند الحفظ!");
+                console.error(err);
             } finally {
                 btn.disabled = false;
+                btn.innerText = "حفظ التحديث للشيت";
             }
         }
 
-        fetchProducts();
+        function toggleCart() {
+            alert("تفعيل نافذة السلة قيد التطوير.");
+        }
+
+        window.addEventListener('DOMContentLoaded', fetchProducts);
     </script>
 </body>
 </html>
