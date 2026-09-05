@@ -132,10 +132,6 @@
       margin-bottom: 25px;
       user-select: none;
     }
-    .pill-tag i {
-      font-size: 0.9rem;
-      color: var(--curex-orange);
-    }
     .hero-main-heading {
       font-weight: 900;
       font-size: 3.8rem;
@@ -293,7 +289,7 @@
   <div class="top-bar">
     توريد موثوق للعيادات والصيدليات – نصل إليك في الوقت المناسب
   </div>
-
+  
   <nav class="navbar-curex">
     <div class="container d-flex justify-content-between align-items-center">
       <a href="#" class="brand-container">
@@ -358,6 +354,7 @@
     <div class="row g-4" id="products-container"></div>
   </section>
 
+  <!-- Modal الطلب -->
   <div class="modal fade" id="orderModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; background-color: #fdfbf7;">
@@ -435,7 +432,7 @@
           </div>
           <div class="footer-info-item">
             <i class="fa-solid fa-envelope"></i>
-            <span>info@curex-health.com</span>
+            <span>abdelramanrashad572@gmail.com</span>
           </div>
         </div>
         <div class="col-lg-3 col-md-6 text-end">
@@ -462,10 +459,10 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // الرابط المحدث لـ Apps Script
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzk3np1Tw-j0OEaEA9kKK_XVinQsADoubP5MA90zCSBhtrZ__Kv8dwxInlMrQCu5A2u/exec";
+    // رابط Apps Script الجديد الخاص بك
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwf9skQZLX_o-xaRQ4uDWEj1MVAtglsULOT0NndjlYzO-mLjiZnKsJ82yU5l64ZfCUS/exec";
+    
     let allProducts = [];
-
     document.addEventListener("DOMContentLoaded", fetchProducts);
 
     async function fetchProducts() {
@@ -514,8 +511,8 @@
     function filterProducts() {
       const query = document.getElementById('searchInput').value.toLowerCase();
       const filtered = allProducts.filter(p => 
-        (p.itemName && p.itemName.toLowerCase().includes(query)) || 
-        (p.itemCode && p.itemCode.toLowerCase().includes(query)) ||
+        p.itemName.toLowerCase().includes(query) || 
+        p.itemCode.toLowerCase().includes(query) ||
         (p.category && p.category.toLowerCase().includes(query))
       );
       renderProducts(filtered);
@@ -541,8 +538,7 @@
       e.preventDefault();
       const submitBtn = document.getElementById('submitBtn');
       submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> جاري تسجيل الطلب...';
-
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> جاري التسجيل بالشيت...';
       const payload = {
         action: "createOrder",
         itemCode: document.getElementById('modalItemCode').value,
@@ -554,7 +550,6 @@
         address: document.getElementById('clientAddress').value,
         email: document.getElementById('clientEmail').value
       };
-
       try {
         await fetch(SCRIPT_URL, {
           method: "POST",
@@ -562,7 +557,7 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         });
-        alert("تم إرسال الطلب وتسجيله بنجاح!");
+        alert("تم إرسال الطلب وخصم الكمية من الجوجل شيت بنجاح!");
         location.reload();
       } catch (err) {
         alert("تم تسجيل الطلب بنجاح!");
