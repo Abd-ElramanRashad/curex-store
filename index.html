@@ -3,123 +3,282 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نموذج إرسال البيانات</title>
+    <title>نظام إدارة المخزون - CureX</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
             margin: 0;
+            padding: 20px;
         }
         .container {
-            background-color: #ffffff;
+            max-width: 1000px;
+            margin: auto;
+            background: #fff;
             padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-            font-weight: bold;
-        }
-        input[type="text"], input[type="email"] {
+        h2, h3 { color: #2c3e50; }
+        .hidden { display: none; }
+        
+        /* Layout & Inputs */
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 4px;
             box-sizing: border-box;
-            font-size: 14px;
         }
         button {
-            width: 100%;
-            padding: 10px;
-            background-color: #28a745;
+            background-color: #27ae60;
             color: white;
+            padding: 10px 15px;
             border: none;
-            border-radius: 5px;
-            font-size: 16px;
+            border-radius: 4px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            font-size: 16px;
         }
-        button:hover {
-            background-color: #218838;
+        button:hover { background-color: #219150; }
+        
+        /* Table Style */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
-        #statusMessage {
-            margin-top: 15px;
-            text-align: center;
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: right;
+        }
+        th { background-color: #34495e; color: white; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        
+        .alert-reorder {
+            background-color: #ffe6e6;
+            color: #c0392b;
             font-weight: bold;
         }
-        .success { color: green; }
-        .error { color: red; }
+        
+        /* Auth Screen */
+        #loginSection {
+            max-width: 400px;
+            margin: 80px auto;
+            text-align: center;
+        }
+        
+        .nav-buttons { margin-bottom: 20px; }
+        .nav-buttons button { background-color: #2980b9; margin-left: 5px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>تسجيل البيانات</h2>
-    <form id="dataForm">
+    <!-- 1. شاشة تسجيل الدخول -->
+    <div id="loginSection">
+        <h2>تسجيل الدخول للنظام</h2>
         <div class="form-group">
-            <label for="name">الاسم:</label>
-            <input type="text" id="name" name="name" required placeholder="أدخل اسمك">
+            <input type="password" id="passwordInput" placeholder="أدخل كلمة السر">
         </div>
+        <button onclick="checkPassword()">دخول</button>
+        <p id="loginError" style="color:red;"></p>
+    </div>
+
+    <!-- 2. لوحة التحكم الرئيسية (تظهر بعد الدخول) -->
+    <div id="mainDashboard" class="hidden">
+        <h2>نظام CureX لإدارة المخزون</h2>
         
-        <div class="form-group">
-            <label for="email">البريد الإلكتروني:</label>
-            <input type="email" id="email" name="email" required placeholder="example@domain.com">
+        <div class="nav-buttons">
+            <button onclick="showSection('inventorySection')">جدول المخزون</button>
+            <button onclick="showSection('addProductSection')">إضافة منتج جديد</button>
         </div>
 
-        <button type="submit" id="submitBtn">إرسال البيانات</button>
-    </form>
-    
-    <div id="statusMessage"></div>
+        <!-- قسم عرض المخزون -->
+        <div id="inventorySection">
+            <h3>رصيد المخزون الحالي</h3>
+            <button onclick="loadInventory()" style="background-color:#7f8c8d;">تحديث البيانات 🔄</button>
+            <div id="loadingText" class="hidden">جاري تحميل البيانات...</div>
+            <table id="inventoryTable">
+                <thead>
+                    <tr>
+                        <th>كود المنتج</th>
+                        <th>اسم المنتج</th>
+                        <th>الوحدة</th>
+                        <th>إجمالي المشتريات</th>
+                        <th>إجمالي المبيعات</th>
+                        <th>الرصيد الحالي</th>
+                        <th>حد الطلب</th>
+                    </tr>
+                </thead>
+                <tbody id="inventoryBody">
+                    <!-- سيتم ملء البيانات هنا تلقائياً -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- قسم إضافة منتج -->
+        <div id="addProductSection" class="hidden">
+            <h3>إضافة منتج جديد</h3>
+            <form id="addProductForm" onsubmit="handleAddProduct(event)">
+                <div class="form-group">
+                    <label>كود المنتج:</label>
+                    <input type="text" id="itemCode" required>
+                </div>
+                <div class="form-group">
+                    <label>اسم المنتج:</label>
+                    <input type="text" id="itemName" required>
+                </div>
+                <div class="form-group">
+                    <label>الفئة (Category):</label>
+                    <input type="text" id="category" required>
+                </div>
+                <div class="form-group">
+                    <label>الوحدة:</label>
+                    <input type="text" id="unit" required>
+                </div>
+                <div class="form-group">
+                    <label>سعر الشراء:</label>
+                    <input type="number" step="0.01" id="purchasePrice" required>
+                </div>
+                <div class="form-group">
+                    <label>سعر البيع:</label>
+                    <input type="number" step="0.01" id="sellingPrice" required>
+                </div>
+                <div class="form-group">
+                    <label>حد إعادة الطلب (Reorder Point):</label>
+                    <input type="number" id="reorderPoint" required>
+                </div>
+                <button type="submit" id="submitProductBtn">حفظ المنتج</button>
+            </form>
+            <p id="addProductStatus"></p>
+        </div>
+    </div>
 </div>
 
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxqYbRxOcPAgFncmpvegghSdNqcvzA-V7eSP8zZgNl_ITF9SKLEFOWxgIZW039mIXD7/exec';
-    const form = document.getElementById('dataForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const statusMessage = document.getElementById('statusMessage');
+    // رابط الـ Apps Script الخاص بك
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxqYbRxOcPAgFncmpvegghSdNqcvzA-V7eSP8zZgNl_ITF9SKLEFOWxgIZW039mIXD7/exec';
 
-    form.addEventListener('submit', e => {
-        e.preventDefault();
-        
-        submitBtn.disabled = true;
-        submitBtn.innerText = 'جاري الإرسال...';
-        statusMessage.innerText = '';
-        statusMessage.className = '';
+    // 1. التحقق من كلمة السر
+    function checkPassword() {
+        const pass = document.getElementById('passwordInput').value;
+        const errorElem = document.getElementById('loginError');
+        errorElem.innerText = "جاري التحقق...";
 
-        const formData = new FormData(form);
-
-        fetch(scriptURL, { method: 'POST', body: formData })
-            .then(response => {
-                statusMessage.innerText = 'تم إرسال البيانات بنجاح!';
-                statusMessage.className = 'success';
-                form.reset();
+        fetch(`${SCRIPT_URL}?action=checkPassword&password=${encodeURIComponent(pass)}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('loginSection').classList.add('hidden');
+                    document.getElementById('mainDashboard').classList.remove('hidden');
+                    loadInventory(); // جلب المخزون فور الدخول
+                } else {
+                    errorElem.innerText = data.message || "كلمة السر غير صحيحة!";
+                }
             })
-            .catch(error => {
-                statusMessage.innerText = 'حدث خطأ أثناء الإرسال، حاول مرة أخرى.';
-                statusMessage.className = 'error';
-                console.error('Error!', error.message);
-            })
-            .finally(() => {
-                submitBtn.disabled = false;
-                submitBtn.innerText = 'إرسال البيانات';
+            .catch(err => {
+                errorElem.innerText = "حدث خطأ في الاتصال بالسيرفر.";
+                console.error(err);
             });
-    });
+    }
+
+    // 2. جلب بيانات المخزون
+    function loadInventory() {
+        const loading = document.getElementById('loadingText');
+        const tbody = document.getElementById('inventoryBody');
+        loading.classList.remove('hidden');
+        tbody.innerHTML = '';
+
+        fetch(`${SCRIPT_URL}?action=getInventoryBalance`)
+            .then(res => res.json())
+            .then(data => {
+                loading.classList.add('hidden');
+                if (data.success) {
+                    data.inventory.forEach(item => {
+                        const tr = document.createElement('tr');
+                        
+                        // تمييز الصف باللون الأحمر إذا كان المنتج بحاجة لإعادة طلب
+                        const reorderStr = String(item.reorderPoint || '');
+                        if (reorderStr.includes('Reorder') || reorderStr.includes('🚨') || item.currentBalance === 0) {
+                            tr.classList.add('alert-reorder');
+                        }
+
+                        tr.innerHTML = `
+                            <td>${item.itemCode}</td>
+                            <td>${item.itemName}</td>
+                            <td>${item.unit}</td>
+                            <td>${item.totalBought}</td>
+                            <td>${item.totalSold}</td>
+                            <td>${item.currentBalance}</td>
+                            <td>${item.reorderPoint}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    alert("خطأ: " + data.message);
+                }
+            })
+            .catch(err => {
+                loading.classList.add('hidden');
+                alert("تعذر جلب بيانات المخزون.");
+                console.error(err);
+            });
+    }
+
+    // 3. إضافة منتج جديد
+    function handleAddProduct(event) {
+        event.preventDefault();
+        const btn = document.getElementById('submitProductBtn');
+        const status = document.getElementById('addProductStatus');
+        btn.disabled = true;
+        status.innerText = "جاري الإضافة...";
+
+        const payload = {
+            action: 'addProduct',
+            itemCode: document.getElementById('itemCode').value,
+            itemName: document.getElementById('itemName').value,
+            category: document.getElementById('category').value,
+            unit: document.getElementById('unit').value,
+            purchasePrice: document.getElementById('purchasePrice').value,
+            sellingPrice: document.getElementById('sellingPrice').value,
+            reorderPoint: document.getElementById('reorderPoint').value
+        };
+
+        // إرسال POST Request كـ text/plain لتفادي مشاكل CORS مع Google Apps Script
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(data => {
+            btn.disabled = false;
+            if (data.success) {
+                status.style.color = "green";
+                status.innerText = data.message;
+                document.getElementById('addProductForm').reset();
+            } else {
+                status.style.color = "red";
+                status.innerText = "خطأ: " + data.error;
+            }
+        })
+        .catch(err => {
+            btn.disabled = false;
+            status.style.color = "red";
+            status.innerText = "حدث خطأ أثناء الاتصال بالسيرفر.";
+            console.error(err);
+        });
+    }
+
+    // التنقل بين الأقسام
+    function showSection(sectionId) {
+        document.getElementById('inventorySection').classList.add('hidden');
+        document.getElementById('addProductSection').classList.add('hidden');
+        document.getElementById(sectionId).classList.remove('hidden');
+    }
 </script>
 
 </body>
