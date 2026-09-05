@@ -306,7 +306,8 @@
 
     <!-- JavaScript Engine -->
     <script>
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzNBwciTPQTh4tlya6_9eTl_UL6jD-PUgTSNTBi3uvVdVXy30H-TuvS9h_rbZW3Zo-K/exec";
+        // تم تحديث الرابط بالنظام الجديد المرفق من طرفك
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxB1BDtvA4SPvr896BjRYBggqfaoR_oz2OuISQpTXKqxHrsY4zcnQAu-kRSXwPHzxsL/exec";
 
         let allProducts = [];
         let savedAdminPassword = "";
@@ -328,18 +329,16 @@
             }
         }
 
-        // دالة مرنة للحصول على قيمة الخاصية بغض النظر عن الاسم القادم من Google Apps Script
+        // دالة مرنة للحصول على قيمة الخاصية بغض النظر عن طريقة إرجاعها
         function getPropValue(item, propKeys, fallback = '') {
             if (!item || typeof item !== 'object') return fallback;
             
-            // 1. تجربة مفاتيح الكائنات الصريحة
             for (let key of propKeys) {
                 if (item[key] !== undefined && item[key] !== null && String(item[key]).trim() !== '') {
                     return item[key];
                 }
             }
             
-            // 2. الدعم بالاعتماد على الترتيب من المصفوفة الخامية (إن كانت قادمة كمصفوفة أسطر)
             if (Array.isArray(item)) {
                 if (propKeys.includes('Item Code') && item[0] !== undefined) return item[0];
                 if (propKeys.includes('Item Name') && item[1] !== undefined) return item[1];
@@ -436,7 +435,7 @@
         function renderDashboard(data) {
             const inventoryList = data.inventory || [];
             
-            // 1. حساب Total Sold الكلي من العمود E الخاص بالشيت مباشرة
+            // 1. حساب Total Sold الكلي
             let grandTotalSold = 0;
             inventoryList.forEach(item => {
                 const soldVal = Number(getPropValue(item, ['Total Sold', 'totalSold', 'TotalSold', 'إجمالي المباع'], 0));
@@ -446,7 +445,7 @@
 
             renderSalesChart(inventoryList);
 
-            // 2. تصفية عناصر التنبيه بحسب عمود Reorder Point (G) أو الرصيد الصفري
+            // 2. تصفية عناصر Reorder Alert
             const reorderAlerts = inventoryList.filter(item => {
                 const reorderStatus = String(getPropValue(item, ['Reorder Point', 'reorderPoint', 'ReorderPoint'], '')).toLowerCase();
                 const currentBalance = Number(getPropValue(item, ['Current Balance', 'currentBalance', 'CurrentBalance'], 0));
@@ -477,15 +476,15 @@
                 }).join('');
             }
 
-            // 4. عرض التقرير الشامل بقيم مطابقة 100% لأعمدة الشيت
+            // 4. عرض التقرير الشامل مع عرض أرقام المشتريات المجلوبة مباشرة من الشيت
             const invBody = document.getElementById('inventory-table-body');
             invBody.innerHTML = inventoryList.map(item => {
                 const code = getPropValue(item, ['Item Code', 'code', 'ItemCode', 'Code'], '-');
                 const name = getPropValue(item, ['Item Name', 'name', 'ItemName', 'Name'], '-');
                 const unit = getPropValue(item, ['Unit', 'unit'], 'قطع');
-                const bought = getPropValue(item, ['Total Bought', 'totalBought', 'TotalBought'], 0);
-                const sold = getPropValue(item, ['Total Sold', 'totalSold', 'TotalSold'], 0);
-                const current = getPropValue(item, ['Current Balance', 'currentBalance', 'CurrentBalance'], 0);
+                const bought = getPropValue(item, ['Total Bought', 'totalBought', 'TotalBought', 'إجمالي المشتريات'], 0);
+                const sold = getPropValue(item, ['Total Sold', 'totalSold', 'TotalSold', 'إجمالي المبيعات'], 0);
+                const current = getPropValue(item, ['Current Balance', 'currentBalance', 'CurrentBalance', 'الرصيد الحالي'], 0);
                 const reorderStr = String(getPropValue(item, ['Reorder Point', 'reorderPoint', 'ReorderPoint'], 'Safe ✅'));
                 
                 const isReorder = reorderStr.toLowerCase().includes('reorder') || Number(current) === 0;
