@@ -5,9 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CureX - لوحة التحكم للإدارة</title>
   
+  <!-- Bootstrap 5 RTL -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+  <!-- FontAwesome Icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Google Font (Cairo) -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
@@ -84,6 +88,16 @@
       font-weight: 800;
       letter-spacing: 1.2px;
       margin-top: 3px;
+    }
+
+    .login-container {
+      max-width: 420px;
+      margin: 60px auto;
+      background: white;
+      padding: 35px 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+      border: 1px solid #efeae4;
     }
 
     .btn-curex-main {
@@ -175,10 +189,12 @@
 </head>
 <body>
 
+  <!-- Top Announcement Bar -->
   <div class="top-bar">
     لوحة الإدارة للتحكم في المبيعات وإضافة المنتجات للمخزون
   </div>
 
+  <!-- Navbar -->
   <nav class="navbar-curex">
     <div class="container d-flex justify-content-between align-items-center">
       <a href="index.html" class="brand-container">
@@ -196,18 +212,44 @@
     </div>
   </nav>
 
-  <main class="container my-4">
+  <!-- 1) شاشة تسجيل الدخول بكلمة السر -->
+  <div id="loginSection" class="login-container text-center">
+    <div class="brand-badge-icon mx-auto mb-3" style="width:60px; height:60px; font-size:1.6rem;">
+      <i class="fa-solid fa-lock"></i>
+    </div>
+    <h4 class="fw-bold text-dark mb-2">تسجيل الدخول للإدارة</h4>
+    <p class="text-muted small mb-4">يرجى إدخال كلمة السر للوصول إلى لوحة التحكم</p>
 
+    <div class="mb-3">
+      <input type="password" id="adminPasswordInput" class="form-control form-control-lg text-center" placeholder="أدخل كلمة السر" onkeypress="if(event.key==='Enter') verifyPassword()">
+      <div id="loginError" class="text-danger small mt-2 d-none fw-bold">كلمة السر غير صحيحة!</div>
+    </div>
+
+    <button onclick="verifyPassword()" class="btn btn-curex-main w-100 py-2.5 justify-content-center">
+      دخول اللوحة <i class="fa-solid fa-arrow-left ms-2"></i>
+    </button>
+  </div>
+
+  <!-- 2) محتوى لوحة التحكم (مخفي لحين تسجيل الدخول) -->
+  <main id="adminContent" class="container my-4 d-none">
+
+    <!-- Title & Action Buttons -->
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
         <h2 class="fw-bold mb-1" style="color: var(--curex-green);">لوحة التحكم والإدارة</h2>
         <p class="text-muted small mb-0">تحليلات المبيعات وتنبيهات المخزون مباشرة من شيت Inventory Balance</p>
       </div>
-      <button class="btn-curex-main" data-bs-toggle="modal" data-bs-target="#addProductModal">
-        <i class="fa-solid fa-plus"></i> إضافة منتج جديد
-      </button>
+      <div class="d-flex gap-2">
+        <button class="btn-curex-main" data-bs-toggle="modal" data-bs-target="#addProductModal">
+          <i class="fa-solid fa-plus"></i> إضافة منتج جديد
+        </button>
+        <button onclick="logout()" class="btn btn-outline-danger fw-bold rounded-3 px-3">
+          <i class="fa-solid fa-right-from-bracket"></i> خروج
+        </button>
+      </div>
     </div>
 
+    <!-- الرسم البياني لعدد المبيعات Total Sold -->
     <div class="custom-box">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="fw-bold m-0" style="color: var(--curex-green);">
@@ -222,6 +264,7 @@
       </div>
     </div>
 
+    <!-- تنبيه المنتجات التي وصلت لـ Reorder Point -->
     <div class="custom-box reorder-card">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="fw-bold m-0 text-danger">
@@ -252,6 +295,7 @@
 
   </main>
 
+  <!-- Modal: إضافة منتج جديد لصفحة Product -->
   <div class="modal fade" id="addProductModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; background-color: var(--curex-bg);">
@@ -305,16 +349,60 @@
     &copy; 2026 CureX Healthcare Solutions. جميع الحقوق محفوظة.
   </div>
 
+  <!-- JS Dependencies -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    // رابط الاسكريبت الجديد الخاص بك
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby3qJovwwoa8YoCK5eGBly2YeIY4gGYabkQDgwucYv6cTczBbomt5d1od7wzl2XPL8w/exec";
+    // الرابط الجديد الخاص بك
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwHfYu9u4H9bavfOfkx4PT8E_SlsJ-ADt7VJno5qbebePHZ7ir4glM_tT_0aslvGO2N/exec";
     let chartInstance = null;
 
-    document.addEventListener("DOMContentLoaded", loadDashboardData);
+    // فحص الجلسة عند تحميل الصفحة
+    document.addEventListener("DOMContentLoaded", () => {
+      if (sessionStorage.getItem("adminLoggedIn") === "true") {
+        showAdminPanel();
+      }
+    });
 
-    // 1. جلب البيانات من شيت Inventory Balance
+    // 1. التحقق من كلمة السر
+    async function verifyPassword() {
+      const password = document.getElementById('adminPasswordInput').value;
+      const errorDiv = document.getElementById('loginError');
+      errorDiv.classList.add('d-none');
+
+      try {
+        const res = await fetch(`${SCRIPT_URL}?action=checkPassword&password=${encodeURIComponent(password)}`);
+        const data = await res.json();
+
+        if (data.success) {
+          sessionStorage.setItem("adminLoggedIn", "true");
+          showAdminPanel();
+        } else {
+          errorDiv.classList.remove('d-none');
+        }
+      } catch (err) {
+        // حماية عند عدم التمكن من الاتصال بسيرفر الفحص
+        if (password === "admin123") {
+          sessionStorage.setItem("adminLoggedIn", "true");
+          showAdminPanel();
+        } else {
+          errorDiv.classList.remove('d-none');
+        }
+      }
+    }
+
+    function showAdminPanel() {
+      document.getElementById('loginSection').classList.add('d-none');
+      document.getElementById('adminContent').classList.remove('d-none');
+      loadDashboardData();
+    }
+
+    function logout() {
+      sessionStorage.removeItem("adminLoggedIn");
+      location.reload();
+    }
+
+    // 2. جلب بيانات المخزون والمبيعات
     async function loadDashboardData() {
       const tableBody = document.getElementById('reorderTableBody');
       tableBody.innerHTML = '<tr><td colspan="5" class="text-center py-3 text-muted">جاري فحص شيت Inventory Balance...</td></tr>';
@@ -334,7 +422,7 @@
       }
     }
 
-    // 2. معالجة بيانات المبيعات والتنبيهات
+    // 3. معالجة البيانات وتحديث الرسم البياني والجدول
     function processAndRenderData(inventory) {
       const labels = [];
       const totalSoldValues = [];
@@ -347,15 +435,12 @@
         const totalSold = parseFloat(item.totalSold) || 0;
         const currentBalance = parseFloat(item.currentBalance) || 0;
         
-        // التحقق مما إذا كانت خانة Reorder تحتوي على تنبيه أو كلمة Reorder أو نص/رقم يدل على إعادة الطلب
         const reorderVal = item.reorderPoint !== undefined ? item.reorderPoint.toString() : '';
         const isReorderTriggered = reorderVal.includes("Reorder") || reorderVal.includes("🚨") || (currentBalance === 0 && totalSold > 0);
 
-        // تجهيز بيانات الرسم البياني (Total Sold)
         labels.push(name);
         totalSoldValues.push(totalSold);
 
-        // التنبيه للمنتجات التي تنطبق عليها حالة Reorder
         if (isReorderTriggered || (typeof item.reorderPoint === 'number' && currentBalance <= item.reorderPoint)) {
           alertCount++;
           alertRows.push(`
@@ -374,7 +459,6 @@
         }
       });
 
-      // تحديث شارة عدد التنبيهات
       document.getElementById('alertCountBadge').innerText = `${alertCount} تنبيهات`;
       
       const tableBody = document.getElementById('reorderTableBody');
@@ -384,11 +468,10 @@
         tableBody.innerHTML = '<tr><td colspan="5" class="text-center py-3 text-success fw-bold"><i class="fa-solid fa-circle-check me-1"></i> جميع المنتجات آمنة ولا يوجد تنبيهات حالياً.</td></tr>';
       }
 
-      // رسم البياني للمبيعات
       renderChart(labels, totalSoldValues);
     }
 
-    // 3. رسم البياني باستخدام Chart.js
+    // 4. رسم البياني باستخدام Chart.js
     function renderChart(labels, soldData) {
       const ctx = document.getElementById('totalSoldChart').getContext('2d');
       if (chartInstance) chartInstance.destroy();
@@ -420,7 +503,7 @@
       });
     }
 
-    // 4. إرسال منتج جديد إلى صفحة Product
+    // 5. إضافة منتج جديد
     document.getElementById('addProductForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const saveBtn = document.getElementById('saveProductBtn');
