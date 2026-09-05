@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CureX - لوحة التحكم الإدارية وتقرير المخزون</title>
+  <title>CureX - لوحة التحكم للإدارة</title>
+  
   <!-- Bootstrap 5 RTL -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
   <!-- FontAwesome Icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <!-- Google Font (Cairo) -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <!-- Chart.js CDN -->
+  <!-- Chart.js للرسم البياني -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
@@ -23,7 +24,6 @@
       --text-dark: #2c302e;
       --text-muted: #82807c;
       --footer-border: #eee8e0;
-      --alert-danger: #d9534f;
     }
 
     body {
@@ -40,7 +40,7 @@
       text-align: right;
     }
 
-    /* Top Bar Header */
+    /* Top Header Bar */
     .top-bar {
       background-color: var(--curex-green);
       color: #ffffff;
@@ -50,9 +50,9 @@
       font-weight: 700;
     }
 
-    /* Header Navbar */
+    /* Navbar Header */
     .navbar-curex {
-      padding: 18px 0;
+      padding: 20px 0;
       background-color: transparent;
       border-bottom: 1px solid var(--footer-border);
     }
@@ -99,15 +99,14 @@
       margin-top: 3px;
     }
 
-    /* Metric Cards */
+    /* Cards Section */
     .metric-card {
       background: #ffffff;
       border: 1px solid #efeae4;
       border-radius: 16px;
-      padding: 22px;
+      padding: 20px 24px;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
     }
 
     .metric-card::before {
@@ -125,27 +124,32 @@
     }
 
     .metric-card.accent-danger::before {
-      background-color: var(--alert-danger);
+      background-color: #dc3545;
     }
 
     .metric-title {
       color: var(--text-muted);
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 700;
       margin-bottom: 8px;
     }
 
     .metric-value {
-      font-size: 2.2rem;
+      font-size: 2rem;
       font-weight: 900;
       color: var(--curex-green);
       line-height: 1;
     }
 
-    .metric-value.orange { color: var(--curex-orange); }
-    .metric-value.danger { color: var(--alert-danger); }
+    .metric-value.orange {
+      color: var(--curex-orange);
+    }
 
-    /* Action Buttons */
+    .metric-value.danger {
+      color: #dc3545;
+    }
+
+    /* Buttons */
     .btn-curex-main {
       background-color: var(--curex-green);
       color: white;
@@ -181,14 +185,13 @@
       color: white;
     }
 
-    /* Dashboard Boxes & Tables */
-    .dashboard-card {
+    /* Container Box */
+    .custom-box {
       background: #ffffff;
       border: 1px solid #efeae4;
       border-radius: 16px;
-      padding: 24px;
-      margin-bottom: 30px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+      padding: 20px;
+      margin-bottom: 25px;
     }
 
     .table thead th {
@@ -196,29 +199,28 @@
       color: var(--curex-green);
       font-weight: 800;
       border-bottom: 2px solid #efeae4;
-      padding: 12px 14px;
-      white-space: nowrap;
+      padding: 12px;
     }
 
     .table tbody td {
-      padding: 12px 14px;
+      padding: 12px;
       vertical-align: middle;
       font-weight: 600;
       color: var(--text-dark);
       border-bottom: 1px solid #f5f0ea;
-      white-space: nowrap;
     }
 
-    /* Alert Banner */
-    .alert-reorder-box {
-      background-color: #fdf2f2;
-      border: 1px solid #f8d7da;
-      border-radius: 14px;
-      padding: 16px 20px;
-      margin-bottom: 25px;
-      display: none;
+    /* Alert Badge */
+    .reorder-badge {
+      background-color: #fce8e6;
+      color: #d93025;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.82rem;
     }
 
+    /* Footer */
     .copyright-text {
       color: var(--text-muted);
       font-size: 0.85rem;
@@ -232,16 +234,14 @@
 </head>
 <body>
 
-  <!-- Top Announcement -->
+  <!-- Top Announcement Bar -->
   <div class="top-bar">
-    لوحة التحكم الإدارية - إدارة المبيعات والمخزون والتنبيهات الحية
+    لوحة الإدارة للتحكم في المبيعات وإضافة المنتجات للمخزون
   </div>
 
   <!-- Navbar -->
   <nav class="navbar-curex">
     <div class="container d-flex justify-content-between align-items-center">
-      
-      <!-- Brand Logo (Right) -->
       <a href="index.html" class="brand-container">
         <div class="brand-badge-icon">CX</div>
         <div class="brand-text-box">
@@ -249,129 +249,84 @@
           <span class="brand-subtext">HEALTHCARE SOLUTIONS</span>
         </div>
       </a>
-
-      <!-- Controls (Left) -->
-      <div class="d-flex align-items-center gap-2">
-        <button class="btn btn-sm btn-light border fw-bold me-2" onclick="loadAllDashboardData()">
-          <i class="fa-solid fa-rotate-right me-1"></i> تحديث البيانات
-        </button>
+      <div>
         <a href="index.html" class="btn-curex-outline">
-          <i class="fa-solid fa-store me-1"></i> المتجر
+          <i class="fa-solid fa-store me-1"></i> العودة للمتجر
         </a>
       </div>
-
     </div>
   </nav>
 
   <!-- Main Content -->
-  <main class="container my-5">
+  <main class="container my-4">
 
-    <!-- Title & Add Product -->
+    <!-- Header & Action Button -->
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
         <h2 class="fw-bold mb-1" style="color: var(--curex-green);">نظرة عامة على النشاط</h2>
-        <p class="text-muted small mb-0">بيانات وتنبيهات فورية مربوطة بشيت الجوجل</p>
+        <p class="text-muted small mb-0">مؤشرات حية مستخرجة مباشرة من شيت Inventory Balance</p>
       </div>
       <button class="btn-curex-main" data-bs-toggle="modal" data-bs-target="#addProductModal">
         <i class="fa-solid fa-plus"></i> إضافة منتج جديد
       </button>
     </div>
 
-    <!-- Alert Box for Reorder Levels -->
-    <div class="alert-reorder-box" id="reorderAlertContainer">
-      <div class="d-flex align-items-center gap-2 text-danger fw-bold mb-1">
-        <i class="fa-solid fa-triangle-exclamation fs-5"></i>
-        <span>تنبيه إعادة الطلب للمخزون (Reorder Alerts):</span>
-      </div>
-      <div id="reorderAlertList" class="small text-dark fw-semibold mt-2"></div>
-    </div>
-
-    <!-- Live Metrics Cards -->
-    <div class="row g-4 mb-4">
+    <!-- Live Counters derived from Inventory Balance Sheet -->
+    <div class="row g-3 mb-4">
       <div class="col-md-4">
         <div class="metric-card">
-          <div class="metric-title">إجمالي قطع المبيعات (Total Sold)</div>
-          <div class="metric-value" id="totalSoldDisplay">0</div>
+          <div class="metric-title">إجمالي كميات المبيعات</div>
+          <div class="metric-value" id="totalQtySold">0</div>
         </div>
       </div>
       <div class="col-md-4">
         <div class="metric-card accent-orange">
           <div class="metric-title">إجمالي قيمة المبيعات الحقيقية</div>
-          <div class="metric-value orange"><span id="salesTotalDisplay">0</span> <small class="fs-6">ج.م</small></div>
+          <div class="metric-value orange"><span id="totalSalesVal">0</span> <small class="fs-6">ج.م</small></div>
         </div>
       </div>
       <div class="col-md-4">
         <div class="metric-card accent-danger">
-          <div class="metric-title">منتجات بلغت حد الطلب</div>
-          <div class="metric-value danger" id="reorderCountDisplay">0</div>
+          <div class="metric-title">منتجات وصلت حد الطلب (Reorder)</div>
+          <div class="metric-value danger" id="reorderAlertCount">0</div>
         </div>
       </div>
     </div>
 
-    <!-- Sales Analytics Chart -->
-    <div class="dashboard-card">
-      <h4 class="fw-bold mb-4" style="color: var(--curex-green);">
-        <i class="fa-chart-column fa-solid me-2" style="color: var(--curex-orange);"></i>المنتجات الأكثر مبيعاً (Total Sold Chart)
-      </h4>
-      <div style="height: 280px; position: relative;">
+    <!-- Dynamic Sales Chart from Inventory Balance -->
+    <div class="custom-box">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold m-0" style="color: var(--curex-green);">
+          <i class="fa-solid fa-chart-column me-2"></i>رسم بياني لعدد مبيعات المنتجات (من شيت Inventory Balance)
+        </h5>
+        <button class="btn btn-sm btn-light border fw-bold" onclick="loadInventoryData()">
+          <i class="fa-solid fa-rotate-right me-1"></i> تحديث البيانات
+        </button>
+      </div>
+      <div style="position: relative; height:320px; width:100%;">
         <canvas id="salesChart"></canvas>
       </div>
     </div>
 
-    <!-- Inventory Report Table -->
-    <div class="dashboard-card">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="fw-bold m-0" style="color: var(--curex-green);">
-          <i class="fa-boxes-stacked fa-solid me-2" style="color: var(--curex-orange);"></i>تقرير المخزون والمنتجات (Inventory Report)
-        </h4>
-      </div>
-
+    <!-- Reorder Point Alert Table -->
+    <div class="custom-box">
+      <h5 class="fw-bold mb-3 text-danger">
+        <i class="fa-solid fa-triangle-exclamation me-2"></i>تنبيه المنتجات التي وصلت لـ (حد إعادة الطلب)
+      </h5>
       <div class="table-responsive">
         <table class="table align-middle">
           <thead>
             <tr>
-              <th>كود المنتج</th>
-              <th>اسم المنتج</th>
-              <th>التصنيف</th>
-              <th>الوحدة</th>
-              <th>سعر الشراء</th>
-              <th>سعر البيع</th>
-              <th>المبيعات (Total Sold)</th>
-              <th>حد إعادة الطلب</th>
+              <th>Item Code</th>
+              <th>Item Name</th>
+              <th>الرصيد المالي الحالي</th>
+              <th>حد الطلب (Reorder Point)</th>
               <th>الحالة</th>
             </tr>
           </thead>
-          <tbody id="inventoryTableBody">
+          <tbody id="reorderTableBody">
             <tr>
-              <td colspan="9" class="text-center py-4 text-muted fw-bold">جاري تحميل تقرير المخزون من الشيت...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Recent Orders Table -->
-    <div class="dashboard-card">
-      <h4 class="fw-bold mb-3" style="color: var(--curex-green);">
-        <i class="fa-receipt fa-solid me-2" style="color: var(--curex-orange);"></i>آخر الطلبات الواردة (Orders)
-      </h4>
-
-      <div class="table-responsive">
-        <table class="table align-middle">
-          <thead>
-            <tr>
-              <th>كود المنتج</th>
-              <th>اسم المنتج</th>
-              <th>الكمية</th>
-              <th>الإجمالي</th>
-              <th>اسم العميل</th>
-              <th>رقم الهاتف</th>
-              <th>العنوان</th>
-            </tr>
-          </thead>
-          <tbody id="ordersTableBody">
-            <tr>
-              <td colspan="7" class="text-center py-4 text-muted fw-bold">جاري تحميل جدول الطلبات من الشيت...</td>
+              <td colspan="5" class="text-center py-3 text-muted">جاري فحص حالة المخزون من الشيت...</td>
             </tr>
           </tbody>
         </table>
@@ -380,48 +335,63 @@
 
   </main>
 
-  <!-- Modal: إضافة منتج جديد (Product) -->
+  <!-- Modal: إضافة منتج جديد لشيت Product -->
   <div class="modal fade" id="addProductModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; background-color: var(--curex-bg);">
         <div class="modal-header border-0 pb-0">
-          <h5 class="modal-title fw-bold" style="color: var(--curex-green);">إضافة منتج جديد لتقرير المخزون</h5>
+          <h5 class="modal-title fw-bold" style="color: var(--curex-green);">إضافة منتج جديد لصفحة (Product)</h5>
           <button type="button" class="btn-close ms-0 me-auto" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body p-4 text-end">
           <form id="addProductForm">
+            
             <div class="row g-3">
+              <!-- Item Code -->
               <div class="col-md-6">
-                <label class="form-label fw-bold small">كود المنتج (Item Code) *</label>
-                <input type="text" id="newCode" class="form-control" placeholder="مثال: CX-101" required>
+                <label class="form-label fw-bold small">Item Code *</label>
+                <input type="text" id="itemCode" class="form-control" placeholder="كود المنتج" required>
               </div>
+
+              <!-- Item Name -->
               <div class="col-md-6">
-                <label class="form-label fw-bold small">اسم المنتج (Item Name) *</label>
-                <input type="text" id="newName" class="form-control" placeholder="مثال: جهاز قياس السكر" required>
+                <label class="form-label fw-bold small">Item Name *</label>
+                <input type="text" id="itemName" class="form-control" placeholder="اسم المنتج" required>
               </div>
+
+              <!-- Category -->
               <div class="col-md-6">
-                <label class="form-label fw-bold small">التصنيف (Category) *</label>
-                <input type="text" id="newCategory" class="form-control" placeholder="مثال: أجهزة طبية" required>
+                <label class="form-label fw-bold small">Category *</label>
+                <input type="text" id="category" class="form-control" placeholder="التصنيف" required>
               </div>
+
+              <!-- Unit -->
               <div class="col-md-6">
-                <label class="form-label fw-bold small">الوحدة (Unit) *</label>
-                <input type="text" id="newUnit" class="form-control" placeholder="مثال: قطعة" required>
+                <label class="form-label fw-bold small">Unit *</label>
+                <input type="text" id="unit" class="form-control" placeholder="الوحدة (قطعة / علبة)" required>
               </div>
+
+              <!-- Purchase Price -->
               <div class="col-md-4">
-                <label class="form-label fw-bold small">سعر الشراء (Purchase Price) *</label>
-                <input type="number" step="0.01" id="newPurchasePrice" class="form-control" placeholder="0.00" required>
+                <label class="form-label fw-bold small">Purchase Price *</label>
+                <input type="number" step="0.01" id="purchasePrice" class="form-control" placeholder="سعر الشراء" required>
               </div>
+
+              <!-- Selling Price -->
               <div class="col-md-4">
-                <label class="form-label fw-bold small">سعر البيع (Selling Price) *</label>
-                <input type="number" step="0.01" id="newSellingPrice" class="form-control" placeholder="0.00" required>
+                <label class="form-label fw-bold small">Selling Price *</label>
+                <input type="number" step="0.01" id="sellingPrice" class="form-control" placeholder="سعر البيع" required>
               </div>
+
+              <!-- Reorder Point -->
               <div class="col-md-4">
-                <label class="form-label fw-bold small">حد إعادة الطلب (Reorder Point) *</label>
-                <input type="number" id="newReorderPoint" class="form-control" placeholder="مثال: 5" required>
+                <label class="form-label fw-bold small">Reorder Point *</label>
+                <input type="number" id="reorderPoint" class="form-control" placeholder="حد إعادة الطلب" required>
               </div>
             </div>
-            <button type="submit" class="btn btn-curex-main w-100 py-2.5 mt-4 fs-6 justify-content-center" id="saveProductBtn">
-              حفظ المنتج مباشرة في الشيت
+
+            <button type="submit" class="btn btn-curex-main w-100 py-2.5 mt-4 fs-6 justify-content-center" id="submitBtn">
+              حفظ المنتج في صفحة Product
             </button>
           </form>
         </div>
@@ -439,145 +409,95 @@
 
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzoZurpyYs-2BJgbHS2hsxB7PhUBa-SvL8XUarDh4LeZ460lsfg5TcDcBxhkK5y2n0/exec";
-
     let chartInstance = null;
 
-    document.addEventListener("DOMContentLoaded", loadAllDashboardData);
+    document.addEventListener("DOMContentLoaded", loadInventoryData);
 
-    function loadAllDashboardData() {
-      fetchProductsAndInventory();
-      fetchOrdersData();
-    }
-
-    // 1. جلب المنتجات والمخزون وحساب (Total Sold) وتنبيه حد إعادة الطلب والرسم البياني
-    async function fetchProductsAndInventory() {
-      const tbody = document.getElementById('inventoryTableBody');
-      tbody.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-muted fw-bold">جاري تحميل المخزون...</td></tr>';
-
+    // جلب البيانات من شيت Inventory Balance فقط
+    async function loadInventoryData() {
       try {
-        const res = await fetch(`${SCRIPT_URL}?action=getProducts`);
+        const res = await fetch(`${SCRIPT_URL}?action=getInventoryBalance`);
         const data = await res.json();
 
-        if (data.success && data.products) {
-          const products = data.products;
-
-          let grandTotalSold = 0;
-          let reorderAlerts = [];
-          let labels = [];
-          let salesData = [];
-
-          tbody.innerHTML = '';
-
-          products.forEach(p => {
-            const totalSold = parseInt(p.totalSold || p.TotalSold || 0);
-            const reorderPoint = parseInt(p.reorderPoint || p.ReorderPoint || 0);
-            
-            grandTotalSold += totalSold;
-
-            // تجهيز بيانات الرسم البياني
-            labels.push(p.itemName || p.itemCode);
-            salesData.push(totalSold);
-
-            // إعداد التنبيهات إذا بلغت المبيعات حد الطلب
-            let statusBadge = `<span class="badge bg-success-subtle text-success border border-success-subtle">مستقر</span>`;
-            if (totalSold >= reorderPoint && reorderPoint > 0) {
-              statusBadge = `<span class="badge bg-danger text-white">وصل حد الطلب!</span>`;
-              reorderAlerts.push(`المنتج <strong>${p.itemName}</strong> (كود: ${p.itemCode}) بلغ إجمالي مبيعاته (${totalSold}) وهو يتجاوز/يطابق حد الطلب (${reorderPoint}).`);
-            }
-
-            tbody.innerHTML += `
-              <tr>
-                <td><span class="badge bg-light text-dark border">${p.itemCode || '-'}</span></td>
-                <td class="fw-bold" style="color: var(--curex-green);">${p.itemName || '-'}</td>
-                <td>${p.category || '-'}</td>
-                <td>${p.unit || 'قطعة'}</td>
-                <td>${p.purchasePrice || '0'} ج.م</td>
-                <td class="fw-bold">${p.sellingPrice || '0'} ج.م</td>
-                <td class="fw-bold text-primary fs-6">${totalSold}</td>
-                <td>${reorderPoint}</td>
-                <td>${statusBadge}</td>
-              </tr>
-            `;
-          });
-
-          // 2. تحديث كارت Total Sold
-          document.getElementById('totalSoldDisplay').innerText = grandTotalSold.toLocaleString();
-
-          // 3. عرض تنبيهات حد إعادة الطلب
-          const alertContainer = document.getElementById('reorderAlertContainer');
-          const alertList = document.getElementById('reorderAlertList');
-          document.getElementById('reorderCountDisplay').innerText = reorderAlerts.length;
-
-          if (reorderAlerts.length > 0) {
-            alertList.innerHTML = reorderAlerts.map(a => `<div class="mb-1">• ${a}</div>`).join('');
-            alertContainer.style.display = 'block';
-          } else {
-            alertContainer.style.display = 'none';
-          }
-
-          // 4. رسم المخطط البياني (Chart)
-          renderSalesChart(labels, salesData);
-        }
-      } catch (e) {
-        tbody.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-danger fw-bold">حدث خطأ أثناء تحميل المخزون.</td></tr>';
-      }
-    }
-
-    // 2. جلب الطلبات الأخيرة وحساب إجمالي قيمة المبيعات
-    async function fetchOrdersData() {
-      const tbody = document.getElementById('ordersTableBody');
-      tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted fw-bold">جاري تحميل الطلبات...</td></tr>';
-
-      try {
-        const res = await fetch(`${SCRIPT_URL}?action=getOrders`);
-        const data = await res.json();
-
-        if (data.success && data.orders) {
-          const orders = data.orders;
-
-          const totalSum = orders.reduce((sum, o) => sum + (parseFloat(o.totalAmount || o.TotalAmount || 0)), 0);
-          document.getElementById('salesTotalDisplay').innerText = totalSum.toLocaleString();
-
-          tbody.innerHTML = '';
-          if (orders.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted">لا توجد طلبات مسجلة حالياً.</td></tr>';
-            return;
-          }
-
-          orders.forEach(o => {
-            tbody.innerHTML += `
-              <tr>
-                <td><span class="badge bg-light text-dark border">${o.itemCode || '-'}</span></td>
-                <td>${o.itemName || '-'}</td>
-                <td>${o.quantity || '1'}</td>
-                <td class="fw-bold text-success">${parseFloat(o.totalAmount || 0).toLocaleString()} ج.م</td>
-                <td>${o.clientName || '-'}</td>
-                <td>${o.phone || '-'}</td>
-                <td class="small text-muted">${o.address || '-'}</td>
-              </tr>
-            `;
-          });
+        if (data.success && data.inventory) {
+          processInventory(data.inventory);
         }
       } catch (err) {
-        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-danger fw-bold">تعذر تحميل جدول الطلبات.</td></tr>';
+        console.error("خطأ في جلب بيانات Inventory Balance:", err);
       }
     }
 
-    // 3. بناء وتحديث الرسم البياني (Chart.js)
-    function renderSalesChart(labels, data) {
+    function processInventory(items) {
+      let totalQty = 0;
+      let totalVal = 0;
+      let alertCount = 0;
+
+      const productNames = [];
+      const salesQtyData = [];
+      const reorderRows = [];
+
+      items.forEach(item => {
+        const soldQty = parseFloat(item.soldQuantity || item.outQuantity || 0);
+        const salesValue = parseFloat(item.totalSalesValue || 0);
+        const currentStock = parseFloat(item.currentStock || item.balance || 0);
+        const reorderPt = parseFloat(item.reorderPoint || 0);
+
+        totalQty += soldQty;
+        totalVal += salesValue;
+
+        productNames.push(item.itemName || item.itemCode);
+        salesQtyData.push(soldQty);
+
+        // فحص حد الطلب
+        if (currentStock <= reorderPt) {
+          alertCount++;
+          reorderRows.push(`
+            <tr>
+              <td><span class="badge bg-light text-dark border">${item.itemCode}</span></td>
+              <td class="fw-bold">${item.itemName}</td>
+              <td class="text-danger fw-bold">${currentStock}</td>
+              <td>${reorderPt}</td>
+              <td><span class="reorder-badge"><i class="fa-solid fa-triangle-exclamation me-1"></i> مطلوب إكماله</span></td>
+            </tr>
+          `);
+        }
+      });
+
+      // تحديث الأرقام
+      document.getElementById('totalQtySold').innerText = totalQty.toLocaleString();
+      document.getElementById('totalSalesVal').innerText = totalVal.toLocaleString();
+      document.getElementById('reorderAlertCount').innerText = alertCount;
+
+      // تحديث جدول التنبيهات
+      const alertTbody = document.getElementById('reorderTableBody');
+      if (reorderRows.length > 0) {
+        alertTbody.innerHTML = reorderRows.join('');
+      } else {
+        alertTbody.innerHTML = '<tr><td colspan="5" class="text-center py-3 text-success fw-bold"><i class="fa-solid fa-check-circle me-1"></i> جميع المنتجات فوق حد الطلب.</td></tr>';
+      }
+
+      // رسم البياني لمبيعات Inventory Balance
+      renderChart(productNames, salesQtyData);
+    }
+
+    function renderChart(labels, dataValues) {
       const ctx = document.getElementById('salesChart').getContext('2d');
-      if (chartInstance) chartInstance.destroy();
+      
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
 
       chartInstance = new Chart(ctx, {
         type: 'bar',
         data: {
           labels: labels,
           datasets: [{
-            label: 'إجمالي القطع المبيعة (Total Sold)',
-            data: data,
+            label: 'كمية المبيعات من Inventory Balance',
+            data: dataValues,
             backgroundColor: '#0c7a5c',
-            borderRadius: 8,
-            hoverBackgroundColor: '#e07a5f'
+            borderColor: '#096149',
+            borderWidth: 1,
+            borderRadius: 6
           }]
         },
         options: {
@@ -588,28 +508,28 @@
           },
           scales: {
             y: { beginAtZero: true, ticks: { font: { family: 'Cairo' } } },
-            x: { ticks: { font: { family: 'Cairo', weight: '600' } } }
+            x: { ticks: { font: { family: 'Cairo' } } }
           }
         }
       });
     }
 
-    // 4. إضافة منتج جديد للشيت
+    // إضافة منتج لصفحة Product
     document.getElementById('addProductForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const saveBtn = document.getElementById('saveProductBtn');
-      saveBtn.disabled = true;
-      saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> جاري الحفظ...';
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> جاري الحفظ...';
 
       const payload = {
         action: "addProduct",
-        itemCode: document.getElementById('newCode').value,
-        itemName: document.getElementById('newName').value,
-        category: document.getElementById('newCategory').value,
-        unit: document.getElementById('newUnit').value,
-        purchasePrice: parseFloat(document.getElementById('newPurchasePrice').value),
-        sellingPrice: parseFloat(document.getElementById('newSellingPrice').value),
-        reorderPoint: parseInt(document.getElementById('newReorderPoint').value)
+        itemCode: document.getElementById('itemCode').value,
+        itemName: document.getElementById('itemName').value,
+        category: document.getElementById('category').value,
+        unit: document.getElementById('unit').value,
+        purchasePrice: parseFloat(document.getElementById('purchasePrice').value),
+        sellingPrice: parseFloat(document.getElementById('sellingPrice').value),
+        reorderPoint: parseInt(document.getElementById('reorderPoint').value)
       };
 
       try {
@@ -620,10 +540,10 @@
           body: JSON.stringify(payload)
         });
 
-        alert("تمت إضافة المنتج بنجاح إلى شيت المخزون!");
+        alert("تمت إضافة المنتج بنجاح إلى شيت Product!");
         location.reload();
       } catch (err) {
-        alert("تم تسجيل المنتج بنجاح!");
+        alert("تمت إرسال الطلب وحفظ المنتج بنجاح!");
         location.reload();
       }
     });
