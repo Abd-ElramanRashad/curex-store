@@ -225,7 +225,7 @@
       <div id="loginError" class="text-danger small mt-2 d-none fw-bold">كلمة السر غير صحيحة!</div>
     </div>
 
-    <button onclick="verifyPassword()" class="btn btn-curex-main w-100 py-2.5 justify-content-center">
+    <button onclick="verifyPassword()" class="btn btn-curex-main w-100 py-2.5 justify-content-center" id="loginBtn">
       دخول اللوحة <i class="fa-solid fa-arrow-left ms-2"></i>
     </button>
   </div>
@@ -353,8 +353,8 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    // تم الربط بالرابط الجديد هنا مباشرة
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyYrWD0D88dcgE6WQIhHH-ub1T1FVSK-Vh4ozONlSZs82qfV2geaJU2RLOaHM7ejp4z/exec";
+    // الرابط الجديد الخاص بك
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxtwdYRzsORD6lmlP4KrS02cgwUkDetQTCNcX21ko1yxDjRMOeRHk4g5SoyF2hklVsO/exec";
     let chartInstance = null;
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -363,24 +363,39 @@
       }
     });
 
-    // 1. التحقق من كلمة السر عبر السيرفر
+    // 1. التحقق من كلمة السر
     async function verifyPassword() {
-      const password = document.getElementById('adminPasswordInput').value;
+      const passwordInput = document.getElementById('adminPasswordInput');
+      const password = passwordInput.value;
       const errorDiv = document.getElementById('loginError');
+      const loginBtn = document.getElementById('loginBtn');
+
+      if (!password) return;
+
       errorDiv.classList.add('d-none');
+      loginBtn.disabled = true;
+      loginBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> جاري التحقق...';
 
       try {
-        const res = await fetch(`${SCRIPT_URL}?action=checkPassword&password=${encodeURIComponent(password)}`);
+        const res = await fetch(`${SCRIPT_URL}?action=checkPassword&password=${encodeURIComponent(password)}`, {
+          redirect: 'follow'
+        });
         const data = await res.json();
 
         if (data.success) {
           sessionStorage.setItem("adminLoggedIn", "true");
           showAdminPanel();
         } else {
+          errorDiv.innerText = data.message || "كلمة السر غير صحيحة!";
           errorDiv.classList.remove('d-none');
         }
       } catch (err) {
+        console.error("Login Error:", err);
+        errorDiv.innerText = "حدث خطأ في الاتصال بالسيرفر!";
         errorDiv.classList.remove('d-none');
+      } finally {
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = 'دخول اللوحة <i class="fa-solid fa-arrow-left ms-2"></i>';
       }
     }
 
@@ -395,13 +410,15 @@
       location.reload();
     }
 
-    // 2. جلب البيانات
+    // 2. جلب البيانات من السيرفر
     async function loadDashboardData() {
       const tableBody = document.getElementById('reorderTableBody');
-      tableBody.innerHTML = '<tr><td colspan="5" class="text-center py-3 text-muted">جاري فحص شيت Inventory Balance...</td></tr>';
+      tableBody.innerHTML = '<tr><td colspan="5" class="text-center py-3 text-muted"><span class="spinner-border spinner-border-sm me-2"></span> جاري جلب البيانات من شيت Inventory Balance...</td></tr>';
 
       try {
-        const res = await fetch(`${SCRIPT_URL}?action=getInventoryBalance`);
+        const res = await fetch(`${SCRIPT_URL}?action=getInventoryBalance`, {
+          redirect: 'follow'
+        });
         const data = await res.json();
 
         if (data.success && data.inventory) {
@@ -411,11 +428,11 @@
         }
       } catch (err) {
         console.error("Fetch error:", err);
-        tableBody.innerHTML = '<tr><td colspan="5" class="text-center py-3 text-danger">عذراً، حدث خطأ أثناء الاتصال بالـ Apps Script.</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="5" class="text-center py-3 text-danger">عذراً، حدث خطأ أثناء الاتصال بالـ Apps Script. تحقق من تفويض التطبيق (Anyone).</td></tr>';
       }
     }
 
-    // 3. معالجة البيانات وتحديث الرسم والجدول
+    // 3. معالجة البيانات وتحديث الجدول والرسم البياني
     function processAndRenderData(inventory) {
       const labels = [];
       const totalSoldValues = [];
@@ -464,7 +481,7 @@
       renderChart(labels, totalSoldValues);
     }
 
-    // 4. الرسم البياني
+    // 4. رسم المبيعات بيانيًا
     function renderChart(labels, soldData) {
       const ctx = document.getElementById('totalSoldChart').getContext('2d');
       if (chartInstance) chartInstance.destroy();
@@ -522,11 +539,19 @@
         });
 
         alert("تم إرسال طلب إضافة المنتج بنجاح إلى شيت Product!");
-        location.reload();
+        
+        // إغلاق المودال وتحديث البيانات بدون إعادة تحميل الصفحة
+        const modalElement = document.getElementById('addProductModal');
+        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+        if (modalInstance) modalInstance.hide();
+        document.getElementById('addProductForm').reset();
+        
+        loadDashboardData();
       } catch (err) {
         alert("حدث خطأ أثناء الإرسال!");
+      } finally {
         saveBtn.disabled = false;
-        saveBtn.innerText = "حفظ المنتج في صفحة Product";
+        saveBtn.innerHTML = "حفظ المنتج في صفحة Product";
       }
     });
   </script>
