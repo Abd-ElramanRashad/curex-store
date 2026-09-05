@@ -148,8 +148,17 @@
       font-weight: 700;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       margin-bottom: 25px;
+      user-select: none; /* حظر تحديد/نسخ الأيقونة والتاج */
+      -webkit-user-select: none;
+      -ms-user-select: none;
+    }
+
+    .pill-tag i {
+      font-size: 0.9rem;
+      color: var(--curex-orange);
+      user-select: none;
     }
 
     .hero-main-heading {
@@ -339,34 +348,34 @@
   <nav class="navbar-curex">
     <div class="container d-flex justify-content-between align-items-center">
       
-      <!-- Cart & Admin Buttons (Left Side) -->
-      <div class="d-flex align-items-center gap-3">
-        <a href="admin.html" class="text-muted fs-5 me-1" title="لوحة التحكم"><i class="fa-solid fa-user-gear"></i></a>
-        <div class="cart-btn-pill">
-          <span class="cart-badge-circle" id="cartCount">0</span>
-          <span>السلة</span>
-        </div>
-      </div>
-
-      <!-- CureX Brand Logo (Right Side - Absolute Top Right) -->
+      <!-- CureX Brand Logo (أقصى اليمين) -->
       <a href="#" class="brand-container">
+        <div class="brand-badge-icon">CX</div>
         <div class="brand-text-box">
           <span class="brand-name">CureX</span>
           <span class="brand-subtext">HEALTHCARE SOLUTIONS</span>
         </div>
-        <div class="brand-badge-icon">CX</div>
       </a>
+
+      <!-- Cart & Admin Buttons (أقصى اليسار) -->
+      <div class="d-flex align-items-center gap-3">
+        <div class="cart-btn-pill">
+          <span>السلة</span>
+          <span class="cart-badge-circle" id="cartCount">0</span>
+        </div>
+        <a href="admin.html" class="text-muted fs-5 ms-1" title="لوحة التحكم"><i class="fa-solid fa-user-gear"></i></a>
+      </div>
 
     </div>
   </nav>
 
-  <!-- 3. Hero Section (Forced Right Alignment) -->
+  <!-- 3. Hero Section -->
   <section class="hero-section">
     <div class="container">
       <div class="hero-content-wrapper">
         
         <div class="pill-tag">
-          <span>٪</span>
+          <i class="fa-solid fa-star"></i>
           <span>رعاية تبدأ من الاختيار الصحيح</span>
         </div>
 
@@ -388,7 +397,7 @@
     </div>
   </section>
 
-  <!-- 4. Products Section Header (Forced Right Alignment) -->
+  <!-- 4. Products Section Header -->
   <section class="container my-5" id="products-section">
     <div class="row align-items-end mb-4">
       <div class="col-md-7 text-end">
@@ -466,7 +475,7 @@
     </div>
   </div>
 
-  <!-- 6. Footer (Forced Right Alignment with Exact Image Columns) -->
+  <!-- 6. Footer -->
   <footer class="footer-custom">
     <div class="container">
       <div class="row gy-4 justify-content-between">
@@ -474,11 +483,11 @@
         <!-- Right Side Column: Brand Logo & Mission -->
         <div class="col-lg-5 col-md-12 text-end mb-4 mb-lg-0">
           <a href="#" class="brand-container mb-3">
+            <div class="brand-badge-icon">CX</div>
             <div class="brand-text-box">
               <span class="brand-name">CureX</span>
               <span class="brand-subtext">HEALTHCARE SOLUTIONS</span>
             </div>
-            <div class="brand-badge-icon">CX</div>
           </a>
           <p class="footer-brand-desc">
             نختار مستلزمات الرعاية الصحية بعناية، ونوصلها بوضوح وسرعة إلى من يعتمد عليها كل يوم.
