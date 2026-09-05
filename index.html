@@ -1,285 +1,337 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة المخزون - CureX</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 1000px;
-            margin: auto;
-            background: #fff;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        h2, h3 { color: #2c3e50; }
-        .hidden { display: none; }
-        
-        /* Layout & Inputs */
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        button {
-            background-color: #27ae60;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover { background-color: #219150; }
-        
-        /* Table Style */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: right;
-        }
-        th { background-color: #34495e; color: white; }
-        tr:nth-child(even) { background-color: #f9f9f9; }
-        
-        .alert-reorder {
-            background-color: #ffe6e6;
-            color: #c0392b;
-            font-weight: bold;
-        }
-        
-        /* Auth Screen */
-        #loginSection {
-            max-width: 400px;
-            margin: 80px auto;
-            text-align: center;
-        }
-        
-        .nav-buttons { margin-bottom: 20px; }
-        .nav-buttons button { background-color: #2980b9; margin-left: 5px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CureX - متجر المستلزمات والأجهزة الطبية</title>
+  
+  <!-- Bootstrap 5 RTL -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Google Font (Cairo) -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --curex-green: #0c7a5c;
+      --curex-green-hover: #096149;
+      --curex-orange: #e07a5f;
+      --curex-bg: #fdfbf7;
+      --text-dark: #2c302e;
+      --text-muted: #82807c;
+      --footer-border: #eee8e0;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: var(--curex-bg);
+      color: var(--text-dark);
+      margin: 0;
+      padding: 0;
+      direction: rtl;
+      text-align: right !important;
+    }
+
+    .top-bar {
+      background-color: var(--curex-green);
+      color: #ffffff;
+      text-align: center !important;
+      padding: 8px 15px;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .navbar-curex {
+      padding: 18px 0;
+      background-color: #ffffff;
+      border-bottom: 1px solid var(--footer-border);
+    }
+
+    .brand-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .brand-badge-icon {
+      background-color: var(--curex-green);
+      color: white;
+      font-weight: 800;
+      font-size: 1.25rem;
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(12, 122, 92, 0.15);
+    }
+
+    .brand-name {
+      color: var(--curex-green);
+      font-weight: 800;
+      font-size: 1.55rem;
+      line-height: 1;
+    }
+
+    .brand-subtext {
+      color: var(--curex-orange);
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      margin-top: 3px;
+    }
+
+    .product-card {
+      background: #ffffff;
+      border: 1px solid #efeae4;
+      border-radius: 16px;
+      padding: 20px;
+      transition: all 0.3s ease;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+    }
+
+    .product-icon-holder {
+      width: 70px;
+      height: 70px;
+      background-color: #f4f9f6;
+      color: var(--curex-green);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+    }
+
+    .product-title {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    .product-badge {
+      background-color: #eaf5f1;
+      color: var(--curex-green);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      display: inline-block;
+      margin-bottom: 12px;
+      width: fit-content;
+    }
+
+    .product-price {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--curex-green);
+    }
+
+    .btn-curex-main {
+      background-color: var(--curex-green);
+      color: white;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 8px 18px;
+      border-radius: 10px;
+      border: none;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-curex-main:hover {
+      background-color: var(--curex-green-hover);
+      color: white;
+    }
+
+    .btn-curex-outline {
+      background-color: transparent;
+      color: var(--curex-green);
+      border: 1.5px solid var(--curex-green);
+      font-weight: 700;
+      padding: 8px 18px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-curex-outline:hover {
+      background-color: var(--curex-green);
+      color: white;
+    }
+
+    .copyright-text {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-align: center !important;
+      padding: 30px 0;
+      border-top: 1px solid var(--footer-border);
+      margin-top: 50px;
+    }
+  </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- 1. شاشة تسجيل الدخول -->
-    <div id="loginSection">
-        <h2>تسجيل الدخول للنظام</h2>
-        <div class="form-group">
-            <input type="password" id="passwordInput" placeholder="أدخل كلمة السر">
+  <!-- Top Announcement Bar -->
+  <div class="top-bar">
+    أهلاً بكم في CureX - الأجهزة والمستلزمات الطبية المعتمدة
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar-curex sticky-top">
+    <div class="container d-flex justify-content-between align-items-center">
+      <a href="index.html" class="brand-container">
+        <div class="brand-badge-icon">CX</div>
+        <div class="d-flex flex-column text-end">
+          <span class="brand-name">CureX</span>
+          <span class="brand-subtext">HEALTHCARE SOLUTIONS</span>
         </div>
-        <button onclick="checkPassword()">دخول</button>
-        <p id="loginError" style="color:red;"></p>
+      </a>
+      <div>
+        <a href="admin.html" class="btn-curex-outline">
+          <i class="fa-solid fa-user-shield me-1"></i> لوحة الإدارة
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <div class="container my-5 text-center">
+    <h1 class="fw-bold mb-3" style="color: var(--curex-green);">متجر مستلزمات CureX الطبية</h1>
+    <p class="text-muted fs-5">استعرض أفضل المعدات والأجهزة الطبية المتوفرة في المخزن مباشرة</p>
+  </div>
+
+  <!-- Products Section -->
+  <main class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h4 class="fw-bold m-0" style="color: var(--curex-green);">
+        <i class="fa-solid fa-boxes-stacked me-2"></i>المنتجات المتاحة
+      </h4>
+      <button class="btn btn-sm btn-light border fw-bold" onclick="fetchProducts()">
+        <i class="fa-solid fa-rotate-right me-1"></i> تحديث
+      </button>
     </div>
 
-    <!-- 2. لوحة التحكم الرئيسية (تظهر بعد الدخول) -->
-    <div id="mainDashboard" class="hidden">
-        <h2>نظام CureX لإدارة المخزون</h2>
-        
-        <div class="nav-buttons">
-            <button onclick="showSection('inventorySection')">جدول المخزون</button>
-            <button onclick="showSection('addProductSection')">إضافة منتج جديد</button>
-        </div>
-
-        <!-- قسم عرض المخزون -->
-        <div id="inventorySection">
-            <h3>رصيد المخزون الحالي</h3>
-            <button onclick="loadInventory()" style="background-color:#7f8c8d;">تحديث البيانات 🔄</button>
-            <div id="loadingText" class="hidden">جاري تحميل البيانات...</div>
-            <table id="inventoryTable">
-                <thead>
-                    <tr>
-                        <th>كود المنتج</th>
-                        <th>اسم المنتج</th>
-                        <th>الوحدة</th>
-                        <th>إجمالي المشتريات</th>
-                        <th>إجمالي المبيعات</th>
-                        <th>الرصيد الحالي</th>
-                        <th>حد الطلب</th>
-                    </tr>
-                </thead>
-                <tbody id="inventoryBody">
-                    <!-- سيتم ملء البيانات هنا تلقائياً -->
-                </tbody>
-            </table>
-        </div>
-
-        <!-- قسم إضافة منتج -->
-        <div id="addProductSection" class="hidden">
-            <h3>إضافة منتج جديد</h3>
-            <form id="addProductForm" onsubmit="handleAddProduct(event)">
-                <div class="form-group">
-                    <label>كود المنتج:</label>
-                    <input type="text" id="itemCode" required>
-                </div>
-                <div class="form-group">
-                    <label>اسم المنتج:</label>
-                    <input type="text" id="itemName" required>
-                </div>
-                <div class="form-group">
-                    <label>الفئة (Category):</label>
-                    <input type="text" id="category" required>
-                </div>
-                <div class="form-group">
-                    <label>الوحدة:</label>
-                    <input type="text" id="unit" required>
-                </div>
-                <div class="form-group">
-                    <label>سعر الشراء:</label>
-                    <input type="number" step="0.01" id="purchasePrice" required>
-                </div>
-                <div class="form-group">
-                    <label>سعر البيع:</label>
-                    <input type="number" step="0.01" id="sellingPrice" required>
-                </div>
-                <div class="form-group">
-                    <label>حد إعادة الطلب (Reorder Point):</label>
-                    <input type="number" id="reorderPoint" required>
-                </div>
-                <button type="submit" id="submitProductBtn">حفظ المنتج</button>
-            </form>
-            <p id="addProductStatus"></p>
-        </div>
+    <!-- Products Grid -->
+    <div class="row g-4" id="productsGrid">
+      <div class="col-12 text-center py-5">
+        <div class="spinner-border text-success" role="status"></div>
+        <p class="text-muted mt-2 fw-bold">جاري تحميل المنتجات من شيت المخزون...</p>
+      </div>
     </div>
-</div>
+  </main>
 
-<script>
-    // رابط الـ Apps Script الخاص بك
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxqYbRxOcPAgFncmpvegghSdNqcvzA-V7eSP8zZgNl_ITF9SKLEFOWxgIZW039mIXD7/exec';
+  <div class="copyright-text">
+    &copy; 2026 CureX Healthcare Solutions. جميع الحقوق محفوظة.
+  </div>
 
-    // 1. التحقق من كلمة السر
-    function checkPassword() {
-        const pass = document.getElementById('passwordInput').value;
-        const errorElem = document.getElementById('loginError');
-        errorElem.innerText = "جاري التحقق...";
+  <!-- JS Dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-        fetch(`${SCRIPT_URL}?action=checkPassword&password=${encodeURIComponent(pass)}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    document.getElementById('loginSection').classList.add('hidden');
-                    document.getElementById('mainDashboard').classList.remove('hidden');
-                    loadInventory(); // جلب المخزون فور الدخول
-                } else {
-                    errorElem.innerText = data.message || "كلمة السر غير صحيحة!";
-                }
-            })
-            .catch(err => {
-                errorElem.innerText = "حدث خطأ في الاتصال بالسيرفر.";
-                console.error(err);
-            });
+  <script>
+    // نفس رابط الـ Web App الخاص بك
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxqYbRxOcPAgFncmpvegghSdNqcvzA-V7eSP8zZgNl_ITF9SKLEFOWxgIZW039mIXD7/exec";
+
+    document.addEventListener("DOMContentLoaded", fetchProducts);
+
+    async function fetchProducts() {
+      const grid = document.getElementById('productsGrid');
+      grid.innerHTML = `
+        <div class="col-12 text-center py-5">
+          <div class="spinner-border text-success" role="status"></div>
+          <p class="text-muted mt-2 fw-bold">جاري تحميل المنتجات...</p>
+        </div>
+      `;
+
+      try {
+        const res = await fetch(`${SCRIPT_URL}?action=getInventoryBalance`);
+        const data = await res.json();
+
+        if (data.success && data.inventory && data.inventory.length > 0) {
+          renderProducts(data.inventory);
+        } else {
+          grid.innerHTML = `
+            <div class="col-12 text-center py-5 text-muted">
+              <i class="fa-solid fa-box-open fs-1 mb-3 d-block text-secondary"></i>
+              لا توجد منتجات معروضة حالياً.
+            </div>
+          `;
+        }
+      } catch (err) {
+        console.error("Fetch products error:", err);
+        grid.innerHTML = `
+          <div class="col-12 text-center py-5 text-danger">
+            <i class="fa-solid fa-triangle-exclamation fs-1 mb-3 d-block"></i>
+            عذراً، تعذر جلب المنتجات. يرجى التأكد من الاتصال وسيرفر Google Apps Script.
+          </div>
+        `;
+      }
     }
 
-    // 2. جلب بيانات المخزون
-    function loadInventory() {
-        const loading = document.getElementById('loadingText');
-        const tbody = document.getElementById('inventoryBody');
-        loading.classList.remove('hidden');
-        tbody.innerHTML = '';
+    function renderProducts(products) {
+      const grid = document.getElementById('productsGrid');
+      grid.innerHTML = '';
 
-        fetch(`${SCRIPT_URL}?action=getInventoryBalance`)
-            .then(res => res.json())
-            .then(data => {
-                loading.classList.add('hidden');
-                if (data.success) {
-                    data.inventory.forEach(item => {
-                        const tr = document.createElement('tr');
-                        
-                        // تمييز الصف باللون الأحمر إذا كان المنتج بحاجة لإعادة طلب
-                        const reorderStr = String(item.reorderPoint || '');
-                        if (reorderStr.includes('Reorder') || reorderStr.includes('🚨') || item.currentBalance === 0) {
-                            tr.classList.add('alert-reorder');
-                        }
+      products.forEach(item => {
+        const code = item.itemCode || 'CODE';
+        const name = item.itemName || 'منتج طبي';
+        const category = item.category || 'مستلزمات طبية';
+        const price = parseFloat(item.sellingPrice || item.price || 0).toLocaleString('ar-EG');
+        const unit = item.unit || 'قطعة';
+        const balance = parseInt(item.currentBalance) || 0;
 
-                        tr.innerHTML = `
-                            <td>${item.itemCode}</td>
-                            <td>${item.itemName}</td>
-                            <td>${item.unit}</td>
-                            <td>${item.totalBought}</td>
-                            <td>${item.totalSold}</td>
-                            <td>${item.currentBalance}</td>
-                            <td>${item.reorderPoint}</td>
-                        `;
-                        tbody.appendChild(tr);
-                    });
-                } else {
-                    alert("خطأ: " + data.message);
-                }
-            })
-            .catch(err => {
-                loading.classList.add('hidden');
-                alert("تعذر جلب بيانات المخزون.");
-                console.error(err);
-            });
+        // بطاقة المنتج
+        const col = document.createElement('div');
+        col.className = 'col-md-6 col-lg-4';
+
+        col.innerHTML = `
+          <div class="product-card">
+            <div>
+              <div class="d-flex justify-content-between align-items-start">
+                <div class="product-icon-holder">
+                  <i class="fa-solid fa-stethoscope"></i>
+                </div>
+                <span class="badge ${balance > 0 ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'} fw-bold px-2 py-1 rounded-2">
+                  ${balance > 0 ? `متوفر (${balance} ${unit})` : 'غير متوفر حالياً'}
+                </span>
+              </div>
+
+              <span class="product-badge">${category}</span>
+              <h5 class="product-title">${name}</h5>
+              <p class="text-muted small mb-3">كود المنتج: <span class="fw-bold text-dark">${code}</span></p>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+              <div>
+                <span class="text-muted small d-block">السعر:</span>
+                <span class="product-price">${price} <small class="fs-6 text-muted">ج.م</small></span>
+              </div>
+              <button class="btn-curex-main" ${balance <= 0 ? 'disabled' : ''}>
+                <i class="fa-solid fa-cart-plus"></i> طلب الآن
+              </button>
+            </div>
+          </div>
+        `;
+
+        grid.appendChild(col);
+      });
     }
-
-    // 3. إضافة منتج جديد
-    function handleAddProduct(event) {
-        event.preventDefault();
-        const btn = document.getElementById('submitProductBtn');
-        const status = document.getElementById('addProductStatus');
-        btn.disabled = true;
-        status.innerText = "جاري الإضافة...";
-
-        const payload = {
-            action: 'addProduct',
-            itemCode: document.getElementById('itemCode').value,
-            itemName: document.getElementById('itemName').value,
-            category: document.getElementById('category').value,
-            unit: document.getElementById('unit').value,
-            purchasePrice: document.getElementById('purchasePrice').value,
-            sellingPrice: document.getElementById('sellingPrice').value,
-            reorderPoint: document.getElementById('reorderPoint').value
-        };
-
-        // إرسال POST Request كـ text/plain لتفادي مشاكل CORS مع Google Apps Script
-        fetch(SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify(payload)
-        })
-        .then(res => res.json())
-        .then(data => {
-            btn.disabled = false;
-            if (data.success) {
-                status.style.color = "green";
-                status.innerText = data.message;
-                document.getElementById('addProductForm').reset();
-            } else {
-                status.style.color = "red";
-                status.innerText = "خطأ: " + data.error;
-            }
-        })
-        .catch(err => {
-            btn.disabled = false;
-            status.style.color = "red";
-            status.innerText = "حدث خطأ أثناء الاتصال بالسيرفر.";
-            console.error(err);
-        });
-    }
-
-    // التنقل بين الأقسام
-    function showSection(sectionId) {
-        document.getElementById('inventorySection').classList.add('hidden');
-        document.getElementById('addProductSection').classList.add('hidden');
-        document.getElementById(sectionId).classList.remove('hidden');
-    }
-</script>
-
+  </script>
 </body>
 </html>
