@@ -3,432 +3,127 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CureX - لوحة التحكم للإدارة</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <title>لوحة التحكم - Admin Panel</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    :root {
-      --curex-green: #0c7a5c;
-      --curex-green-hover: #096149;
-      --curex-orange: #e07a5f;
-      --curex-bg: #fdfbf7;
-      --text-dark: #2c302e;
-      --text-muted: #82807c;
-      --footer-border: #eee8e0;
-    }
-    body { font-family: 'Cairo', sans-serif; background-color: var(--curex-bg); color: var(--text-dark); margin: 0; padding: 0; direction: rtl; text-align: right !important; }
-    *, ::after, ::before { text-align: right; }
-    .top-bar { background-color: var(--curex-green); color: #ffffff; text-align: center !important; padding: 8px 15px; font-size: 0.88rem; font-weight: 700; }
-    .navbar-curex { padding: 18px 0; background-color: transparent; border-bottom: 1px solid var(--footer-border); }
-    .brand-container { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-    .brand-badge-icon { background-color: var(--curex-green); color: white; font-weight: 800; font-size: 1.25rem; width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
-    .brand-name { color: var(--curex-green); font-weight: 800; font-size: 1.55rem; line-height: 1; }
-    .brand-subtext { color: var(--curex-orange); font-size: 0.62rem; font-weight: 800; letter-spacing: 1.2px; margin-top: 3px; }
-    .login-container { max-width: 420px; margin: 60px auto; background: white; padding: 35px 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); border: 1px solid #efeae4; }
-    .btn-curex-main { background-color: var(--curex-green); color: white; font-weight: 700; font-size: 0.95rem; padding: 10px 24px; border-radius: 10px; border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
-    .btn-curex-main:hover { background-color: var(--curex-green-hover); color: white; }
-    .custom-box { background: #ffffff; border: 1px solid #efeae4; border-radius: 16px; padding: 24px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.015); }
-    .stat-card { border-radius: 16px; padding: 20px; color: white; }
-    .bg-stat-green { background-color: var(--curex-green); }
-    .bg-stat-orange { background-color: var(--curex-orange); }
-    .bg-stat-dark { background-color: #2c302e; }
-    .bg-stat-blue { background-color: #2a9d8f; }
-    .reorder-card { border-right: 5px solid #dc3545; }
-    .table thead th { background-color: #f8f5f0; color: var(--curex-green); font-weight: 800; border-bottom: 2px solid #efeae4; padding: 12px 16px; }
-    .table tbody td { padding: 14px 16px; vertical-align: middle; font-weight: 600; color: var(--text-dark); border-bottom: 1px solid #f5f0ea; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; }
+    .card { background: white; padding: 20px; border-radius: 8px; margin-bottom: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    h2 { margin-top: 0; color: #0d6efd; border-bottom: 2px solid #e9ecef; padding-bottom: 10px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #dee2e6; padding: 10px; text-align: right; }
+    th { background: #f8f9fa; }
+    .btn { background: #198754; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; }
+    input, select { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+    .alert { background: #f8d7da; color: #842029; padding: 10px; border-radius: 4px; margin-bottom: 10px; }
   </style>
 </head>
 <body>
 
-  <div class="top-bar">لوحة الإدارة للتحكم في المبيعات وإضافة المنتجات وشحنات المخزون</div>
-
-  <nav class="navbar-curex">
-    <div class="container d-flex justify-content-between align-items-center">
-      <a href="index.html" class="brand-container">
-        <div class="brand-badge-icon">CX</div>
-        <div class="d-flex flex-column text-end">
-          <span class="brand-name">CureX</span>
-          <span class="brand-subtext">HEALTHCARE SOLUTIONS</span>
-        </div>
-      </a>
-      <a href="index.html" class="btn btn-outline-success fw-bold rounded-3">العودة للمتجر</a>
-    </div>
-  </nav>
-
-  <!-- Login Section -->
-  <div id="loginSection" class="login-container text-center">
-    <div class="brand-badge-icon mx-auto mb-3" style="width:60px; height:60px; font-size:1.6rem;"><i class="fa-solid fa-lock"></i></div>
-    <h4 class="fw-bold text-dark mb-2">تسجيل الدخول للإدارة</h4>
-    <p class="text-muted small mb-4">أدخل كلمة السر للوصول إلى التحليلات والمخزون</p>
-    <div class="mb-3">
-      <input type="password" id="adminPasswordInput" class="form-control form-control-lg text-center" placeholder="أدخل كلمة السر" onkeypress="if(event.key==='Enter') verifyPassword()">
-      <div id="loginError" class="text-danger small mt-2 d-none fw-bold">كلمة السر غير صحيحة!</div>
-    </div>
-    <button onclick="verifyPassword()" class="btn btn-curex-main w-100 py-2.5 justify-content-center">دخول اللوحة</button>
+  <div class="card">
+    <h2>⚠️ تنبيهات حد إعادة الطلب (Reorder Point)</h2>
+    <div id="reorderAlerts">جاري الفحص...</div>
   </div>
 
-  <!-- Admin Panel Content -->
-  <main id="adminContent" class="container my-4 d-none">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <div>
-        <h2 class="fw-bold mb-1" style="color: var(--curex-green);">لوحة التحكم والإدارة</h2>
-        <p class="text-muted small mb-0">تحليلات المبيعات وتنبيهات المخزون مباشرة من Google Sheets</p>
+  <div class="card">
+    <h2>➕ إضافة منتج جديد وشراء أولي</h2>
+    <form id="addProductForm">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <div class="form-group"><label>كود المنتج (Item Code)</label><input type="text" id="itemCode" required></div>
+        <div class="form-group"><label>اسم المنتج (Item Name)</label><input type="text" id="itemName" required></div>
+        <div class="form-group"><label>التصنيف (Category)</label><input type="text" id="category"></div>
+        <div class="form-group"><label>سعر الشراء (Purchase Price)</label><input type="number" id="purchasePrice" required></div>
+        <div class="form-group"><label>سعر البيع (Selling Price)</label><input type="number" id="sellingPrice" required></div>
+        <div class="form-group"><label>حد إعادة الطلب (Reorder Point)</label><input type="number" id="reorderPoint" required></div>
+        <div class="form-group"><label>الكمية المشتراة أولياً (Quantity)</label><input type="number" id="initialQty" required></div>
+        <div class="form-group"><label>اسم المورد (Supplier Name)</label><input type="text" id="supplierName" required></div>
       </div>
-      <div class="d-flex gap-2">
-        <button class="btn-curex-main" data-bs-toggle="modal" data-bs-target="#addPurchaseModal"><i class="fa-solid fa-truck-ramp-box"></i> إضافة شحنة (Stock In)</button>
-        <button class="btn-curex-main" data-bs-toggle="modal" data-bs-target="#addProductModal"><i class="fa-solid fa-plus"></i> إضافة منتج جديد</button>
-        <button onclick="logout()" class="btn btn-outline-danger fw-bold rounded-3 px-3"><i class="fa-solid fa-right-from-bracket"></i> خروج</button>
-      </div>
-    </div>
-
-    <!-- Overview Stat Cards -->
-    <div class="row g-3 mb-4">
-      <div class="col-md-3">
-        <div class="stat-card bg-stat-green">
-          <small class="text-white-50 fw-bold">إجمالي الإيرادات</small>
-          <h3 class="fw-bold m-0" id="statRevenue">0 ج.م</h3>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="stat-card bg-stat-orange">
-          <small class="text-white-50 fw-bold">المنتجات المنخفضة المخزون</small>
-          <h3 class="fw-bold m-0" id="statLowStock">0</h3>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="stat-card bg-stat-dark">
-          <small class="text-white-50 fw-bold">إجمالي قطع المبيعات</small>
-          <h3 class="fw-bold m-0" id="statSalesQty">0</h3>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="stat-card bg-stat-blue">
-          <small class="text-white-50 fw-bold">إجمالي قطع المخزون الحالي</small>
-          <h3 class="fw-bold m-0" id="statStockQty">0</h3>
-        </div>
-      </div>
-    </div>
-
-    <!-- Charts -->
-    <div class="row g-4 mb-4">
-      <div class="col-md-8">
-        <div class="custom-box h-100">
-          <h5 class="fw-bold mb-3" style="color: var(--curex-green);"><i class="fa-solid fa-chart-column me-2"></i>أعلى المنتجات مبيعاً (Total Sold)</h5>
-          <div style="position: relative; height:300px;"><canvas id="totalSoldChart"></canvas></div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="custom-box h-100">
-          <h5 class="fw-bold mb-3" style="color: var(--curex-orange);"><i class="fa-solid fa-chart-pie me-2"></i>المبيعات حسب التصنيف</h5>
-          <div style="position: relative; height:300px;"><canvas id="categoryChart"></canvas></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Low Stock Alert Box -->
-    <div class="custom-box reorder-card">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="fw-bold m-0 text-danger"><i class="fa-solid fa-triangle-exclamation me-2"></i>المنتجات التي وصلت حد إعادة الطلب (Low Stock)</h5>
-        <span class="badge bg-danger fs-6" id="alertCountBadge">0 تنبيهات</span>
-      </div>
-      <div class="table-responsive">
-        <table class="table align-middle">
-          <thead>
-            <tr>
-              <th>كود المنتج</th>
-              <th>اسم المنتج</th>
-              <th>الرصيد الحالي</th>
-              <th>حد الطلب (Reorder Point)</th>
-              <th>الحالة</th>
-            </tr>
-          </thead>
-          <tbody id="reorderTableBody">
-            <tr><td colspan="5" class="text-center py-3 text-muted">جاري الفحص...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Detailed Inventory Analytics -->
-    <div class="custom-box">
-      <h5 class="fw-bold mb-3" style="color: var(--curex-green);"><i class="fa-solid fa-list-check me-2"></i>تحليل شامل لكل منتج في المخزن</h5>
-      <div class="table-responsive">
-        <table class="table table-hover align-middle">
-          <thead>
-            <tr>
-              <th>كود</th>
-              <th>اسم المنتج</th>
-              <th>التصنيف</th>
-              <th>سعر الشراء</th>
-              <th>سعر البيع</th>
-              <th>إجمالي المشترى</th>
-              <th>إجمالي المباع</th>
-              <th>المخزون الحالي</th>
-              <th>إجمالي الإيرادات</th>
-              <th>الربح التقديري</th>
-            </tr>
-          </thead>
-          <tbody id="detailedTableBody">
-            <tr><td colspan="10" class="text-center py-3 text-muted">جاري تحميل البيانات...</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </main>
-
-  <!-- Modal: Add Product -->
-  <div class="modal fade" id="addProductModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; background-color: var(--curex-bg);">
-        <div class="modal-header border-0 pb-0">
-          <h5 class="modal-title fw-bold" style="color: var(--curex-green);">إضافة منتج جديد</h5>
-          <button type="button" class="btn-close ms-0 me-auto" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body p-4 text-end">
-          <form id="addProductForm">
-            <div class="row g-3">
-              <div class="col-md-6"><label class="form-label fw-bold small">Item Code *</label><input type="text" id="itemCode" class="form-control" placeholder="P021" required></div>
-              <div class="col-md-6"><label class="form-label fw-bold small">Item Name *</label><input type="text" id="itemName" class="form-control" required></div>
-              <div class="col-md-6"><label class="form-label fw-bold small">Category *</label><input type="text" id="category" class="form-control" required></div>
-              <div class="col-md-6"><label class="form-label fw-bold small">Unit *</label><input type="text" id="unit" class="form-control" placeholder="قطعة / علبة" required></div>
-              <div class="col-md-4"><label class="form-label fw-bold small">Purchase Price *</label><input type="number" step="0.01" id="purchasePrice" class="form-control" required></div>
-              <div class="col-md-4"><label class="form-label fw-bold small">Selling Price *</label><input type="number" step="0.01" id="sellingPrice" class="form-control" required></div>
-              <div class="col-md-4"><label class="form-label fw-bold small">Initial Quantity *</label><input type="number" id="initialQuantity" class="form-control" value="0" required></div>
-              <div class="col-md-12"><label class="form-label fw-bold small">Reorder Point *</label><input type="number" id="reorderPoint" class="form-control" required></div>
-            </div>
-            <button type="submit" class="btn btn-curex-main w-100 py-2.5 mt-4 justify-content-center" id="saveProductBtn">حفظ المنتج في Google Sheets</button>
-          </form>
-        </div>
-      </div>
-    </div>
+      <button type="submit" class="btn" style="background:#0d6efd; width:100%; padding:10px;">إضافة المنتج وتسجيل الشراء</button>
+    </form>
   </div>
 
-  <!-- Modal: Add Purchase (Stock In) -->
-  <div class="modal fade" id="addPurchaseModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; background-color: var(--curex-bg);">
-        <div class="modal-header border-0 pb-0">
-          <h5 class="modal-title fw-bold" style="color: var(--curex-green);">تسجيل شحنة / شراء جديد (Stock In)</h5>
-          <button type="button" class="btn-close ms-0 me-auto" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body p-4 text-end">
-          <form id="addPurchaseForm">
-            <div class="mb-3">
-              <label class="form-label fw-bold small">اختر المنتج *</label>
-              <select id="purchaseItemCode" class="form-select" required></select>
-            </div>
-            <div class="mb-3">
-              <label class="form-label fw-bold small">الكمية المضافة *</label>
-              <input type="number" id="purchaseQty" class="form-control" min="1" required>
-            </div>
-            <div class="mb-3">
-              <label class="form-label fw-bold small">اسم المورد</label>
-              <input type="text" id="supplierName" class="form-control" placeholder="شركة التوريد">
-            </div>
-            <button type="submit" class="btn btn-curex-main w-100 py-2.5 mt-3 justify-content-center" id="savePurchaseBtn">تسجيل المشتريات وزيادة المخزون</button>
-          </form>
-        </div>
-      </div>
-    </div>
+  <div class="card">
+    <h2>📊 الرسم البياني للمبيعات (Total Sold)</h2>
+    <canvas id="salesChart" height="100"></canvas>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    const SCRIPT_URL = "const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyaEFNQy72e95ikEhqWaYsWIZb-eQstLMdKeH0j3E9edL5uRXGmzlXxsIa_0nPESW_6/exec";
-    let chartInstance = null;
-    let catChartInstance = null;
-    let allDetailedItems = [];
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyNAekUcgeBOXnN3zH7A_PYo5CK05EWduj_nczenyw-rd1w70onPrXfq6GPJQK4fio_/exec";
 
-    document.addEventListener("DOMContentLoaded", () => {
-      if (sessionStorage.getItem("adminLoggedIn") === "true") showAdminPanel();
-    });
-
-    async function verifyPassword() {
-      const password = document.getElementById('adminPasswordInput').value;
-      const errorDiv = document.getElementById('loginError');
-      errorDiv.classList.add('d-none');
-      try {
-        const res = await fetch(`${SCRIPT_URL}?action=checkPassword&password=${encodeURIComponent(password)}`);
-        const data = await res.json();
-        if (data.success) {
-          sessionStorage.setItem("adminLoggedIn", "true");
-          showAdminPanel();
-        } else {
-          errorDiv.classList.remove('d-none');
-        }
-      } catch (err) {
-        errorDiv.classList.remove('d-none');
-      }
-    }
-
-    function showAdminPanel() {
-      document.getElementById('loginSection').classList.add('d-none');
-      document.getElementById('adminContent').classList.remove('d-none');
-      loadAnalytics();
-    }
-
-    function logout() {
-      sessionStorage.removeItem("adminLoggedIn");
-      location.reload();
-    }
-
-    async function loadAnalytics() {
-      try {
-        const res = await fetch(`${SCRIPT_URL}?action=getAnalytics`);
-        const data = await res.json();
-        if (data.success) {
-          renderDashboard(data);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
-    function renderDashboard(data) {
-      document.getElementById('statRevenue').innerText = data.summary.totalRevenue.toLocaleString() + ' ج.م';
-      document.getElementById('statLowStock').innerText = data.summary.lowStockCount;
-      document.getElementById('statSalesQty').innerText = data.summary.totalSalesQty;
-      document.getElementById('statStockQty').innerText = data.summary.totalStock;
-
-      // Render Low Stock Table
-      const reorderBody = document.getElementById('reorderTableBody');
-      document.getElementById('alertCountBadge').innerText = `${data.lowStockItems.length} تنبيهات`;
-      if (data.lowStockItems.length > 0) {
-        reorderBody.innerHTML = data.lowStockItems.map(item => `
-          <tr>
-            <td><span class="badge bg-light text-dark border">${item.itemCode}</span></td>
-            <td class="fw-bold">${item.itemName}</td>
-            <td class="text-danger fw-bold">${item.currentBalance}</td>
-            <td><span class="badge bg-warning text-dark">${item.reorderPoint}</span></td>
-            <td><span class="badge bg-danger">Low Stock Alert</span></td>
-          </tr>
-        `).join('');
-      } else {
-        reorderBody.innerHTML = '<tr><td colspan="5" class="text-center py-3 text-success fw-bold"><i class="fa-solid fa-circle-check me-1"></i> جميع المنتجات آمنة.</td></tr>';
-      }
-
-      // Detailed Table
-      allDetailedItems = data.itemsDetailed;
-      const detailBody = document.getElementById('detailedTableBody');
-      const purchaseSelect = document.getElementById('purchaseItemCode');
-      purchaseSelect.innerHTML = '';
-
-      detailBody.innerHTML = data.itemsDetailed.map(item => {
-        purchaseSelect.innerHTML += `<option value="${item.itemCode}">${item.itemName} (${item.itemCode})</option>`;
-        return `
-          <tr>
-            <td><small class="fw-bold">${item.itemCode}</small></td>
-            <td class="fw-bold">${item.itemName}</td>
-            <td><span class="badge bg-light text-dark border">${item.category}</span></td>
-            <td>${item.purchasePrice}</td>
-            <td>${item.sellingPrice}</td>
-            <td>${item.totalBought}</td>
-            <td class="text-primary fw-bold">${item.totalSold}</td>
-            <td class="${item.currentBalance <= item.reorderPoint ? 'text-danger fw-bold' : ''}">${item.currentBalance}</td>
-            <td class="text-success fw-bold">${item.revenue.toLocaleString()} ج.م</td>
-            <td class="text-success fw-bold">${item.profit.toLocaleString()} ج.م</td>
-          </tr>
-        `;
-      }).join('');
-
-      renderCharts(data.itemsDetailed);
-    }
-
-    function renderCharts(items) {
-      const labels = items.map(i => i.itemName);
-      const salesData = items.map(i => i.totalSold);
-
-      const ctx1 = document.getElementById('totalSoldChart').getContext('2d');
-      if (chartInstance) chartInstance.destroy();
-      chartInstance = new Chart(ctx1, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'إجمالي القطع المباعة',
-            data: salesData,
-            backgroundColor: '#0c7a5c',
-            borderRadius: 6
-          }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-      });
-
-      // Category Aggregation
-      let catMap = {};
-      items.forEach(i => {
-        catMap[i.category] = (catMap[i.category] || 0) + i.totalSold;
-      });
-
-      const ctx2 = document.getElementById('categoryChart').getContext('2d');
-      if (catChartInstance) catChartInstance.destroy();
-      catChartInstance = new Chart(ctx2, {
-        type: 'doughnut',
-        data: {
-          labels: Object.keys(catMap),
-          datasets: [{
-            data: Object.values(catMap),
-            backgroundColor: ['#0c7a5c', '#e07a5f', '#2a9d8f', '#e9c46a']
-          }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-      });
-    }
-
-    // Add Product Form Submit
-    document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+    // 1. إضافة منتج جديد
+    document.getElementById('addProductForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      const saveBtn = document.getElementById('saveProductBtn');
-      saveBtn.disabled = true;
-
-      const payload = {
-        action: "addProduct",
+      const productData = {
         itemCode: document.getElementById('itemCode').value,
         itemName: document.getElementById('itemName').value,
         category: document.getElementById('category').value,
-        unit: document.getElementById('unit').value,
         purchasePrice: parseFloat(document.getElementById('purchasePrice').value),
         sellingPrice: parseFloat(document.getElementById('sellingPrice').value),
-        initialQuantity: parseInt(document.getElementById('initialQuantity').value),
         reorderPoint: parseInt(document.getElementById('reorderPoint').value)
       };
 
-      await fetch(SCRIPT_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(payload)
-      });
-      alert("تمت إضافة المنتج بنجاح!");
-      location.reload();
-    });
-
-    // Add Purchase Form Submit
-    document.getElementById('addPurchaseForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const saveBtn = document.getElementById('savePurchaseBtn');
-      saveBtn.disabled = true;
-
-      const selectedCode = document.getElementById('purchaseItemCode').value;
-      const itemObj = allDetailedItems.find(i => i.itemCode === selectedCode);
-
-      const payload = {
-        action: "addPurchase",
-        itemCode: selectedCode,
-        itemName: itemObj ? itemObj.itemName : "",
-        quantity: document.getElementById('purchaseQty').value,
+      const initialBuyData = {
+        quantity: parseInt(document.getElementById('initialQty').value),
         supplierName: document.getElementById('supplierName').value
       };
 
-      await fetch(SCRIPT_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(payload)
+      fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          action: "addNewProduct",
+          productData,
+          initialBuyData
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message);
+        location.reload();
       });
-      alert("تم إضافة الشحنة والمخزون بنجاح!");
-      location.reload();
     });
+
+    // 2. تحميل الرسم البياني والتنبيهات
+    async function loadDashboard() {
+      const res = await fetch(`${APPS_SCRIPT_URL}?action=getInventory`);
+      const result = await res.json();
+      
+      if(result.status === "success") {
+        const labels = [];
+        const soldData = [];
+        const alertsContainer = document.getElementById('reorderAlerts');
+        alertsContainer.innerHTML = "";
+
+        result.data.forEach(item => {
+          labels.push(item.itemName);
+          soldData.push(item.totalSold || 0);
+
+          if(item.currentBalance <= item.reorderPoint) {
+            alertsContainer.innerHTML += `<div class="alert">المنتج <strong>${item.itemName}</strong> (كود: ${item.itemCode}) وصل للحد الأدنى! المتبقي: ${item.currentBalance} | الحد: ${item.reorderPoint}</div>`;
+          }
+        });
+
+        if(alertsContainer.innerHTML === "") {
+          alertsContainer.innerHTML = "<p style='color:green;'>جميع المستويات آمنة حالياً.</p>";
+        }
+
+        // رسم المبيعات
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'إجمالي المبيعات (Total Sold)',
+              data: soldData,
+              backgroundColor: '#0d6efd'
+            }]
+          }
+        });
+      }
+    }
+
+    loadDashboard();
   </script>
 </body>
 </html>
