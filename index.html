@@ -30,15 +30,20 @@
       margin: 0;
       padding: 0;
       direction: rtl;
-      text-align: right;
+      text-align: right !important;
       overflow-x: hidden;
+    }
+
+    /* Force all text alignment right */
+    *, ::after, ::before {
+      text-align: right;
     }
 
     /* Top Banner Bar */
     .top-bar {
       background-color: var(--curex-green);
       color: #ffffff;
-      text-align: center;
+      text-align: center !important;
       padding: 8px 15px;
       font-size: 0.88rem;
       font-weight: 700;
@@ -74,7 +79,7 @@
     .brand-text-box {
       display: flex;
       flex-direction: column;
-      text-align: right;
+      text-align: right !important;
     }
 
     .brand-name {
@@ -122,9 +127,16 @@
       font-weight: 800;
     }
 
-    /* Hero Section Exact Layout */
+    /* Hero Section Forced Right */
     .hero-section {
       padding: 40px 0 60px 0;
+      text-align: right !important;
+    }
+
+    .hero-content-wrapper {
+      max-width: 650px;
+      margin-right: 0;
+      margin-left: auto;
     }
 
     .pill-tag {
@@ -145,6 +157,7 @@
       font-size: 3.8rem;
       line-height: 1.15;
       margin-bottom: 20px;
+      text-align: right !important;
     }
 
     .heading-green { color: var(--curex-green); }
@@ -157,6 +170,7 @@
       max-width: 580px;
       line-height: 1.6;
       margin-bottom: 35px;
+      text-align: right !important;
     }
 
     .btn-curex-main {
@@ -189,6 +203,7 @@
       letter-spacing: 1.5px;
       margin-bottom: 4px;
       display: block;
+      text-align: right !important;
     }
 
     .section-main-title {
@@ -196,12 +211,14 @@
       font-weight: 900;
       font-size: 2.2rem;
       margin-bottom: 6px;
+      text-align: right !important;
     }
 
     .section-desc-text {
       color: var(--text-muted);
       font-size: 0.95rem;
       font-weight: 600;
+      text-align: right !important;
     }
 
     .search-input-pill {
@@ -218,6 +235,7 @@
       border: 1px solid #f0ebe3;
       border-radius: 16px;
       transition: all 0.25s ease;
+      text-align: right !important;
     }
 
     .product-card:hover {
@@ -255,12 +273,13 @@
       color: white;
     }
 
-    /* New Custom Footer Layout matching user uploaded image */
+    /* Footer Custom Layout Right Aligned */
     .footer-custom {
       background-color: var(--curex-bg);
       border-top: 1px solid var(--footer-border);
       padding: 60px 0 30px 0;
       margin-top: 90px;
+      text-align: right !important;
     }
 
     .footer-title {
@@ -268,6 +287,7 @@
       font-weight: 800;
       font-size: 1.25rem;
       margin-bottom: 20px;
+      text-align: right !important;
     }
 
     .footer-info-item {
@@ -279,6 +299,7 @@
       font-weight: 600;
       font-size: 0.95rem;
       margin-bottom: 12px;
+      text-align: right !important;
     }
 
     .footer-info-item i {
@@ -293,13 +314,14 @@
       line-height: 1.7;
       max-width: 420px;
       margin-top: 20px;
+      text-align: right !important;
     }
 
     .copyright-text {
       color: var(--text-muted);
       font-size: 0.85rem;
       font-weight: 600;
-      text-align: center;
+      text-align: center !important;
       padding-top: 30px;
       border-top: 1px solid var(--footer-border);
       margin-top: 40px;
@@ -313,65 +335,63 @@
     توريد موثوق للعيادات والصيدليات – نصل إليك في الوقت المناسب
   </div>
 
-  <!-- 2. Navbar Header (RTL Layout) -->
+  <!-- 2. Navbar Header -->
   <nav class="navbar-curex">
     <div class="container d-flex justify-content-between align-items-center">
       
-      <!-- Right Side: Logo -->
-      <a href="#" class="brand-container">
-        <div class="brand-badge-icon">CX</div>
-        <div class="brand-text-box">
-          <span class="brand-name">CureX</span>
-          <span class="brand-subtext">HEALTHCARE SOLUTIONS</span>
-        </div>
-      </a>
-
-      <!-- Left Side: Cart & Admin Buttons -->
+      <!-- Cart & Admin Buttons (Left Side) -->
       <div class="d-flex align-items-center gap-3">
+        <a href="admin.html" class="text-muted fs-5 me-1" title="لوحة التحكم"><i class="fa-solid fa-user-gear"></i></a>
         <div class="cart-btn-pill">
           <span class="cart-badge-circle" id="cartCount">0</span>
           <span>السلة</span>
         </div>
-        <a href="admin.html" class="text-muted fs-5 ms-1" title="لوحة التحكم"><i class="fa-solid fa-user-gear"></i></a>
       </div>
+
+      <!-- CureX Brand Logo (Right Side - Absolute Top Right) -->
+      <a href="#" class="brand-container">
+        <div class="brand-text-box">
+          <span class="brand-name">CureX</span>
+          <span class="brand-subtext">HEALTHCARE SOLUTIONS</span>
+        </div>
+        <div class="brand-badge-icon">CX</div>
+      </a>
 
     </div>
   </nav>
 
-  <!-- 3. Hero Section (RTL Layout) -->
+  <!-- 3. Hero Section (Forced Right Alignment) -->
   <section class="hero-section">
     <div class="container">
-      <div class="row">
-        <div class="col-lg-8 text-start text-md-end">
-          
-          <div class="pill-tag">
-            <span>٪</span>
-            <span>رعاية تبدأ من الاختيار الصحيح</span>
-          </div>
-
-          <h1 class="hero-main-heading">
-            <div class="heading-green">كل ما تحتاجه</div>
-            <div class="heading-orange">لرعاية أفضل.</div>
-          </h1>
-
-          <p class="hero-sub-text">
-            مستلزمات صحية موثوقة، جاهزة لعيادتك أو منزلك. اكتشفها بأسلوب عصري وسهل واطلبها بثقة.
-          </p>
-
-          <a href="#products-section" class="btn-curex-main">
-            <span>تصفح المنتجات</span>
-            <i class="fa-solid fa-arrow-left"></i>
-          </a>
-
+      <div class="hero-content-wrapper">
+        
+        <div class="pill-tag">
+          <span>٪</span>
+          <span>رعاية تبدأ من الاختيار الصحيح</span>
         </div>
+
+        <h1 class="hero-main-heading">
+          <div class="heading-green">كل ما تحتاجه</div>
+          <div class="heading-orange">لرعاية أفضل.</div>
+        </h1>
+
+        <p class="hero-sub-text">
+          مستلزمات صحية موثوقة، جاهزة لعيادتك أو منزلك. اكتشفها بأسلوب عصري وسهل واطلبها بثقة.
+        </p>
+
+        <a href="#products-section" class="btn-curex-main">
+          <span>تصفح المنتجات</span>
+          <i class="fa-solid fa-arrow-left"></i>
+        </a>
+
       </div>
     </div>
   </section>
 
-  <!-- 4. Products Section Header (RTL Layout) -->
+  <!-- 4. Products Section Header (Forced Right Alignment) -->
   <section class="container my-5" id="products-section">
     <div class="row align-items-end mb-4">
-      <div class="col-md-7 text-start text-md-end">
+      <div class="col-md-7 text-end">
         <span class="section-meta-subtitle">THE ESSENTIALS, CURATED</span>
         <h2 class="section-main-title">اختياراتنا لك</h2>
         <p class="section-desc-text">ابحث بالاسم أو الكود، واختر ما يناسب احتياجك.</p>
@@ -446,27 +466,27 @@
     </div>
   </div>
 
-  <!-- 6. Footer Matching the User's Provided Image Layout -->
+  <!-- 6. Footer (Forced Right Alignment with Exact Image Columns) -->
   <footer class="footer-custom">
     <div class="container">
-      <div class="row gy-4">
+      <div class="row gy-4 justify-content-between">
         
-        <!-- Left Side: Brand Logo & Mission Description -->
-        <div class="col-lg-6 col-md-12 text-start text-md-end mb-4 mb-lg-0">
+        <!-- Right Side Column: Brand Logo & Mission -->
+        <div class="col-lg-5 col-md-12 text-end mb-4 mb-lg-0">
           <a href="#" class="brand-container mb-3">
-            <div class="brand-badge-icon">CX</div>
             <div class="brand-text-box">
               <span class="brand-name">CureX</span>
               <span class="brand-subtext">HEALTHCARE SOLUTIONS</span>
             </div>
+            <div class="brand-badge-icon">CX</div>
           </a>
           <p class="footer-brand-desc">
             نختار مستلزمات الرعاية الصحية بعناية، ونوصلها بوضوح وسرعة إلى من يعتمد عليها كل يوم.
           </p>
         </div>
 
-        <!-- Right Side: Contact & Commitments -->
-        <div class="col-lg-3 col-md-6 text-start text-md-end">
+        <!-- Middle Column: Contact Info -->
+        <div class="col-lg-3 col-md-6 text-end">
           <h5 class="footer-title">نحن هنا للمساعدة</h5>
           <div class="footer-info-item">
             <i class="fa-solid fa-phone"></i>
@@ -482,7 +502,8 @@
           </div>
         </div>
 
-        <div class="col-lg-3 col-md-6 text-start text-md-end">
+        <!-- Left Column: Commitments -->
+        <div class="col-lg-3 col-md-6 text-end">
           <h5 class="footer-title">التزامنا</h5>
           <div class="footer-info-item">
             <i class="fa-solid fa-shield-halved"></i>
