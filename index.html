@@ -111,12 +111,8 @@
             <h2 class="text-base font-extrabold text-brand-teal mb-4">جدول المخزون والمبيعات الشامل</h2>
             <div class="overflow-x-auto">
                 <table class="w-full text-xs text-right border-collapse" id="admin-table">
-                    <thead id="admin-table-head">
-                        <!-- يتم إنشاؤه تلقائياً بناءً على رؤوس الأعمدة في الشيت -->
-                    </thead>
-                    <tbody id="admin-table-body" class="divide-y divide-stone-100 font-semibold">
-                        <!-- يتم تحميل الصفوف تلقائياً -->
-                    </tbody>
+                    <thead id="admin-table-head"></thead>
+                    <tbody id="admin-table-body" class="divide-y divide-stone-100 font-semibold"></tbody>
                 </table>
             </div>
         </div>
@@ -146,7 +142,6 @@
     <script>
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxB1BDtvA4SPvr896BjRYBggqfaoR_oz2OuISQpTXKqxHrsY4zcnQAu-kRSXwPHzxsL/exec";
 
-        // 1. جلب المنتجات وعرضها للزائر بشكل مبسط ومضمون
         async function fetchProducts() {
             const loading = document.getElementById('loading');
             const grid = document.getElementById('products-grid');
@@ -163,7 +158,6 @@
                     grid.innerHTML = `<div class="col-span-full text-center py-8 font-bold text-stone-500">لا توجد بيانات متاحة حالياً.</div>`;
                 } else {
                     data.forEach(item => {
-                        // استخراج القيم بغض النظر عن أسماء الأعمدة في الشيت
                         const keys = Object.keys(item);
                         const nameKey = keys.find(k => k.toLowerCase().includes('name') || k.includes('اسم')) || keys[1] || keys[0];
                         const codeKey = keys.find(k => k.toLowerCase().includes('code') || k.includes('كود')) || keys[0];
@@ -192,14 +186,13 @@
                 }
             } catch (err) {
                 console.error("خطأ في جلب البيانات:", err);
-                grid.innerHTML = `<div class="col-span-full text-center py-8 font-bold text-red-500">تعذر الاتصال بالشيت. تأكد من إعدادات Google Apps Script.</div>`;
+                grid.innerHTML = `<div class="col-span-full text-center py-8 font-bold text-red-500">تعذر الاتصال بالشيت.</div>`;
             } finally {
                 loading.classList.add('hidden');
                 grid.classList.remove('hidden');
             }
         }
 
-        // 2. التحكم في النافذة المنبثقة للأدمن
         function openAdminModal() { document.getElementById('admin-login-modal').classList.remove('hidden'); }
         function closeAdminModal() { document.getElementById('admin-login-modal').classList.add('hidden'); }
         function closeAdminView() {
@@ -207,7 +200,6 @@
             document.getElementById('store-view').classList.remove('hidden');
         }
 
-        // 3. تسجيل دخول الأدمن وعرض كافة أعمدة الشيت ديناميكياً
         async function handleAdminLogin(e) {
             e.preventDefault();
             const pass = document.getElementById('admin-pass-input').value;
@@ -216,7 +208,8 @@
             btn.innerText = "جاري التحميل...";
 
             try {
-                const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getDashboardData&sheet=InventoryBalance&password=${encodeURIComponent(pass)}`);
+                // إرسال طلب بدون تحديد اسم الشيت صراحة لكي يتم إرجاع الشيت الرئيسي تلقائياً
+                const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getDashboardData&password=${encodeURIComponent(pass)}`);
                 const data = await res.json();
 
                 if (data.error) {
@@ -236,7 +229,6 @@
             }
         }
 
-        // 4. بناء جدول الداشبورد تلقائياً بناءً على الأعمدة الموجودة فعلياً في الشيت
         function renderAdminTable(rows) {
             const head = document.getElementById('admin-table-head');
             const body = document.getElementById('admin-table-body');
@@ -248,10 +240,8 @@
                 return;
             }
 
-            // استخراج أسماء العناوين (الأعمدة) تلقائياً من أول عنصر
             const columns = Object.keys(rows[0]);
 
-            // بناء رأس الجدول
             let headerHTML = '<tr class="border-b bg-stone-50 text-brand-teal font-extrabold">';
             columns.forEach(col => {
                 headerHTML += `<th class="py-3 px-4 text-right">${col}</th>`;
@@ -259,7 +249,6 @@
             headerHTML += '</tr>';
             head.innerHTML = headerHTML;
 
-            // بناء صفوف البيانات
             rows.forEach(row => {
                 let rowHTML = '<tr class="border-b border-stone-100 hover:bg-stone-50 transition">';
                 columns.forEach(col => {
